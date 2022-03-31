@@ -1,0 +1,11 @@
+build/
+dist/
+chunc.egg-info/
+*.pyc
+*.logs/
+*.log
+*.npz
+*.csv
+*.txt
+*.checkpoints/
+dataset/
