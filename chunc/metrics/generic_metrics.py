@@ -9,12 +9,14 @@ class GenericMetric:
     def __init__(self,
         name:   str='generic',
         output_shape:   tuple=(),
+        latent_shape:   tuple=(),
         target_shape:   tuple=(),
         input_shape:    tuple=(),
         when_compute:   str='all',
     ):
         self.name = name
         self.output_shape = output_shape
+        self.latent_shape = latent_shape
         self.target_shape = target_shape
         self.input_shape = input_shape
         self.when_compute = when_compute

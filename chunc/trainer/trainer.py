@@ -4,6 +4,7 @@ Class for a generic model trainer.
 import torch
 import os
 from tqdm import tqdm
+from chunc.dataset.chunc import CHUNCDataset
 from chunc.utils.logger import Logger
 from chunc.metrics import GenericMetric
 from chunc.metrics import MetricHandler
@@ -160,108 +161,108 @@ class Trainer:
             model:      input_shape, output_shape
             dataset_loader: num_***_batches, 
         """
-        # # check dataset from dataset_loader
-        # try:
-        #     data = next(iter(dataset_loader.inference_loader))
-        # except Exception as e:
-        #     self.logger.error(f"problem indexing elements of dataset {dataset_loader.dataset}: {e}")
-        # num_data_elements = len(data)
-        # input = data[0]
-        # target = data[1]
-        # if issubclass(type(dataset_loader.dataset), GenericDataset):
-        #     # check consistency in definition of __getitem__
-        #     feature_shape = dataset_loader.dataset.feature_shape
-        #     class_shape   = dataset_loader.dataset.class_shape
-        #     event_sample_weights_shape = dataset_loader.dataset.event_sample_weights_shape
-        #     event_class_weights_shape = dataset_loader.dataset.event_class_weights_shape
-        #     if feature_shape != input[0].shape:
-        #         self.logger.warning(f"parameter '{dataset_loader.dataset}:feature_shape={feature_shape}' not equal to what is generated from first element of '{dataset_loader.dataset}:__getitem__={input.shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
-        #     if class_shape != target[0].shape:
-        #         self.logger.warning(f"parameter '{dataset_loader.dataset}:class_shape={class_shape}' not equal to what is generated from second element of '{dataset_loader.dataset}:__getitem__={target.shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
-        #     # check that correct number of elements produced and shapes match weights
-        #     if dataset_loader.dataset.use_sample_weights and not dataset_loader.dataset.use_class_weights:
-        #         if num_data_elements != 3:
-        #             self.logger.error(f"dataset has ('{dataset_loader.dataset}:use_sample_weights=={dataset_loader.dataset.use_sample_weights}' and '{dataset_loader.dataset}:use_class_weights=={dataset_loader.dataset.use_class_weights}'), however 'len({dataset_loader.dataset}:__getitem__)=={num_data_elements}'! Perhaps an inconsistency in the definition of __getitem__!")
-        #         if event_sample_weights_shape != data[2].shape:
-        #             self.logger.warning(f"parameter '{dataset_loader.dataset}:event_sample_weights_shape={event_sample_weights_shape}' not equal to what is generated from third element of '{dataset_loader.dataset}:__getitem__={data[2].shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
-        #     elif dataset_loader.dataset.use_class_weights and not dataset_loader.dataset.use_sample_weights:
-        #         if num_data_elements != 3:
-        #             self.logger.error(f"dataset has ('{dataset_loader.dataset}:use_sample_weights=={dataset_loader.dataset.use_sample_weights}' and '{dataset_loader.dataset}:use_class_weights=={dataset_loader.dataset.use_class_weights}'), however 'len({dataset_loader.dataset}:__getitem__)=={num_data_elements}'! Perhaps an inconsistency in the definition of __getitem__!")
-        #         if event_class_weights_shape != data[2].shape:
-        #             self.logger.warning(f"parameter '{dataset_loader.dataset}:event_class_weights_shape={event_class_weights_shape}' not equal to what is generated from third element of '{dataset_loader.dataset}:__getitem__={data[2].shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
-        #     elif dataset_loader.dataset.use_sample_weights and dataset_loader.dataset.use_class_weights:
-        #         if num_data_elements != 4:
-        #             self.logger.error(f"dataset has ('{dataset_loader.dataset}:use_sample_weights=={dataset_loader.dataset.use_sample_weights}' and '{dataset_loader.dataset}:use_class_weights=={dataset_loader.dataset.use_class_weights}'), however 'len({dataset_loader.dataset}:__getitem__)=={num_data_elements}'! Perhaps an inconsistency in the definition of __getitem__!")
-        #         if event_sample_weights_shape != data[2].shape:
-        #             self.logger.warning(f"parameter '{dataset_loader.dataset}:event_sample_weights_shape={event_sample_weights_shape}' not equal to what is generated from third element of '{dataset_loader.dataset}:__getitem__={data[2].shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
-        #         if event_sample_weights_shape != data[3].shape:
-        #             self.logger.warning(f"parameter '{dataset_loader.dataset}:event_class_weights_shape={event_class_weights_shape}' not equal to what is generated from fourth element of '{dataset_loader.dataset}:__getitem__={data[3].shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
-        #     else:
-        #         if num_data_elements != 2:
-        #             self.logger.error(f"dataset has ('{dataset_loader.dataset}:use_sample_weights=={dataset_loader.dataset.use_sample_weights}' and '{dataset_loader.dataset}:use_class_weights=={dataset_loader.dataset.use_class_weights}'), however 'len({dataset_loader.dataset}:__getitem__)=={num_data_elements}'! Perhaps an inconsistency in the definition of __getitem__!")
-        # # check model
-        # try:
-        #     output = self.model(data)
-        # except Exception as e:
-        #     self.logger.error(f"model '{self.model}' forward function incompatible with data from dataset_loader! Perhaps you forgot 'x = x[0].to(self.device)'?: {e}")
-        # # make a shape list
-        # self.num_output_elements = len(output)
-        # if self.num_output_elements == 1:
-        #     self.output_shape = output.squeeze(0).shape
-        # else:
-        #     self.output_shape = [tensor.squeeze(0).shape for tensor in output]
-        # # confirm shapes and behavior with criterion
-        # for name, loss in self.criterion.losses.items():
-        #     try:
-        #         loss_value = loss.loss(output, data)
-        #     except Exception as e:
-        #         self.logger.error(f"loss function '{loss}' evaluation failed with inputs:\noutput={output}\ndata={data}\n{e}")
+        # check dataset from dataset_loader
+        try:
+            data = next(iter(dataset_loader.inference_loader))
+        except Exception as e:
+            self.logger.error(f"problem indexing elements of dataset {dataset_loader.dataset}: {e}")
+        num_data_elements = len(data)
+        input = data[0]
+        target = data[1]
+        if issubclass(type(dataset_loader.dataset), CHUNCDataset):
+            # check consistency in definition of __getitem__
+            feature_shape = dataset_loader.dataset.feature_shape
+            class_shape   = dataset_loader.dataset.class_shape
+            event_sample_weights_shape = dataset_loader.dataset.event_sample_weights_shape
+            event_class_weights_shape = dataset_loader.dataset.event_class_weights_shape
+            if feature_shape != input[0].shape:
+                self.logger.warning(f"parameter '{dataset_loader.dataset}:feature_shape={feature_shape}' not equal to what is generated from first element of '{dataset_loader.dataset}:__getitem__={input.shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
+            if class_shape != target[0].shape:
+                self.logger.warning(f"parameter '{dataset_loader.dataset}:class_shape={class_shape}' not equal to what is generated from second element of '{dataset_loader.dataset}:__getitem__={target.shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
+            # check that correct number of elements produced and shapes match weights
+            if dataset_loader.dataset.use_sample_weights and not dataset_loader.dataset.use_class_weights:
+                if num_data_elements != 3:
+                    self.logger.error(f"dataset has ('{dataset_loader.dataset}:use_sample_weights=={dataset_loader.dataset.use_sample_weights}' and '{dataset_loader.dataset}:use_class_weights=={dataset_loader.dataset.use_class_weights}'), however 'len({dataset_loader.dataset}:__getitem__)=={num_data_elements}'! Perhaps an inconsistency in the definition of __getitem__!")
+                if event_sample_weights_shape != data[2].shape:
+                    self.logger.warning(f"parameter '{dataset_loader.dataset}:event_sample_weights_shape={event_sample_weights_shape}' not equal to what is generated from third element of '{dataset_loader.dataset}:__getitem__={data[2].shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
+            elif dataset_loader.dataset.use_class_weights and not dataset_loader.dataset.use_sample_weights:
+                if num_data_elements != 3:
+                    self.logger.error(f"dataset has ('{dataset_loader.dataset}:use_sample_weights=={dataset_loader.dataset.use_sample_weights}' and '{dataset_loader.dataset}:use_class_weights=={dataset_loader.dataset.use_class_weights}'), however 'len({dataset_loader.dataset}:__getitem__)=={num_data_elements}'! Perhaps an inconsistency in the definition of __getitem__!")
+                if event_class_weights_shape != data[2].shape:
+                    self.logger.warning(f"parameter '{dataset_loader.dataset}:event_class_weights_shape={event_class_weights_shape}' not equal to what is generated from third element of '{dataset_loader.dataset}:__getitem__={data[2].shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
+            elif dataset_loader.dataset.use_sample_weights and dataset_loader.dataset.use_class_weights:
+                if num_data_elements != 4:
+                    self.logger.error(f"dataset has ('{dataset_loader.dataset}:use_sample_weights=={dataset_loader.dataset.use_sample_weights}' and '{dataset_loader.dataset}:use_class_weights=={dataset_loader.dataset.use_class_weights}'), however 'len({dataset_loader.dataset}:__getitem__)=={num_data_elements}'! Perhaps an inconsistency in the definition of __getitem__!")
+                if event_sample_weights_shape != data[2].shape:
+                    self.logger.warning(f"parameter '{dataset_loader.dataset}:event_sample_weights_shape={event_sample_weights_shape}' not equal to what is generated from third element of '{dataset_loader.dataset}:__getitem__={data[2].shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
+                if event_sample_weights_shape != data[3].shape:
+                    self.logger.warning(f"parameter '{dataset_loader.dataset}:event_class_weights_shape={event_class_weights_shape}' not equal to what is generated from fourth element of '{dataset_loader.dataset}:__getitem__={data[3].shape}'! Perhaps an inconsistency in the definition of the __getitem__ function!")
+            else:
+                if num_data_elements != 2:
+                    self.logger.error(f"dataset has ('{dataset_loader.dataset}:use_sample_weights=={dataset_loader.dataset.use_sample_weights}' and '{dataset_loader.dataset}:use_class_weights=={dataset_loader.dataset.use_class_weights}'), however 'len({dataset_loader.dataset}:__getitem__)=={num_data_elements}'! Perhaps an inconsistency in the definition of __getitem__!")
+        # check model
+        try:
+            output = self.model(data)
+        except Exception as e:
+            self.logger.error(f"model '{self.model}' forward function incompatible with data from dataset_loader! Perhaps you forgot 'x = x[0].to(self.device)'?: {e}")
+        # make a shape list
+        self.num_output_elements = len(output)
+        if self.num_output_elements == 1:
+            self.output_shape = output.squeeze(0).shape
+        else:
+            self.output_shape = [tensor.squeeze(0).shape for tensor in output]
+        # confirm shapes and behavior with criterion
+        for name, loss in self.criterion.losses.items():
+            try:
+                loss_value = loss.loss(output, data)
+            except Exception as e:
+                self.logger.error(f"loss function '{loss}' evaluation failed with inputs:\noutput={output}\ndata={data}\n{e}")
         
-        # # confirm shapes and behavior with metrics
-        # """
-        # There are two classes of metrics, 
-        #     generic:    saves a single output tensor and a single target tensor
-        #     tuple:      saves a tuple of output tensors and all dataloader tensors
-        # If each type is present in our metrics list, then we should check that 
-        # tensor operations defined within the metrics are compatible with the 
-        # dataloader and the model.
-        # """
-        # # create empty tensors
-        # if self.metrics != None:
-        #     # first generic shapes are tested
-        #     if self.num_output_elements == 1:
-        #         try:
-        #             test_output = torch.empty(
-        #                 size=(0,*output[0].shape), 
-        #                 dtype=torch.float, device=self.device
-        #             )
-        #         except Exception as e:
-        #             self.logger.error(f"problem creating tensor with output shape '{output.shape}'.")
-        #     else:
-        #         for ii in range(len(output)):
-        #             try:
-        #                 test_output = torch.empty(
-        #                     size=(0,*output[ii][0].shape), 
-        #                     dtype=torch.float, device=self.device
-        #                 )
-        #             except Exception as e:
-        #                 self.logger.error(f"problem creating tensor with output shape '{output[ii].shape}'.")
-        #     try:
-        #         test_target = torch.empty(
-        #             size=(0,*target[0].shape), 
-        #             dtype=torch.float, device=self.device
-        #         )
-        #     except Exception as e:
-        #         self.logger.error(f"problem creating tensor with target shape '{target.shape}'.")
-        #     if isinstance(self.metrics, MetricHandler):
-        #         if self.num_output_elements == 1:
-        #             self.metrics.set_shapes(output[0].shape, target[0].shape)
-        #         else:
-        #             self.metrics.set_shapes(output[0][0].shape, target[0].shape)
-        #     self.metrics.reset_batch()
-        # # confirm shapes and behavior with callbacks
-        # self.criterion.reset_batch()
-        # self.logger.info("passed consistency check.")
+        # confirm shapes and behavior with metrics
+        """
+        There are two classes of metrics, 
+            generic:    saves a single output tensor and a single target tensor
+            tuple:      saves a tuple of output tensors and all dataloader tensors
+        If each type is present in our metrics list, then we should check that 
+        tensor operations defined within the metrics are compatible with the 
+        dataloader and the model.
+        """
+        # create empty tensors
+        if self.metrics != None:
+            # first generic shapes are tested
+            if self.num_output_elements == 1:
+                try:
+                    test_output = torch.empty(
+                        size=(0,*output[0].shape), 
+                        dtype=torch.float, device=self.device
+                    )
+                except Exception as e:
+                    self.logger.error(f"problem creating tensor with output shape '{output.shape}'.")
+            else:
+                for ii in range(len(output)):
+                    try:
+                        test_output = torch.empty(
+                            size=(0,*output[ii][0].shape), 
+                            dtype=torch.float, device=self.device
+                        )
+                    except Exception as e:
+                        self.logger.error(f"problem creating tensor with output shape '{output[ii].shape}'.")
+            try:
+                test_target = torch.empty(
+                    size=(0,*target[0].shape), 
+                    dtype=torch.float, device=self.device
+                )
+            except Exception as e:
+                self.logger.error(f"problem creating tensor with target shape '{target.shape}'.")
+            if isinstance(self.metrics, MetricHandler):
+                if self.num_output_elements == 1:
+                    self.metrics.set_shapes(output[0].shape, None, target[0].shape, input[0].shape)
+                else:
+                    self.metrics.set_shapes(output[0][0].shape, output[1][0].shape, target[0].shape, input[0].shape)
+            self.metrics.reset_batch()
+        # confirm shapes and behavior with callbacks
+        self.criterion.reset_batch()
+        self.logger.info("passed consistency check.")
 
     def train(self,
         dataset_loader,             # dataset_loader to pass in
@@ -816,7 +817,7 @@ class Trainer:
                     inference_loop.set_description(f"Inference: Batch [{ii+1}/{num_batches}]")
                     inference_loop.set_postfix_str(f"loss={loss.item():.2e}")
         if self.num_output_elements != 1:
-            predictions = torch.stack(predictions)
+            predictions = torch.cat(predictions, dim=1)
         # save predictions if wanted
         if save_predictions:
             predictions_name = self.model.name + "_predictions"

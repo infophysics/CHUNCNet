@@ -12,6 +12,7 @@ def generate_gaussian(
     dimension:  int=5,
     mean:       float=0.0,
     sigma:      float=1.0,
+    save_plot:  bool=True,
 ):
     means = torch.full(
         size=(number_of_samples,dimension), 
@@ -25,6 +26,23 @@ def generate_gaussian(
         mean=means,
         std=stds,
     )
+    if save_plot:
+        if not os.path.isdir("plots/distribution/"):
+            os.makedirs("plots/distribution/")
+        fig, axs = plt.subplots()
+        for ii in range(dimension):
+            axs.hist(
+                normal[:,ii].numpy(), 
+                bins=100, 
+                label=f'dimension_{ii}', 
+                histtype='step', 
+                density=True, stacked=True
+            )
+        axs.set_xlabel(f'x')
+        plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+        plt.tight_layout()
+        plt.savefig("plots/distribution/gaussian_x.png")
+
     return normal
 
 def generate_concentric_spheres(

@@ -9,6 +9,8 @@ from chunc.losses import ClusterLoss, L2OutputLoss
 from chunc.losses import LatentWassersteinLoss
 from chunc.losses import LatentWassersteinValidLoss
 from chunc.losses import LatentWassersteinInvalidLoss
+from chunc.losses import SingleLatentWassersteinLoss
+from chunc.losses import LatentBinaryLoss
 from chunc.utils.utils import get_method_arguments
 
 class LossHandler:
@@ -45,6 +47,8 @@ class LossHandler:
             'LatentWassersteinLoss':        LatentWassersteinLoss,
             'LatentWassersteinValidLoss':   LatentWassersteinValidLoss,
             'LatentWassersteinInvalidLoss': LatentWassersteinInvalidLoss,
+            'SingleLatentWassersteinLoss':  SingleLatentWassersteinLoss,
+            'LatentBinaryLoss': LatentBinaryLoss,
         }
         # check config
         for item in self.cfg.keys():

@@ -5,6 +5,7 @@ import numpy as np
 import torch
 from matplotlib import pyplot as plt
 
+from chunc.metrics.savers import *
 from chunc.utils.callbacks import GenericCallback
 
 class MetricCallback(GenericCallback):
@@ -18,7 +19,12 @@ class MetricCallback(GenericCallback):
         if metrics_list != None:
             self.metric_names = [
                 name for name, metric in self.metrics_list.metrics.items()
-                if not isinstance(metric, GenericMetricSaver)
+                if not sum([
+                    isinstance(metric, LatentSaver),
+                    isinstance(metric, OutputSaver),
+                    isinstance(metric, TargetSaver),
+                    isinstance(metric, InputSaver)
+                ])
             ]
 
         # containers for training metrics
@@ -84,7 +90,6 @@ class MetricCallback(GenericCallback):
                 (self.test_metrics, temp_metrics),
                 dim=0
             )
-        
 
     def evaluate_training(self):
         pass

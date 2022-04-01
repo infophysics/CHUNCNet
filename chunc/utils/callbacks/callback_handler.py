@@ -4,6 +4,7 @@ Container for generic callbacks
 from chunc.utils.logger import Logger
 from chunc.utils.callbacks import GenericCallback
 from chunc.utils.callbacks import LossCallback, MetricCallback
+from chunc.utils.callbacks import LatentCallback, OutputCallback
 from chunc.utils.utils import get_method_arguments
 
 class CallbackHandler:
@@ -32,8 +33,10 @@ class CallbackHandler:
     def process_config(self):
         # list of available callbacks
         self.available_callbacks = {
-            'loss':                     LossCallback,
-            'metric':                   MetricCallback,
+            'loss':     LossCallback,
+            'metric':   MetricCallback,
+            'latent':   LatentCallback,
+            'output':   OutputCallback,
         }
         # check config
         for item in self.cfg.keys():

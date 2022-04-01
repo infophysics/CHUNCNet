@@ -2,6 +2,7 @@
 Various utility functions
 """
 import numpy as np
+from matplotlib import pyplot as plt
 import torch
 import inspect
 import os
@@ -147,3 +148,20 @@ def get_base_classes(derived):
     except:
         pass
     return bases
+
+def generate_plot_grid(
+    num_plots,
+    **kwargs,
+):
+    nrows = int(np.floor(np.sqrt(num_plots)))
+    ncols = int(np.ceil(num_plots/nrows))
+    fig, axs = plt.subplots(
+        nrows=nrows, ncols=ncols,
+        **kwargs
+    )
+    nplots = nrows * ncols
+    nextra = nplots - num_plots
+    for ii in range(nextra):
+        axs.flat[-(ii+1)].set_visible(False)
+    return fig, axs
+    

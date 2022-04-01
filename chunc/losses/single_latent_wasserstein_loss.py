@@ -6,17 +6,17 @@ import torch
 
 from chunc.losses import GenericLoss
 
-class LatentWassersteinLoss(GenericLoss):
+class SingleLatentWassersteinLoss(GenericLoss):
     """
     """
     def __init__(self,
         alpha: float=1.0,
-        name:   str='latent_wasserstein_loss',
+        name:   str='single_latent_wasserstein_loss',
         latent_variables:   list=[],
         distribution:       list=[],
         num_projections:    int=100,
     ):
-        super(LatentWassersteinLoss, self).__init__(name)
+        super(SingleLatentWassersteinLoss, self).__init__(name)
         self.alpha = alpha
         self.latent_variables = latent_variables
         self.distribution = distribution.float()

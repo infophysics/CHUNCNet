@@ -3,4 +3,6 @@ from .timing_callback import *
 from .memory_callback import *
 from .loss_callback import *
 from .metric_callback import *
+from .latent_callback import *
+from .output_callback import *
 from .callback_handler import *

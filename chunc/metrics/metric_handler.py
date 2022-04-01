@@ -3,6 +3,9 @@ Container for generic callbacks
 """
 from chunc.utils.logger import Logger
 from chunc.metrics import GenericMetric
+from chunc.metrics import LatentBinaryAccuracy
+from chunc.metrics.savers import LatentSaver, TargetSaver
+from chunc.metrics.savers import OutputSaver, InputSaver
 from chunc.utils.utils import get_method_arguments
 
 class MetricHandler:
@@ -32,6 +35,11 @@ class MetricHandler:
         # TODO: Make this automatic
         # list of available metrics
         self.available_metrics = {
+            'LatentBinaryAccuracy': LatentBinaryAccuracy,
+            'LatentSaver':  LatentSaver,
+            'OutputSaver':  OutputSaver,
+            'TargetSaver':  TargetSaver,
+            'InputSaver':  InputSaver,
         }
 
         # check config
@@ -61,11 +69,13 @@ class MetricHandler:
     
     def set_shapes(self,
         output_shape,
+        latent_shape,
         target_shape,
-        input_shape=(),
+        input_shape,
     ):
         for name, metric in self.metrics.items():
             metric.output_shape = output_shape
+            metric.latent_shape = latent_shape
             metric.target_shape = target_shape
             metric.input_shape = input_shape
             metric.reset_batch()
