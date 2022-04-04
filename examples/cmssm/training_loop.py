@@ -128,6 +128,7 @@ if __name__ == "__main__":
             'metrics_list':     swae_metrics,
             'latent_variables': [0,1,2,3,4],
             'binary_variable':  5,
+            'binary_bins':      10,
         },
         'output':   {
             'criterion_list':   swae_loss,
@@ -154,6 +155,6 @@ if __name__ == "__main__":
     
     swae_trainer.train(
         swae_loader,
-        epochs=500,
+        epochs=100,
         checkpoint=25
     )

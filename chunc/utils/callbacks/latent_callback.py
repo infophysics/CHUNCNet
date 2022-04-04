@@ -18,6 +18,7 @@ class LatentCallback(GenericCallback):
         metrics_list,
         latent_variables:   list=[],
         binary_variable:    int=-1,
+        binary_bins:        int=0,
     ):  
         super(LatentCallback, self).__init__()
         self.criterion_list = criterion_list
@@ -33,9 +34,13 @@ class LatentCallback(GenericCallback):
                 if isinstance(metric, TargetSaver):
                     self.target_name = name
         self.binary_variable = binary_variable
+        self.binary_bins = binary_bins
         
         if not os.path.isdir("plots/latent/"):
             os.makedirs("plots/latent/")
+        if self.binary_bins > 0:
+            if not os.path.isdir("plots/latent/bins/"):
+                os.makedirs("plots/latent/bins/")
 
         # containers for training metrics
         if self.latent_name != None:
@@ -128,6 +133,7 @@ class LatentCallback(GenericCallback):
                 self.training_latent[:,self.binary_variable][valid_mask].cpu().numpy(),
                 bins=100,
                 label='valid',
+                color='k',
                 histtype='step',
                 stacked=True,
                 density=True
@@ -136,6 +142,7 @@ class LatentCallback(GenericCallback):
                 self.training_latent[:,self.binary_variable][~valid_mask].cpu().numpy(),
                 bins=100,
                 label='invalid',
+                color='r',
                 histtype='step',
                 stacked=True,
                 density=True
@@ -156,6 +163,7 @@ class LatentCallback(GenericCallback):
                     self.training_latent[:,ii][valid_mask].cpu().numpy(), 
                     bins=100, 
                     label='valid', 
+                    color='k',
                     histtype='step', 
                     stacked=True,
                     density=True
@@ -164,6 +172,7 @@ class LatentCallback(GenericCallback):
                     self.training_latent[:,ii][~valid_mask].cpu().numpy(), 
                     bins=100, 
                     label='invalid', 
+                    color='r',
                     histtype='step', 
                     stacked=True,
                     density=True
@@ -184,6 +193,7 @@ class LatentCallback(GenericCallback):
                     self.validation_latent[:,ii][valid_mask].cpu().numpy(), 
                     bins=100, 
                     label='valid', 
+                    color='k',
                     histtype='step', 
                     stacked=True,
                     density=True
@@ -192,6 +202,7 @@ class LatentCallback(GenericCallback):
                     self.validation_latent[:,ii][~valid_mask].cpu().numpy(), 
                     bins=100, 
                     label='invalid', 
+                    color='r',
                     histtype='step', 
                     stacked=True,
                     density=True
@@ -201,7 +212,70 @@ class LatentCallback(GenericCallback):
             plt.suptitle("Validation latent variables by class")
             plt.tight_layout()
             plt.savefig(f"plots/latent/validation_variables_category.png")
-            
+        
+            if self.binary_bins > 0:
+                valid_mask = (self.training_target == 1).squeeze(1)
+                # bin the binary variable
+                hist, bin_edges = np.histogram(
+                    self.training_latent[:,self.binary_variable].cpu().numpy(),
+                    bins=self.binary_bins
+                )
+                valid_indices = np.digitize(
+                    self.training_latent[:,self.binary_variable][valid_mask].cpu().numpy(),
+                    bins=bin_edges
+                )
+                invalid_indices = np.digitize(
+                    self.training_latent[:,self.binary_variable][~valid_mask].cpu().numpy(),
+                    bins=bin_edges
+                )
+                for ii in self.latent_variables:
+                    fig, axs = utils.generate_plot_grid(
+                        self.binary_bins+1,
+                        figsize=(10, 6)
+                    )
+                    for jj in range(self.binary_bins):
+                        if sum((valid_indices == jj+1)) != 0:
+                            # bin the binary variable
+                            axs.flat[jj].hist(
+                                self.training_latent[:,ii][valid_mask][(valid_indices == jj+1)].cpu().numpy(), 
+                                bins=100, 
+                                label='valid', 
+                                color='k',
+                                histtype='step', 
+                            )
+                        if sum((invalid_indices == jj+1)) != 0:
+                            axs.flat[jj].hist(
+                                self.training_latent[:,ii][~valid_mask][(invalid_indices == jj+1)].cpu().numpy(), 
+                                bins=100, 
+                                label='invalid', 
+                                color='r',
+                                histtype='step', 
+                            )
+                        axs.flat[jj].set_xlabel(f'bin {jj}: [{bin_edges[jj]:.2f},{bin_edges[jj+1]:.2f}]')
+                    axs.flat[0].legend()
+                    axs.flat[self.binary_bins].hist(
+                        self.training_latent[:,self.binary_variable][valid_mask].cpu().numpy(),
+                        bins=bin_edges,
+                        label='valid',
+                        color='k',
+                        histtype='step',
+                        stacked=True,
+                        density=True
+                    )
+                    axs.flat[self.binary_bins].hist(
+                        self.training_latent[:,self.binary_variable][~valid_mask].cpu().numpy(),
+                        bins=bin_edges,
+                        label='invalid',
+                        color='r',
+                        histtype='step',
+                        stacked=True,
+                        density=True
+                    )
+                    axs.flat[self.binary_bins].set_xlabel("latent category")
+                    plt.suptitle(f"Training latent variable {ii} by binary bin")
+                    plt.tight_layout()
+                    plt.savefig(f"plots/latent/bins/latent_{ii}.png")
+
     def evaluate_testing(self):  
         pass
         # # evaluate metrics from training and validation
