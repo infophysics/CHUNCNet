@@ -33,12 +33,11 @@ class Sampler:
     ):
         inference_loader = loader.all_loader
         inference_loop = enumerate(inference_loader, 0)
+        self.num_latent_bins = num_latent_bins
+        self.num_binary_bins = num_binary_bins
         
         # set up array for latent
-        latent = [
-            torch.empty(size=(0,1), dtype=torch.float)
-            for ii in range(len(self.latent_variables))
-        ]
+        latent = torch.empty(size=(0,len(self.latent_variables)), dtype=torch.float)
         binary = torch.empty(size=(0,1), dtype=torch.float)
         targets = torch.empty(size=(0,1), dtype=torch.float)
         
@@ -49,21 +48,109 @@ class Sampler:
             for ii, data in inference_loop:
                 # get the network output
                 outputs = self.model(data)
-
-                latent = [
-                    torch.cat((latent[jj], outputs[1][jj]), dim=0)
-                    for jj in range(len(self.latent_variables))
-                ]
-                binary = torch.cat((binary, outputs[1][self.binary_variable]), dim=0)
+                latent = torch.cat((latent, outputs[1][:,self.latent_variables]), dim=0)
+                binary = torch.cat((binary, outputs[1][:,self.binary_variable].unsqueeze(1)), dim=0)
                 targets = torch.cat((targets,data[1]), dim=0)
         
         # create bins for binary variable
-        binary_hist, binary_edges = np.histogram(binary, bins=num_binary_bins)
-
+        self.latent_binary_hist['binary_hist'], self.latent_binary_hist['binary_edges'] = np.histogram(
+            binary, bins=num_binary_bins
+        )
+        binary_masks = [
+            (binary >= self.latent_binary_hist['binary_edges'][i]) & (binary < self.latent_binary_hist['binary_edges'][i+1])
+            for i in range(len(self.latent_binary_hist['binary_hist']))
+        ]
         # create bins for all latent variables
+        for ii, mask in enumerate(binary_masks):
+            valid_mask = (targets[mask] == 1)
+            for jj in range(len(self.latent_variables)):
+                temp_latent = latent[:,jj].unsqueeze(1)
+                self.latent_valid_hist[f'{jj}_hist_{ii}'], self.latent_valid_hist[f'{jj}_bin_edges_{ii}'] = np.histogram(
+                    temp_latent[mask][valid_mask], bins=num_latent_bins
+                )
+                self.latent_invalid_hist[f'{jj}_hist_{ii}'], self.latent_invalid_hist[f'{jj}_bin_edges_{ii}'] = np.histogram(
+                    temp_latent[mask][~valid_mask], bins=num_latent_bins
+                )
+        for ii in range(num_binary_bins):
+            for jj in range(len(self.latent_variables)):
+                self.latent_valid_hist[f'{jj}_hist_{ii}'] = self.latent_valid_hist[f'{jj}_hist_{ii}'].astype(float)
+                self.latent_invalid_hist[f'{jj}_hist_{ii}'] = self.latent_invalid_hist[f'{jj}_hist_{ii}'].astype(float)
+                self.latent_valid_hist[f'{jj}_hist_{ii}'] /= sum(self.latent_valid_hist[f'{jj}_hist_{ii}'])
+                self.latent_invalid_hist[f'{jj}_hist_{ii}'] /= sum(self.latent_invalid_hist[f'{jj}_hist_{ii}'])
+                self.latent_valid_hist[f'{jj}_chist_{ii}'] = self.latent_valid_hist[f'{jj}_hist_{ii}']
+                self.latent_invalid_hist[f'{jj}_chist_{ii}'] = self.latent_invalid_hist[f'{jj}_hist_{ii}']
+                for kk in range(1,num_latent_bins):
+                    self.latent_valid_hist[f'{jj}_chist_{ii}'][kk] += self.latent_valid_hist[f'{jj}_chist_{ii}'][kk-1]
+                    self.latent_invalid_hist[f'{jj}_chist_{ii}'][kk] += self.latent_invalid_hist[f'{jj}_chist_{ii}'][kk-1]
 
     def sample_histograms(self,
         num_samples:    int=100,
+        binary_bin:     int=0,
+        sample_type:    str='valid',
     ):
-        pass
+        # first get bin samples
+        bin_samples = []
+        sample_probs = np.random.uniform(0,1.0,num_samples)
+        for ii in range(len(sample_probs)):
+            bin_samples.append(np.random.uniform(
+                low=self.latent_binary_hist['binary_edges'][binary_bin],
+                high=self.latent_binary_hist['binary_edges'][binary_bin+1],
+                size=1
+            )[0])
+
+        # now generate valid samples
+        valid_samples = []
+        if sample_type == 'valid' or sample_type == 'all':
+            for jj in range(len(self.latent_variables)):
+                latent_samples = []
+                sample_probs = np.random.uniform(0,1.0,num_samples)
+                for ii in range(len(sample_probs)):
+                    for kk in range(self.num_latent_bins):
+                        if self.latent_valid_hist[f'{jj}_chist_{binary_bin}'][kk] >= sample_probs[ii]:
+                            latent_samples.append(np.random.uniform(
+                                low=self.latent_valid_hist[f'{jj}_bin_edges_{binary_bin}'][kk],
+                                high=self.latent_valid_hist[f'{jj}_bin_edges_{binary_bin}'][kk+1],
+                                size=1
+                            )[0])
+                            break
+                valid_samples.append(latent_samples)
+            valid_samples.append(bin_samples)
+            valid_samples = np.vstack(valid_samples).T
+            if sample_type == 'valid':
+                return torch.tensor(valid_samples, dtype=torch.float)
+
+        # first get bin samples
+        bin_samples = []
+        sample_probs = np.random.uniform(0,1.0,num_samples)
+        for ii in range(len(sample_probs)):
+            bin_samples.append(np.random.uniform(
+                low=self.latent_binary_hist['binary_edges'][binary_bin],
+                high=self.latent_binary_hist['binary_edges'][binary_bin+1],
+                size=1
+            )[0])
+
+        # generate invalid samples
+        invalid_samples = []
+        if sample_type == 'invalid' or sample_type == 'all':
+            for jj in range(len(self.latent_variables)):
+                latent_samples = []
+                sample_probs = np.random.uniform(0,1.0,num_samples)
+                for ii in range(len(sample_probs)):
+                    for kk in range(self.num_latent_bins):
+                        if self.latent_invalid_hist[f'{jj}_chist_{binary_bin}'][kk] >= sample_probs[ii]:
+                            latent_samples.append(np.random.uniform(
+                                low=self.latent_invalid_hist[f'{jj}_bin_edges_{binary_bin}'][kk],
+                                high=self.latent_invalid_hist[f'{jj}_bin_edges_{binary_bin}'][kk+1],
+                                size=1
+                            )[0])
+                            break
+                invalid_samples.append(latent_samples)
+            invalid_samples.append(bin_samples)
+            invalid_samples = np.vstack(invalid_samples).T
+            if sample_type == 'invalid':    
+                return torch.tensor(invalid_samples, dtype=torch.float)
+        if sample_type == 'all':
+            return torch.tensor(np.concatenate((valid_samples, invalid_samples)), dtype=torch.float)
+        
+
 
