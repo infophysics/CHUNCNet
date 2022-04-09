@@ -13,6 +13,8 @@ class Sampler:
         model,
         latent_variables:   list=[],
         binary_variable:    int=-1,
+        num_latent_bins:    int=25,
+        num_binary_bins:    int=10,
     ):
         self.name = model.name + "_sampler"
         self.logger = Logger(self.name, output='both', file_mode='w')
@@ -20,6 +22,9 @@ class Sampler:
         self.model = model
         self.latent_variables = latent_variables
         self.binary_variable = binary_variable
+        self.num_latent_bins = num_latent_bins
+        self.num_binary_bins = num_binary_bins
+        self.device = model.device
 
         # set up latent dictionaries
         self.latent_valid_hist = {}
@@ -28,18 +33,14 @@ class Sampler:
     
     def build_histograms(self,
         loader,
-        num_latent_bins:    int=25,
-        num_binary_bins:    int=10,
     ):
         inference_loader = loader.all_loader
         inference_loop = enumerate(inference_loader, 0)
-        self.num_latent_bins = num_latent_bins
-        self.num_binary_bins = num_binary_bins
         
         # set up array for latent
-        latent = torch.empty(size=(0,len(self.latent_variables)), dtype=torch.float)
-        binary = torch.empty(size=(0,1), dtype=torch.float)
-        targets = torch.empty(size=(0,1), dtype=torch.float)
+        latent = torch.empty(size=(0,len(self.latent_variables)), dtype=torch.float, device=self.device)
+        binary = torch.empty(size=(0,1), dtype=torch.float, device=self.device)
+        targets = torch.empty(size=(0,1), dtype=torch.float, device=self.device)
         
         self.logger.info(f"running inference on dataset '{loader.dataset.name}'.")
         # make sure to set model to eval() during validation!
@@ -50,11 +51,14 @@ class Sampler:
                 outputs = self.model(data)
                 latent = torch.cat((latent, outputs[1][:,self.latent_variables]), dim=0)
                 binary = torch.cat((binary, outputs[1][:,self.binary_variable].unsqueeze(1)), dim=0)
-                targets = torch.cat((targets,data[1]), dim=0)
+                targets = torch.cat((targets,data[1].to(self.device)), dim=0)
         
+        latent = latent.cpu()
+        binary = binary.cpu()
+        targets = targets.cpu()
         # create bins for binary variable
         self.latent_binary_hist['binary_hist'], self.latent_binary_hist['binary_edges'] = np.histogram(
-            binary, bins=num_binary_bins
+            binary, bins=self.num_binary_bins
         )
         binary_masks = [
             (binary >= self.latent_binary_hist['binary_edges'][i]) & (binary < self.latent_binary_hist['binary_edges'][i+1])
@@ -66,12 +70,12 @@ class Sampler:
             for jj in range(len(self.latent_variables)):
                 temp_latent = latent[:,jj].unsqueeze(1)
                 self.latent_valid_hist[f'{jj}_hist_{ii}'], self.latent_valid_hist[f'{jj}_bin_edges_{ii}'] = np.histogram(
-                    temp_latent[mask][valid_mask], bins=num_latent_bins
+                    temp_latent[mask][valid_mask], bins=self.num_latent_bins
                 )
                 self.latent_invalid_hist[f'{jj}_hist_{ii}'], self.latent_invalid_hist[f'{jj}_bin_edges_{ii}'] = np.histogram(
-                    temp_latent[mask][~valid_mask], bins=num_latent_bins
+                    temp_latent[mask][~valid_mask], bins=self.num_latent_bins
                 )
-        for ii in range(num_binary_bins):
+        for ii in range(self.num_binary_bins):
             for jj in range(len(self.latent_variables)):
                 self.latent_valid_hist[f'{jj}_hist_{ii}'] = self.latent_valid_hist[f'{jj}_hist_{ii}'].astype(float)
                 self.latent_invalid_hist[f'{jj}_hist_{ii}'] = self.latent_invalid_hist[f'{jj}_hist_{ii}'].astype(float)
@@ -79,7 +83,7 @@ class Sampler:
                 self.latent_invalid_hist[f'{jj}_hist_{ii}'] /= sum(self.latent_invalid_hist[f'{jj}_hist_{ii}'])
                 self.latent_valid_hist[f'{jj}_chist_{ii}'] = self.latent_valid_hist[f'{jj}_hist_{ii}']
                 self.latent_invalid_hist[f'{jj}_chist_{ii}'] = self.latent_invalid_hist[f'{jj}_hist_{ii}']
-                for kk in range(1,num_latent_bins):
+                for kk in range(1,self.num_latent_bins):
                     self.latent_valid_hist[f'{jj}_chist_{ii}'][kk] += self.latent_valid_hist[f'{jj}_chist_{ii}'][kk-1]
                     self.latent_invalid_hist[f'{jj}_chist_{ii}'][kk] += self.latent_invalid_hist[f'{jj}_chist_{ii}'][kk-1]
 
@@ -88,6 +92,8 @@ class Sampler:
         binary_bin:     int=0,
         sample_type:    str='valid',
     ):
+        if binary_bin >= self.num_binary_bins:
+            self.logger.error(f"specified binary bin: {binary_bin} is out of bounds!")
         # first get bin samples
         bin_samples = []
         sample_probs = np.random.uniform(0,1.0,num_samples)
@@ -151,6 +157,3 @@ class Sampler:
                 return torch.tensor(invalid_samples, dtype=torch.float)
         if sample_type == 'all':
             return torch.tensor(np.concatenate((valid_samples, invalid_samples)), dtype=torch.float)
-        
-
-

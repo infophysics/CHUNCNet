@@ -3,6 +3,7 @@ Various utility functions
 """
 import numpy as np
 from matplotlib import pyplot as plt
+import pandas as pd
 import torch
 import inspect
 import os
@@ -164,4 +165,11 @@ def generate_plot_grid(
     for ii in range(nextra):
         axs.flat[-(ii+1)].set_visible(False)
     return fig, axs
+
+def concatenate_csv(
+    files,
+    output_file
+):
+    combined_csv = pd.concat([pd.read_csv(f) for f in files])
+    combined_csv.to_csv(output_file, header=None, index=False,)
     

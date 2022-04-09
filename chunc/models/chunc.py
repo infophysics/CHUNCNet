@@ -19,9 +19,6 @@ chunc_cmssm_config = {
     'encoder_normalization':'bias',
     # desired dimension of the latent space
     'latent_dimension':     5,
-    'latent_binary':        1,
-    'latent_binary_activation': 'sigmoid',
-    'latent_binary_activation_params':  {},
     # decoder parameters
     'decoder_dimensions':   [10, 25, 50, 25, 10],
     'decoder_activation':   'leaky_relu',
@@ -111,14 +108,8 @@ class CHUNC(GenericModel):
             out_features=self.cfg['latent_dimension'],
             bias=False
         )
-        _latent_dict['latent_binary'] = nn.Linear(
-            in_features=dimension,
-            out_features=1,
-            bias=False
-        )
-        _latent_dict['latent_binary_activation'] = activations[self.cfg['latent_binary_activation']](**self.cfg['latent_binary_activation_params'])
-        
-        input_dimension = self.cfg['latent_dimension'] + self.cfg['latent_binary']
+                
+        input_dimension = self.cfg['latent_dimension']
         # iterate over the decoder
         for ii, dimension in enumerate(self.cfg['decoder_dimensions']):
             if self.cfg['decoder_normalization'] == 'bias':
@@ -164,19 +155,12 @@ class CHUNC(GenericModel):
         # first the encoder
         for layer in self.encoder_dict.keys():
             x = self.encoder_dict[layer](x)
-        latent = self.latent_dict['latent_layer'](x)
-        binary = self.latent_dict['latent_binary'](x)
-        binary = self.latent_dict['latent_binary_activation'](binary)
-        x = torch.cat((latent, binary), dim=1)
+        x = self.latent_dict['latent_layer'](x)
         for layer in self.decoder_dict.keys():
             x = self.decoder_dict[layer](x)
         for layer in self.output_dict.keys():
             x = self.output_dict[layer](x)
-        latent_output = torch.cat(
-            (self.forward_views['latent_layer'],self.forward_views['latent_binary_activation']),
-            dim=1
-        )
-        return x, latent_output
+        return x, self.forward_views['latent_layer']
 
     def sample(self,
         x
@@ -200,8 +184,5 @@ class CHUNC(GenericModel):
         # first the encoder
         for layer in self.encoder_dict.keys():
             x = self.encoder_dict[layer](x)
-        latent = self.latent_dict['latent_layer'](x)
-        binary = self.latent_dict['latent_binary'](x)
-        binary = self.latent_dict['latent_binary_activation'](binary)
-        x = torch.cat((latent, binary), dim=1)
+        x = self.latent_dict['latent_layer'](x)
         return x

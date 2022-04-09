@@ -5,6 +5,7 @@ from chunc.utils.logger import Logger
 from chunc.utils.callbacks import GenericCallback
 from chunc.utils.callbacks import LossCallback, MetricCallback
 from chunc.utils.callbacks import LatentCallback, OutputCallback
+from chunc.utils.callbacks import ClusterCallback
 from chunc.utils.utils import get_method_arguments
 
 class CallbackHandler:
@@ -37,6 +38,7 @@ class CallbackHandler:
             'metric':   MetricCallback,
             'latent':   LatentCallback,
             'output':   OutputCallback,
+            'cluster':  ClusterCallback,
         }
         # check config
         for item in self.cfg.keys():

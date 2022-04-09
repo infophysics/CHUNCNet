@@ -5,4 +5,5 @@ from .loss_callback import *
 from .metric_callback import *
 from .latent_callback import *
 from .output_callback import *
+from .cluster_callback import *
 from .callback_handler import *

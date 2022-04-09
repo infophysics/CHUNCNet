@@ -30,8 +30,12 @@ class LatentSaver(GenericMetric):
             size=(0,*self.latent_shape), 
             dtype=torch.float, device=self.device
         )
+
+        self.epoch_latent = None
         
     def reset_batch(self):
+        if len(self.batch_latent) != 0:
+            self.epoch_latent = self.batch_latent
         self.batch_latent = torch.empty(
             size=(0,*self.latent_shape), 
             dtype=torch.float, device=self.device
@@ -70,8 +74,12 @@ class OutputSaver(GenericMetric):
             size=(0,*self.output_shape), 
             dtype=torch.float, device=self.device
         )
+
+        self.epoch_output = None
         
     def reset_batch(self):
+        if len(self.batch_output) != 0:
+            self.epoch_output = self.batch_output
         self.batch_output = torch.empty(
             size=(0,*self.output_shape), 
             dtype=torch.float, device=self.device
@@ -110,8 +118,12 @@ class TargetSaver(GenericMetric):
             size=(0,*self.target_shape), 
             dtype=torch.float, device=self.device
         )
+
+        self.epoch_target = None
         
     def reset_batch(self):
+        if len(self.batch_target) != 0:
+            self.epoch_target = self.batch_target
         self.batch_target = torch.empty(
             size=(0,*self.target_shape), 
             dtype=torch.float, device=self.device
@@ -150,8 +162,11 @@ class InputSaver(GenericMetric):
             size=(0,*self.input_shape), 
             dtype=torch.float, device=self.device
         )
+        self.epoch_input = None
         
     def reset_batch(self):
+        if len(self.batch_input) != 0:
+            self.epoch_input = self.batch_input
         self.batch_input = torch.empty(
             size=(0,*self.input_shape), 
             dtype=torch.float, device=self.device

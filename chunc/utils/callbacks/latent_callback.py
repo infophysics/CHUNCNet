@@ -82,17 +82,17 @@ class LatentCallback(GenericCallback):
     ):  
         if train_type == 'training':
             if self.latent_name != None:
-                self.training_latent = self.metrics_list.metrics[self.latent_name].batch_latent
+                self.training_latent = self.metrics_list.metrics[self.latent_name].epoch_latent
                 self.metrics_list.metrics[self.latent_name].reset_batch()
             if self.target_name != None:
-                self.training_target = self.metrics_list.metrics[self.target_name].batch_target
+                self.training_target = self.metrics_list.metrics[self.target_name].epoch_target
                 self.metrics_list.metrics[self.target_name].reset_batch()
         else:
             if self.latent_name != None:
-                self.validation_latent = self.metrics_list.metrics[self.latent_name].batch_latent
+                self.validation_latent = self.metrics_list.metrics[self.latent_name].epoch_latent
                 self.metrics_list.metrics[self.latent_name].reset_batch()
             if self.target_name != None:
-                self.validation_target = self.metrics_list.metrics[self.target_name].batch_target
+                self.validation_target = self.metrics_list.metrics[self.target_name].epoch_target
                 self.metrics_list.metrics[self.target_name].reset_batch()
 
     def evaluate_training(self):
@@ -278,112 +278,6 @@ class LatentCallback(GenericCallback):
 
     def evaluate_testing(self):  
         pass
-        # # evaluate metrics from training and validation
-        # if self.metrics_list == None:
-        #     return
-        # epoch_ticks = np.arange(1,self.epochs+1)
-        # # training plot
-        # fig, axs = plt.subplots(figsize=(10,5))
-        # if len(self.training_metrics) != 0:
-        #     for ii, metric in enumerate(self.metric_names):
-        #         temp_metric = self.training_metrics[:,ii]
-        #         final_metric_value = f"(final={temp_metric[-1]:.2e})"
-        #         axs.plot(
-        #             epoch_ticks,
-        #             temp_metric.cpu().numpy(),
-        #             c=self.plot_colors[-(ii+1)],
-        #             label=rf"{metric}"
-        #         )
-        #         axs.plot([],[],
-        #             marker='',
-        #             linestyle='',
-        #             label=rf"{final_metric_value}"
-        #         )
-        #     axs.set_xlabel("epoch")
-        #     axs.set_ylabel("metric")
-        #     axs.set_yscale('log')
-        #     plt.title("metric vs. epoch (training)")
-        #     plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
-        #     plt.tight_layout()
-        #     plt.savefig("plots/epoch_training_metrics.png")
-        
-        # if len(self.validation_metrics) != 0:
-        #     fig, axs = plt.subplots(figsize=(10,5))
-        #     for ii, metric in enumerate(self.metric_names):
-        #         temp_metric = self.validation_metrics[:,ii]
-        #         final_metric_value = f"(final={temp_metric[-1]:.2e})"
-        #         axs.plot(
-        #             epoch_ticks,
-        #             temp_metric.cpu().numpy(),
-        #             c=self.plot_colors[-(ii+1)],
-        #             label=rf"{metric}"
-        #         )
-        #         axs.plot([],[],
-        #             marker='',
-        #             linestyle='',
-        #             label=rf"{final_metric_value}"
-        #         )
-        #     axs.set_xlabel("epoch")
-        #     axs.set_ylabel("metric")
-        #     axs.set_yscale('log')
-        #     plt.title("metric vs. epoch (validation)")
-        #     plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
-        #     plt.tight_layout()
-        #     plt.savefig("plots/epoch_validation_metrics.png")
-
-        # if len(self.training_metrics) != 0 and len(self.validation_metrics) != 0:
-        #     fig, axs = plt.subplots(figsize=(10,5))
-        #     for ii, metric in enumerate(self.metric_names):
-        #         temp_training_metric = self.training_metrics[:,ii]
-        #         temp_validation_metric = self.validation_metrics[:,ii]
-        #         final_training_metric_value = f"(final={temp_training_metric[-1]:.2e})"
-        #         final_validation_metric_value = f"(final={temp_validation_metric[-1]:.2e})"
-        #         axs.plot(
-        #             epoch_ticks,
-        #             temp_training_metric.cpu().numpy(),
-        #             c=self.plot_colors[-(ii+1)],
-        #             linestyle='-',
-        #             label=rf"{metric}"
-        #         )
-        #         axs.plot([],[],
-        #             marker='',
-        #             linestyle='',
-        #             label=rf"{final_training_metric_value}"
-        #         )
-        #         axs.plot(
-        #             epoch_ticks,
-        #             temp_validation_metric.cpu().numpy(),
-        #             c=self.plot_colors[-(ii+1)],
-        #             linestyle='--',
-        #             label=rf"{metric}"
-        #         )
-        #         axs.plot([],[],
-        #             marker='',
-        #             linestyle='',
-        #             label=rf"{final_validation_metric_value}"
-        #         )
-        #     if len(self.test_metrics) != 0:
-        #         for ii, metric in enumerate(self.metric_names):
-        #             temp_metric = self.test_metrics[:,ii]
-        #             final_metric_value = f"(final={temp_metric[-1]:.2e})"
-        #             axs.plot([],[],
-        #                 marker='x',
-        #                 linestyle='',
-        #                 c=self.plot_colors[-(ii+1)],
-        #                 label=rf"(test) {metric}"
-        #             )
-        #             axs.plot([],[],
-        #             marker='',
-        #             linestyle='',
-        #             label=rf"{final_metric_value}"
-        #         )
-        #     axs.set_xlabel("epoch")
-        #     axs.set_ylabel("metric")
-        #     axs.set_yscale('log')
-        #     plt.title("metric vs. epoch")
-        #     plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
-        #     plt.tight_layout()
-        #     plt.savefig("plots/epoch_metrics.png")
 
     def evaluate_inference(self):
         pass

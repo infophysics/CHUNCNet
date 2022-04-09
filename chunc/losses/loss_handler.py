@@ -11,6 +11,7 @@ from chunc.losses import LatentWassersteinValidLoss
 from chunc.losses import LatentWassersteinInvalidLoss
 from chunc.losses import SingleLatentWassersteinLoss
 from chunc.losses import LatentBinaryLoss
+from chunc.losses import LatentClusterLoss
 from chunc.utils.utils import get_method_arguments
 
 class LossHandler:
@@ -20,8 +21,10 @@ class LossHandler:
         name:   str,
         cfg:    dict={},
         losses:  list=[],
+        use_sample_weights: bool=False,
     ):
         self.name = name
+        self.use_sample_weights = use_sample_weights
         self.logger = Logger(self.name, file_mode="w")
         if bool(cfg) and len(losses) != 0:
             self.logger.error(f"handler received both a config and a list of losses! The user should only provide one or the other!")
@@ -49,6 +52,7 @@ class LossHandler:
             'LatentWassersteinInvalidLoss': LatentWassersteinInvalidLoss,
             'SingleLatentWassersteinLoss':  SingleLatentWassersteinLoss,
             'LatentBinaryLoss': LatentBinaryLoss,
+            'LatentClusterLoss':LatentClusterLoss,
         }
         # check config
         for item in self.cfg.keys():
@@ -102,6 +106,10 @@ class LossHandler:
         outputs,
         data,
     ):
-        losses = [loss.loss(outputs, data) for name, loss in self.losses.items()]
+        if self.use_sample_weights:
+            weights = data[2].to(self.device)
+            losses = [(loss.loss(outputs, data) * weights / weights.sum()).sum() for name, loss in self.losses.items()]
+        else:
+            losses = [loss.loss(outputs, data) for name, loss in self.losses.items()]
         return sum(losses)
     

@@ -7,6 +7,7 @@ from .latent_wasserstein_loss import *
 from .latent_wasserstein_valid import *
 from .latent_wasserstein_invalid import *
 from .latent_binary_loss import *
+from .latent_cluster_loss import *
 from .single_latent_wasserstein_loss import *
 from .wasserstein_loss import *
 from .loss_handler import *
