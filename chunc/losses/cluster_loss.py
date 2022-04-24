@@ -31,8 +31,8 @@ class ClusterLoss(GenericLoss):
         max_length = torch.max(lengths)
         labels = data[1].squeeze(1).to(self.device)
         #loss = torch.cat((lengths[(labels == 1)]/max_length,(1. - lengths[(labels == 0)]/max_length)))
-        valid_loss = labels * lengths / max_length
-        invalid_loss = (1 - labels) * (1. - lengths/max_length)
+        valid_loss = labels * lengths
+        invalid_loss = (1 - labels) * (1./(lengths + 1e-10))
         loss = valid_loss + invalid_loss
         # loss = torch.cat((lengths[(labels == 1)],1.0/(lengths[(labels == 0)] + 1e-16)))
         #print(loss)

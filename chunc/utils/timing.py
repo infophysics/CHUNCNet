@@ -91,6 +91,29 @@ class Timers:
             'validation_progress':  Timer('validation_progress',  **self.validation_batch_params),
             'validation_callbacks': Timer('validation_callbacks', type='validation', level='epoch',  gpu=self.gpu),
         }
-
+    
+    def reset_timers(self):
+        self.timers = {
+            'epoch_training':   Timer('epoch_training', type='training', level='epoch',  gpu=self.gpu),
+            'epoch_validation': Timer('epoch_validation', type='validation', level='epoch', gpu=self.gpu),
+            # individual training information
+            'training_data':            Timer('training_data',         **self.train_batch_params),
+            'training_zero_grad':       Timer('training_zero_grad',    **self.train_batch_params),
+            'training_forward':         Timer('training_forward',      **self.train_batch_params),
+            'training_loss':            Timer('training_loss',         **self.train_batch_params),
+            'training_loss_backward':   Timer('training_loss_backward',**self.train_batch_params),
+            'training_backprop':        Timer('training_backprop',     **self.train_batch_params),
+            'training_metrics':         Timer('training_metrics',      **self.train_batch_params),
+            'training_progress':        Timer('training_progress',     **self.train_batch_params),
+            'training_callbacks':       Timer('training_callbacks',    type='training', level='epoch',  gpu=self.gpu),
+            # individual validation information
+            'validation_data':      Timer('validation_data',      **self.validation_batch_params),
+            'validation_forward':   Timer('validation_forward',   **self.validation_batch_params),
+            'validation_loss':      Timer('validation_loss',      **self.validation_batch_params),
+            'validation_metrics':   Timer('validation_metrics',   **self.validation_batch_params),
+            'validation_progress':  Timer('validation_progress',  **self.validation_batch_params),
+            'validation_callbacks': Timer('validation_callbacks', type='validation', level='epoch',  gpu=self.gpu),
+        }
+        
     def synchronize(self):
         torch.cuda.synchronize()

@@ -34,9 +34,9 @@ if __name__ == "__main__":
     chunc_loader = Loader(
         chunc_dataset, 
         batch_size=64,
-        test_split=0.3,
+        test_split=0.1,
         test_seed=100,
-        validation_split=0.3,
+        validation_split=0.1,
         validation_seed=100,
         num_workers=4
     )
@@ -96,7 +96,8 @@ if __name__ == "__main__":
         'LatentClusterLoss':    {
             'alpha':    1.0,
             'latent_variables': [0,1,2,3,4],
-            'cluster_type': 'inverse',
+            'cluster_type': 'fixed',
+            'fixed_value':  1.0,
         }
         
     }

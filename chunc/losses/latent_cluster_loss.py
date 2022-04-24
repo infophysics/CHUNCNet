@@ -14,16 +14,20 @@ class LatentClusterLoss(GenericLoss):
         alpha: float=1.0,
         name:   str='latent_cluster_loss',
         cluster_type:       str='normalized',
+        fixed_value:    float=1.0,
         latent_variables:   list=[],
     ):
         super(LatentClusterLoss, self).__init__(name)
         self.alpha = alpha
+        self.fixed_value = fixed_value
         self.latent_variables = latent_variables
 
         if cluster_type == 'normalized':
             self.__loss = self.__loss_normalized
-        else:
+        elif cluster_type == 'inverse':
             self.__loss = self.__loss_inverse
+        else:
+            self.__loss = self.__loss_fixed
 
     def set_device(self,
         device
@@ -47,8 +51,33 @@ class LatentClusterLoss(GenericLoss):
         max_length = torch.max(lengths)
 
         # valid and invalid loss terms
-        valid_loss = labels * lengths/max_length
-        invalid_loss = (1 - labels) * (1. - lengths/max_length)
+        valid_loss = labels.squeeze(1) * lengths/max_length
+        invalid_loss = (1 - labels.squeeze(1)) * (1. - lengths/max_length)
+        
+        loss = valid_loss + invalid_loss
+        
+        if weights != None:
+            loss = (loss * weights/weights.sum()).sum()
+
+        return loss.mean()
+
+    def __loss_fixed(self,
+        latent_output,
+        labels,
+        weights=None,
+    ):
+        """
+        This loss attempts to push valid points towards the origin
+        and invalid points away from the origin.
+        For valid points, we want |x|^2 = 0, so the loss is simply the distance.
+        For invalid points, we want |x|^2 -> inf, so the loss is: 1 - |x|^2/|x|^2_max,
+        where |x|^2_max is the largest distance in the batch.
+        """
+        lengths = torch.norm(latent_output, p=2, dim=1)
+
+        # valid and invalid loss terms
+        valid_loss = labels.squeeze(1) * lengths
+        invalid_loss = (1 - labels.squeeze(1)) * torch.abs(self.fixed_value - lengths)
         
         loss = valid_loss + invalid_loss
         
@@ -68,11 +97,11 @@ class LatentClusterLoss(GenericLoss):
         For valid points, we want |x|^2 = 0, so the loss is simply the distance.
         For invalid points, we want |x|^2 -> inf, so the loss is: 1/|x|^2.
         """
-        lengths = torch.norm(latent_output, p=2, dim=1)
+        lengths = torch.norm(latent_output, 2, -1)
 
         # valid and invalid loss terms
-        valid_loss = labels * lengths
-        invalid_loss = (1 - labels) * (1./(lengths + 1e-16))
+        valid_loss = labels.squeeze(1) * lengths
+        invalid_loss = (1 - labels.squeeze(1)) * (1./(lengths + 1e-16))
 
         loss = valid_loss + invalid_loss
         

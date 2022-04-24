@@ -3,6 +3,7 @@ Class for a generic model trainer.
 """
 import torch
 import os
+import shutil
 from tqdm import tqdm
 from chunc.dataset.chunc import CHUNCDataset
 from chunc.utils.logger import Logger
@@ -60,6 +61,7 @@ class IterativeTrainer:
 
         # define directories
         self.predictions_dir = f'predictions/{model.name}/'
+        self.iterations_dir  = f'iterations/'
         self.manifold_dir    = f'plots/{model.name}/manifold/'
         self.features_dir    = f'plots/{model.name}/features/'
         self.timing_dir    = f'plots/{model.name}/timing/'
@@ -69,6 +71,9 @@ class IterativeTrainer:
         if not os.path.isdir(self.predictions_dir):
             self.logger.info(f"creating predictions directory '{self.predictions_dir}'")
             os.makedirs(self.predictions_dir)
+        if not os.path.isdir(self.iterations_dir):
+            self.logger.info(f"creating iterations directory '{self.iterations_dir}'")
+            os.makedirs(self.iterations_dir)
         if not os.path.isdir(self.manifold_dir):
             self.logger.info(f"creating manifold directory '{self.manifold_dir}'")
             os.makedirs(self.manifold_dir)
@@ -293,7 +298,7 @@ class IterativeTrainer:
         # setting values in callbacks
         self.callbacks.set_device(self.device)
         self.callbacks.set_training_info(
-            init_epochs + iterations*iter_epochs,
+            init_epochs,
             dataset_loader.num_train_batches,
             dataset_loader.num_validation_batches,
             dataset_loader.num_test_batches
@@ -301,12 +306,9 @@ class IterativeTrainer:
         # Training
         self.logger.info(f"training dataset '{dataset_loader.dataset.name}' for {init_epochs} initial epochs.")
         if no_timing:
-            # TODO: Need to fix this so that memory and timing callbacks aren't called.
             self.__train_no_timing(
                 dataset_loader,
-                iterations,
                 init_epochs,
-                iter_epochs,
                 checkpoint,
                 progress_bar,
                 rewrite_bar,
@@ -315,33 +317,74 @@ class IterativeTrainer:
         else:
             self.__train_with_timing(
                 dataset_loader,
-                iterations,
                 init_epochs,
-                iter_epochs,
                 checkpoint,
                 progress_bar,
                 rewrite_bar,
                 save_predictions
             )
+        """
+        Now we begin the iteration stage where we first sample from the
+        model and then add those samples to the dataset for each new iteration. 
+        """
+        for iteration in range(iterations):
+            # move plots
+            shutil.copytree('plots/', f'{self.iterations_dir}/plots_{iteration}/')
+            # generate new data
+            dataset_loader = self.generator.generate(
+                iteration,
+                self.model,
+                dataset_loader
+            )
+            # reset callbacks
+            self.timers.reset_timers()
+            self.memory_trackers.reset_trackers()
+            self.callbacks.set_training_info(
+                iter_epochs,
+                dataset_loader.num_train_batches,
+                dataset_loader.num_validation_batches,
+                dataset_loader.num_test_batches
+            )
+            # reset callbacks
+            self.callbacks.set_device(self.device)
+            if no_timing:
+                self.__train_no_timing(
+                    dataset_loader,
+                    iter_epochs,
+                    checkpoint,
+                    progress_bar,
+                    rewrite_bar,
+                    save_predictions
+                )
+            else:
+                self.__train_with_timing(
+                    dataset_loader,
+                    iter_epochs,
+                    checkpoint,
+                    progress_bar,
+                    rewrite_bar,
+                    save_predictions
+                )
 
     def __train_with_timing(self,
         dataset_loader,             # dataset_loader to pass in
-        iterations: int=10,         # number of iterations
-        init_epochs:int=100,        # number of epochs to train for initial run
-        iter_epochs:int=10,         # epochs for each iteration
+        epochs:     int=100,        # number of epochs to train
         checkpoint: int=10,         # epochs inbetween weight saving
         progress_bar:   str='all',  # progress bar from tqdm
         rewrite_bar:    bool=False, # wether to leave the bars after each epoch
         save_predictions:bool=True, # wether to save network outputs for all events to original file
     ):
         """
-        First we do an initial training with 'init_epochs' as a number
-        of epochs, then we loop over 'iterations' for 'iter_epochs' each,
-        sampling from the model after the initial iteration to add new
-        points to the dataset.
+        Training usually consists of the following steps:
+            (1) Zero-out training/validation/testing losses and metrics
+            (2) Loop for N epochs:
+                (a) Grab the current batch of (training/validation) data.
+                (b) Run the data through the model and calculate losses/metrics.
+                (c) Backpropagate the loss (training)
+            (3) Evaluate the trained model on testing data.
         """
         # iterate over epochs
-        for epoch in range(init_epochs):
+        for epoch in range(epochs):
             """
             Training stage.
             Setup the progress bar for the training loop.
@@ -424,7 +467,7 @@ class IterativeTrainer:
                 self.timers.timers['training_progress'].start()
                 self.memory_trackers.memory_trackers['training_progress'].start()
                 if (progress_bar == 'all' or progress_bar == 'train'):
-                    training_loop.set_description(f"Training: Epoch [{epoch+1}/{init_epochs}]")
+                    training_loop.set_description(f"Training: Epoch [{epoch+1}/{epochs}]")
                     training_loop.set_postfix_str(f"loss={loss.item():.2e}")
                 self.memory_trackers.memory_trackers['training_progress'].end()
                 self.timers.timers['training_progress'].end()
@@ -459,7 +502,7 @@ class IterativeTrainer:
                         self.memory_trackers.memory_trackers['training_metrics'].end()
                         self.timers.timers['training_metrics'].end()
                         if (progress_bar == 'all' or progress_bar == 'train'):
-                            metrics_training_loop.set_description(f"Training Metrics: Epoch [{epoch+1}/{init_epochs}]")
+                            metrics_training_loop.set_description(f"Training Metrics: Epoch [{epoch+1}/{epochs}]")
                 
             # evaluate callbacks
             self.timers.timers['training_callbacks'].start()
@@ -512,7 +555,7 @@ class IterativeTrainer:
                     self.timers.timers['validation_progress'].start()
                     self.memory_trackers.memory_trackers['validation_progress'].start()
                     if (progress_bar == 'all' or progress_bar == 'validation'):
-                        validation_loop.set_description(f"Validation: Epoch [{epoch+1}/{init_epochs}]")
+                        validation_loop.set_description(f"Validation: Epoch [{epoch+1}/{epochs}]")
                         validation_loop.set_postfix_str(f"loss={loss.item():.2e}")
                     self.memory_trackers.memory_trackers['validation_progress'].end()
                     self.timers.timers['validation_progress'].end()
@@ -545,7 +588,7 @@ class IterativeTrainer:
                         self.memory_trackers.memory_trackers['validation_metrics'].end()
                         self.timers.timers['validation_metrics'].end()
                         if (progress_bar == 'all' or progress_bar == 'validation'):
-                            metrics_validation_loop.set_description(f"Validation Metrics: Epoch [{epoch+1}/{init_epochs}]")
+                            metrics_validation_loop.set_description(f"Validation Metrics: Epoch [{epoch+1}/{epochs}]")
 
             # evaluate callbacks
             self.timers.timers['validation_callbacks'].start()
@@ -564,241 +607,6 @@ class IterativeTrainer:
                 )
             # free up gpu resources
             torch.cuda.empty_cache()
-        """
-        Now we begin the iteration stage where we first sample from the
-        model and then add those samples to the dataset for each new iteration. 
-        """
-        for iteration in range(iterations):
-            dataset_loader = self.generator.generate(
-                iteration,
-                self.model,
-                dataset_loader
-            )
-            # iterate over epochs
-            for epoch in range(iter_epochs):
-                """
-                Training stage.
-                Setup the progress bar for the training loop.
-                """
-                if (progress_bar == 'all' or progress_bar == 'train'):
-                    training_loop = tqdm(
-                        enumerate(dataset_loader.train_loader, 0), 
-                        total=len(dataset_loader.train_loader), 
-                        leave=rewrite_bar,
-                        colour='green'
-                    )
-                else:
-                    training_loop = enumerate(dataset_loader.train_loader, 0)
-
-                # make sure to set model to train() during training!
-                self.model.train()
-                """            
-                Setup timing/memory information for epoch.
-                """
-                self.timers.timers['epoch_training'].start()
-                self.memory_trackers.memory_trackers['epoch_training'].start()
-                self.timers.timers['training_data'].start()
-                self.memory_trackers.memory_trackers['training_data'].start()
-                for ii, data in training_loop:
-                    self.memory_trackers.memory_trackers['training_data'].end()
-                    self.timers.timers['training_data'].end()
-                    # zero the parameter gradients
-                    """
-                    There are choices here, either one can do:
-                        model.zero_grad() or
-                        optimizer.zero_grad() or
-                        for param in model.parameters():        <== optimal choice
-                            param.grad = None
-                    """
-                    self.timers.timers['training_zero_grad'].start()
-                    self.memory_trackers.memory_trackers['training_zero_grad'].start()
-                    for param in self.model.parameters():
-                        param.grad = None
-                    self.memory_trackers.memory_trackers['training_zero_grad'].end()
-                    self.timers.timers['training_zero_grad'].end()
-                    # get the network output
-                    """
-                    The forward call takes in the entire data
-                    stream, which could have multiple inputs needed.
-                    It's up to the model to determine what to do with it.
-
-                    The forward call of the model could send out
-                    multiple output tensors, depending on the application
-                    (such as in an AE where the latent space values are
-                    important). It's up to the loss function to know what to expect.
-                    """
-                    self.timers.timers['training_forward'].start()
-                    self.memory_trackers.memory_trackers['training_forward'].start()
-                    outputs = self.model(data)
-                    self.memory_trackers.memory_trackers['training_forward'].end()
-                    self.timers.timers['training_forward'].end()
-
-                    # compute loss
-                    self.timers.timers['training_loss'].start()
-                    self.memory_trackers.memory_trackers['training_loss'].start()
-                    loss = self.criterion.loss(outputs, data)
-                    self.memory_trackers.memory_trackers['training_loss'].end()
-                    self.timers.timers['training_loss'].end()
-
-                    # backprop
-                    self.timers.timers['training_loss_backward'].start()
-                    self.memory_trackers.memory_trackers['training_loss_backward'].start()
-                    loss.backward()
-                    self.memory_trackers.memory_trackers['training_loss_backward'].end()
-                    self.timers.timers['training_loss_backward'].end()
-
-                    # record backprop timing
-                    self.timers.timers['training_backprop'].start()
-                    self.memory_trackers.memory_trackers['training_backprop'].start()
-                    self.optimizer.step()
-                    self.memory_trackers.memory_trackers['training_backprop'].end()
-                    self.timers.timers['training_backprop'].end()
-
-                    # update progress bar
-                    self.timers.timers['training_progress'].start()
-                    self.memory_trackers.memory_trackers['training_progress'].start()
-                    if (progress_bar == 'all' or progress_bar == 'train'):
-                        training_loop.set_description(f"Training: Epoch [{epoch+1}/{iter_epochs}]")
-                        training_loop.set_postfix_str(f"loss={loss.item():.2e}")
-                    self.memory_trackers.memory_trackers['training_progress'].end()
-                    self.timers.timers['training_progress'].end()
-                    
-                    self.timers.timers['training_data'].start()
-                    self.memory_trackers.memory_trackers['training_data'].start()
-                # update timing info
-                self.memory_trackers.memory_trackers['epoch_training'].end()
-                self.timers.timers['epoch_training'].end()
-                self.model.eval()
-                with torch.no_grad():
-                    """
-                    Run through a metric loop if there are any metrics
-                    defined.
-                    """
-                    if self.metrics != None:
-                        if (progress_bar == 'all' or progress_bar == 'train'):
-                            metrics_training_loop = tqdm(
-                                enumerate(dataset_loader.train_loader, 0), 
-                                total=len(dataset_loader.train_loader), 
-                                leave=rewrite_bar,
-                                colour='green'
-                            )
-                        else:
-                            metrics_training_loop = enumerate(dataset_loader.train_loader, 0)
-                        for ii, data in metrics_training_loop:
-                            # update metrics
-                            self.timers.timers['training_metrics'].start()
-                            self.memory_trackers.memory_trackers['training_metrics'].start()
-                            outputs = self.model(data)
-                            self.metrics.update(outputs, data)
-                            self.memory_trackers.memory_trackers['training_metrics'].end()
-                            self.timers.timers['training_metrics'].end()
-                            if (progress_bar == 'all' or progress_bar == 'train'):
-                                metrics_training_loop.set_description(f"Training Metrics: Epoch [{epoch+1}/{iter_epochs}]")
-                    
-                # evaluate callbacks
-                self.timers.timers['training_callbacks'].start()
-                self.memory_trackers.memory_trackers['training_callbacks'].start()
-                self.callbacks.evaluate_epoch(train_type='training')
-                self.memory_trackers.memory_trackers['training_callbacks'].end()
-                self.timers.timers['training_callbacks'].end()
-
-                """
-                Validation stage.
-                Setup the progress bar for the validation loop.
-                """
-                if (progress_bar == 'all' or progress_bar == 'validation'):
-                    validation_loop = tqdm(
-                        enumerate(dataset_loader.validation_loader, 0), 
-                        total=len(dataset_loader.validation_loader), 
-                        leave=rewrite_bar,
-                        colour='blue'
-                    )
-                else:
-                    validation_loop = enumerate(dataset_loader.validation_loader, 0)
-                # make sure to set model to eval() during validation!
-                self.model.eval()
-                with torch.no_grad():
-                    """
-                    Setup timing information for epoch.
-                    """
-                    self.timers.timers['epoch_validation'].start()
-                    self.memory_trackers.memory_trackers['epoch_validation'].start()
-                    self.timers.timers['validation_data'].start()
-                    self.memory_trackers.memory_trackers['validation_data'].start()
-                    for ii, data in validation_loop:
-                        self.memory_trackers.memory_trackers['validation_data'].end()
-                        self.timers.timers['validation_data'].end()
-                        # get the network output
-                        self.timers.timers['validation_forward'].start()
-                        self.memory_trackers.memory_trackers['validation_forward'].start()
-                        outputs = self.model(data)
-                        self.memory_trackers.memory_trackers['validation_forward'].end()
-                        self.timers.timers['validation_forward'].end()
-
-                        # compute loss
-                        self.timers.timers['validation_loss'].start()
-                        self.memory_trackers.memory_trackers['validation_loss'].start()
-                        loss = self.criterion.loss(outputs, data)
-                        self.memory_trackers.memory_trackers['validation_loss'].end()
-                        self.timers.timers['validation_loss'].end()
-
-                        # update progress bar
-                        self.timers.timers['validation_progress'].start()
-                        self.memory_trackers.memory_trackers['validation_progress'].start()
-                        if (progress_bar == 'all' or progress_bar == 'validation'):
-                            validation_loop.set_description(f"Validation: Epoch [{epoch+1}/{iter_epochs}]")
-                            validation_loop.set_postfix_str(f"loss={loss.item():.2e}")
-                        self.memory_trackers.memory_trackers['validation_progress'].end()
-                        self.timers.timers['validation_progress'].end()
-
-                        self.timers.timers['validation_data'].start()
-                        self.memory_trackers.memory_trackers['validation_data'].start()
-                    # update timing info
-                    self.memory_trackers.memory_trackers['epoch_validation'].end()
-                    self.timers.timers['epoch_validation'].end()
-                    """
-                    Run through a metric loop if there are any metrics
-                    defined.
-                    """
-                    if self.metrics != None:
-                        if (progress_bar == 'all' or progress_bar == 'validation'):
-                            metrics_validation_loop = tqdm(
-                                enumerate(dataset_loader.validation_loader, 0), 
-                                total=len(dataset_loader.validation_loader), 
-                                leave=rewrite_bar,
-                                colour='blue'
-                            )
-                        else:
-                            metrics_validation_loop = enumerate(dataset_loader.validation_loader, 0)
-                        for ii, data in metrics_validation_loop:
-                            # update metrics
-                            self.timers.timers['validation_metrics'].start()
-                            self.memory_trackers.memory_trackers['validation_metrics'].start()
-                            outputs = self.model(data)
-                            self.metrics.update(outputs, data)
-                            self.memory_trackers.memory_trackers['validation_metrics'].end()
-                            self.timers.timers['validation_metrics'].end()
-                            if (progress_bar == 'all' or progress_bar == 'validation'):
-                                metrics_validation_loop.set_description(f"Validation Metrics: Epoch [{epoch+1}/{iter_epochs}]")
-
-                # evaluate callbacks
-                self.timers.timers['validation_callbacks'].start()
-                self.memory_trackers.memory_trackers['validation_callbacks'].start()
-                self.callbacks.evaluate_epoch(train_type='validation')
-                self.memory_trackers.memory_trackers['validation_callbacks'].end()
-                self.timers.timers['validation_callbacks'].end()
-
-                # save weights if at checkpoint step
-                if epoch % checkpoint == 0:
-                    if not os.path.exists(".checkpoints/"):
-                        os.makedirs(".checkpoints/")
-                    torch.save(
-                        self.model.state_dict(), 
-                        f".checkpoints/checkpoint_{epoch}.ckpt"
-                    )
-                # free up gpu resources
-                torch.cuda.empty_cache()
-
         # evaluate epoch callbacks
         self.callbacks.evaluate_training()
         self.logger.info(f"training finished.")
@@ -854,9 +662,7 @@ class IterativeTrainer:
     
     def __train_no_timing(self,
         dataset_loader,             # dataset_loader to pass in
-        iterations: int=10,         # number of iterations
-        init_epochs:int=100,        # number of epochs to train for initial run
-        iter_epochs:int=10,         # epochs for each iteration
+        epochs:     int=100,        # number of epochs to train
         checkpoint: int=10,         # epochs inbetween weight saving
         progress_bar:   str='all',  # progress bar from tqdm
         rewrite_bar:    bool=False, # wether to leave the bars after each epoch
@@ -866,7 +672,7 @@ class IterativeTrainer:
         No comments here since the code is identical to the __train_with_timing function 
         except for the lack of calls to timers.
         """
-        for epoch in range(init_epochs):
+        for epoch in range(epochs):
             if (progress_bar == 'all' or progress_bar == 'train'):
                 training_loop = tqdm(
                     enumerate(dataset_loader.train_loader, 0), 
@@ -885,25 +691,23 @@ class IterativeTrainer:
                 loss.backward()
                 self.optimizer.step()
                 if (progress_bar == 'all' or progress_bar == 'train'):
-                    training_loop.set_description(f"Training: Epoch [{epoch+1}/{init_epochs}]")
+                    training_loop.set_description(f"Training: Epoch [{epoch+1}/{epochs}]")
                     training_loop.set_postfix_str(f"loss={loss.item():.2e}")
-            self.model.eval()
-            with torch.no_grad():
-                if self.metrics != None:
+            if self.metrics != None:
+                if (progress_bar == 'all' or progress_bar == 'train'):
+                    metrics_training_loop = tqdm(
+                        enumerate(dataset_loader.train_loader, 0), 
+                        total=len(dataset_loader.train_loader), 
+                        leave=rewrite_bar,
+                        colour='green'
+                    )
+                else:
+                    metrics_training_loop = enumerate(dataset_loader.train_loader, 0)
+                for ii, data in metrics_training_loop:
+                    outputs = self.model(data)
+                    self.metrics.update(outputs, data)
                     if (progress_bar == 'all' or progress_bar == 'train'):
-                        metrics_training_loop = tqdm(
-                            enumerate(dataset_loader.train_loader, 0), 
-                            total=len(dataset_loader.train_loader), 
-                            leave=rewrite_bar,
-                            colour='green'
-                        )
-                    else:
-                        metrics_training_loop = enumerate(dataset_loader.train_loader, 0)
-                    for ii, data in metrics_training_loop:
-                        outputs = self.model(data)
-                        self.metrics.update(outputs, data)
-                        if (progress_bar == 'all' or progress_bar == 'train'):
-                            metrics_training_loop.set_description(f"Training Metrics: Epoch [{epoch+1}/{init_epochs}]")
+                        metrics_training_loop.set_description(f"Training Metrics: Epoch [{epoch+1}/{epochs}]")
             self.callbacks.evaluate_epoch(train_type='training')
             if (progress_bar == 'all' or progress_bar == 'validation'):
                 validation_loop = tqdm(
@@ -920,7 +724,7 @@ class IterativeTrainer:
                     outputs = self.model(data)
                     loss = self.criterion.loss(outputs, data)
                     if (progress_bar == 'all' or progress_bar == 'validation'):
-                        validation_loop.set_description(f"Validation: Epoch [{epoch+1}/{init_epochs}]")
+                        validation_loop.set_description(f"Validation: Epoch [{epoch+1}/{epochs}]")
                         validation_loop.set_postfix_str(f"loss={loss.item():.2e}")
                 if self.metrics != None:
                     if (progress_bar == 'all' or progress_bar == 'validation'):
@@ -936,7 +740,7 @@ class IterativeTrainer:
                         outputs = self.model(data)
                         self.metrics.update(outputs, data)
                         if (progress_bar == 'all' or progress_bar == 'validation'):
-                            metrics_validation_loop.set_description(f"Validation Metrics: Epoch [{epoch+1}/{init_epochs}]")
+                            metrics_validation_loop.set_description(f"Validation Metrics: Epoch [{epoch+1}/{epochs}]")
             self.callbacks.evaluate_epoch(train_type='validation')
             if epoch % checkpoint == 0:
                 if not os.path.exists(".checkpoints/"):
@@ -945,93 +749,6 @@ class IterativeTrainer:
                     self.model.state_dict(), 
                     f".checkpoints/checkpoint_{epoch}.ckpt"
                 )
-            torch.cuda.empty_cache()
-        for iteration in range(iterations):
-            dataset_loader = self.generator.generate(
-                iteration,
-                self.model,
-                dataset_loader
-            )
-            for epoch in range(iter_epochs):
-                if (progress_bar == 'all' or progress_bar == 'train'):
-                    training_loop = tqdm(
-                        enumerate(dataset_loader.train_loader, 0), 
-                        total=len(dataset_loader.train_loader), 
-                        leave=rewrite_bar,
-                        colour='green'
-                    )
-                else:
-                    training_loop = enumerate(dataset_loader.train_loader, 0)
-                self.model.train()
-                for ii, data in training_loop:
-                    for param in self.model.parameters():
-                        param.grad = None
-                    outputs = self.model(data)
-                    loss = self.criterion.loss(outputs, data)
-                    loss.backward()
-                    self.optimizer.step()
-                    if (progress_bar == 'all' or progress_bar == 'train'):
-                        training_loop.set_description(f"Training: Epoch [{epoch+1}/{iter_epochs}]")
-                        training_loop.set_postfix_str(f"loss={loss.item():.2e}")
-                self.model.eval()
-                with torch.no_grad():
-                    if self.metrics != None:
-                        if (progress_bar == 'all' or progress_bar == 'train'):
-                            metrics_training_loop = tqdm(
-                                enumerate(dataset_loader.train_loader, 0), 
-                                total=len(dataset_loader.train_loader), 
-                                leave=rewrite_bar,
-                                colour='green'
-                            )
-                        else:
-                            metrics_training_loop = enumerate(dataset_loader.train_loader, 0)
-                        for ii, data in metrics_training_loop:
-                            outputs = self.model(data)
-                            self.metrics.update(outputs, data)
-                            if (progress_bar == 'all' or progress_bar == 'train'):
-                                metrics_training_loop.set_description(f"Training Metrics: Epoch [{epoch+1}/{iter_epochs}]")
-                self.callbacks.evaluate_epoch(train_type='training')
-                if (progress_bar == 'all' or progress_bar == 'validation'):
-                    validation_loop = tqdm(
-                        enumerate(dataset_loader.validation_loader, 0), 
-                        total=len(dataset_loader.validation_loader), 
-                        leave=rewrite_bar,
-                        colour='blue'
-                    )
-                else:
-                    validation_loop = enumerate(dataset_loader.validation_loader, 0)
-                self.model.eval()
-                with torch.no_grad():
-                    for ii, data in validation_loop:
-                        outputs = self.model(data)
-                        loss = self.criterion.loss(outputs, data)
-                        if (progress_bar == 'all' or progress_bar == 'validation'):
-                            validation_loop.set_description(f"Validation: Epoch [{epoch+1}/{iter_epochs}]")
-                            validation_loop.set_postfix_str(f"loss={loss.item():.2e}")
-                    if self.metrics != None:
-                        if (progress_bar == 'all' or progress_bar == 'validation'):
-                            metrics_validation_loop = tqdm(
-                                enumerate(dataset_loader.validation_loader, 0), 
-                                total=len(dataset_loader.validation_loader), 
-                                leave=rewrite_bar,
-                                colour='blue'
-                            )
-                        else:
-                            metrics_validation_loop = enumerate(dataset_loader.validation_loader, 0)
-                        for ii, data in metrics_validation_loop:
-                            outputs = self.model(data)
-                            self.metrics.update(outputs, data)
-                            if (progress_bar == 'all' or progress_bar == 'validation'):
-                                metrics_validation_loop.set_description(f"Validation Metrics: Epoch [{epoch+1}/{iter_epochs}]")
-                self.callbacks.evaluate_epoch(train_type='validation')
-                if epoch % checkpoint == 0:
-                    if not os.path.exists(".checkpoints/"):
-                        os.makedirs(".checkpoints/")
-                    torch.save(
-                        self.model.state_dict(), 
-                        f".checkpoints/checkpoint_{epoch}.ckpt"
-                    )
-                torch.cuda.empty_cache()
         self.callbacks.evaluate_training()
         self.logger.info(f"training finished.")
         if (progress_bar == 'all' or progress_bar == 'test'):

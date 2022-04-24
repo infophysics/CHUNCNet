@@ -33,8 +33,8 @@ from chunc.utils.utils import concatenate_csv
 if __name__ == "__main__":
 
     NUM_ITERATIONS = 10
-    INIT_EPOCHS = 10
-    ITER_EPOCHS = 10
+    INIT_EPOCHS = 500
+    ITER_EPOCHS = 50
     """
     First, we create the initial dataset from the parameter files.
     Then, generate the constrained and unconstrained subspaces
@@ -193,10 +193,11 @@ if __name__ == "__main__":
         param_space='cmssm',
     )
     chuncc_generator_config = {
+        'loader':       chuncc_loader,
         'sampler':      chuncc_sampler,
         'mssm_generator':mssm,
         'subspace':     'cmssm',
-        'num_events':   1000,
+        'num_events':   10000,
         'num_workers':  16,
         'binary_bin':   9,
     }

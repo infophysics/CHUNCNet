@@ -90,6 +90,29 @@ class MemoryTrackers:
             'validation_progress':  MemoryTracker('validation_progress',  **self.validation_batch_params),
             'validation_callbacks': MemoryTracker('validation_callbacks', type='validation', level='epoch',  gpu=self.gpu),
         }
+    
+    def reset_trackers(self):
+        self.memory_trackers = {
+            'epoch_training':   MemoryTracker('epoch_training', type='training', level='epoch',  gpu=self.gpu),
+            'epoch_validation': MemoryTracker('epoch_validation', type='validation', level='epoch', gpu=self.gpu),
+            # individual training information
+            'training_data':            MemoryTracker('training_data',         **self.train_batch_params),
+            'training_zero_grad':       MemoryTracker('training_zero_grad',    **self.train_batch_params),
+            'training_forward':         MemoryTracker('training_forward',      **self.train_batch_params),
+            'training_loss':            MemoryTracker('training_loss',         **self.train_batch_params),
+            'training_loss_backward':   MemoryTracker('training_loss_backward',**self.train_batch_params),
+            'training_backprop':        MemoryTracker('training_backprop',     **self.train_batch_params),
+            'training_metrics':         MemoryTracker('training_metrics',      **self.train_batch_params),
+            'training_progress':        MemoryTracker('training_progress',     **self.train_batch_params),
+            'training_callbacks':       MemoryTracker('training_callbacks',    type='training', level='epoch',  gpu=self.gpu),
+            # individual validation information
+            'validation_data':      MemoryTracker('validation_data',      **self.validation_batch_params),
+            'validation_forward':   MemoryTracker('validation_forward',   **self.validation_batch_params),
+            'validation_loss':      MemoryTracker('validation_loss',      **self.validation_batch_params),
+            'validation_metrics':   MemoryTracker('validation_metrics',   **self.validation_batch_params),
+            'validation_progress':  MemoryTracker('validation_progress',  **self.validation_batch_params),
+            'validation_callbacks': MemoryTracker('validation_callbacks', type='validation', level='epoch',  gpu=self.gpu),
+        }
 
     def synchronize(self):
         torch.cuda.synchronize()
