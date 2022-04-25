@@ -14,6 +14,8 @@ from chunc.utils.memory import MemoryTrackers
 from chunc.utils.callbacks import CallbackHandler
 from chunc.utils.callbacks import TimingCallback, MemoryTrackerCallback
 import chunc.utils.utils as utils
+from chunc.utils.utils import get_files
+from datetime import datetime
 
 """
 Allowed types one can use for a metric

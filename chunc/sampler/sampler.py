@@ -6,7 +6,41 @@ import torch
 
 from chunc.utils.logger import Logger
 
-class Sampler:
+"""
+Class for sampling from latent space distributions of CHUNC models
+"""
+import numpy as np
+import torch
+
+from chunc.utils.logger import Logger
+
+class CHUNCSampler:
+    """
+    """
+    def __init__(self,
+        model,
+        latent_variables:   list=[],
+    ):
+        self.name = model.name + "_sampler"
+        self.logger = Logger(self.name, output='both', file_mode='w')
+        self.logger.info(f"constructing model sampler.")
+        self.model = model
+        self.latent_variables = latent_variables
+        self.device = model.device
+
+    def sample_latent(self,
+        num_samples:    int=100,
+        sample_mean:    float=0.0,
+        sample_sigma:   float=0.01
+    ):
+        valid_samples = np.random.normal(
+            sample_mean,sample_sigma,
+            size=(num_samples,len(self.latent_variables))
+        )
+        return torch.tensor(valid_samples, dtype=torch.float)
+
+        
+class CHUNCCSampler:
     """
     """
     def __init__(self,

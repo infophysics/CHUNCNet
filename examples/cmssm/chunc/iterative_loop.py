@@ -1,27 +1,40 @@
 """
-Training loop for a CMSSM model   
+Iterative training/sampling/training/...
 """
-# CHUNC imports
-from chunc.dataset.chunc import CHUNCDataset
-from chunc.dataset.mapper import MSSMMapper
-from chunc.utils.loader import Loader
-from chunc.losses import LossHandler
-from chunc.optimizers import Optimizer
-from chunc.metrics import MetricHandler
-from chunc.trainer import Trainer
-from chunc.utils.callbacks import CallbackHandler
-from chunc.utils.distributions import generate_concentric_spheres
-from chunc.utils.utils import get_files
-from chunc.models import CHUNC
 import numpy as np
+import scipy as sp
+import matplotlib.pyplot as plt
+import sys
 import torch
+import csv
 import os
 import shutil
 from datetime import datetime
 
+from chunc.dataset.parameters import *
+from chunc.dataset.cmssm import cMSSMDataset
+from chunc.dataset.chunc import CHUNCDataset
+from chunc.utils.loader import Loader
+from chunc.losses import LossHandler
+from chunc.optimizers import Optimizer
+from chunc.metrics import MetricHandler
+from chunc.trainer import IterativeTrainer
+from chunc.utils.callbacks import CallbackHandler
+from chunc.generator import CHUNCGenerator
+from chunc.utils.distributions import generate_sphere
+from chunc.utils.distributions import generate_concentric_spheres
+from chunc.utils.distributions import generate_gaussian
+from chunc.models import CHUNC
+from chunc.utils.mssm import MSSMGenerator
+from chunc.sampler import CHUNCSampler
+from chunc.utils.utils import concatenate_csv, get_files
+
 
 if __name__ == "__main__":
 
+    NUM_ITERATIONS = 10
+    INIT_EPOCHS = 100
+    ITER_EPOCHS = 25
     # clean up directories first
     now = datetime.now()
     os.makedirs(f"runs/{now}")
@@ -37,14 +50,32 @@ if __name__ == "__main__":
         shutil.move("mssm_input/", f"runs/{now}/")
     if os.path.isdir("mssm_output/"):
         shutil.move("mssm_output/", f"runs/{now}/")
-    if os.path.isdir("mapper/"):
-        shutil.move("mapper/", f"runs/{now}/")
     constraint_files = get_files("constraints/higgs_dm_lsp/")
     for file in constraint_files:
         if "iterative" in file:
             shutil.move(f"constraints/higgs_dm_lsp/{file}", f"runs/{now}")
-
     """
+    First, we create the initial dataset from the parameter files.
+    Then, generate the constrained and unconstrained subspaces
+    and save the labeled training set to numpy files.
+    """
+    apply_constraints = False
+    dataset = cMSSMDataset(
+        input_dir = '../../../cmssm/cmssm_random_new/',
+    )
+    if apply_constraints:
+        dataset.generate_constrained_dataset()
+        dataset.generate_unconstrained_dataset(max_num_files = 100)
+    dataset.generate_training_set(
+        constrained_file    = 'constraints/higgs_dm_lsp/constrained_data.csv',
+        unconstrained_file  = 'constraints/higgs_dm_lsp/unconstrained_data.csv',
+        symmetric_events    = True,
+        labeling    = 'binary',
+        save        = True,
+        output_file = 'cmssm_dataset_symmetric.npz'
+    )
+    """
+    Then we do an initial training for 100 epochs.
     Now we load our dataset as a torch dataset (chuncDataset),
     and then feed that into a dataloader.
     """
@@ -63,7 +94,7 @@ if __name__ == "__main__":
     )
     chunc_loader = Loader(
         chunc_dataset, 
-        batch_size=64,
+        batch_size=32,
         test_split=0.1,
         test_seed=100,
         validation_split=0.1,
@@ -116,7 +147,7 @@ if __name__ == "__main__":
             'distribution':     generate_concentric_spheres(
                 number_of_samples=10000,
                 dimension=5,
-                inner_radius=0.3,
+                inner_radius=0.1,
                 outer_radius=1.0,
                 thickness=0.3,
                 save_plot=True,
@@ -173,11 +204,33 @@ if __name__ == "__main__":
         callback_config
     )
 
+    """Generate samples from the latent variables"""
+    chunc_sampler = CHUNCSampler(
+        model=chunc_model,
+        latent_variables=[0,1,2,3,4],
+    )
+    mssm = MSSMGenerator(
+        microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
+        softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
+        param_space='cmssm',
+    )
+    chunc_generator_config = {
+        'loader':       chunc_loader,
+        'sampler':      chunc_sampler,
+        'mssm_generator':mssm,
+        'subspace':     'cmssm',
+        'num_events':   1000,
+        'num_workers':  16,
+        'sample_mean':  0.0,
+        'sample_sigma': 0.001
+    }
+    chunc_generator = CHUNCGenerator(chunc_generator_config)
     # create trainer
-    chunc_trainer = Trainer(
+    chunc_trainer = IterativeTrainer(
         model=chunc_model,
         criterion=chunc_loss,
         optimizer=chunc_optimizer,
+        generator=chunc_generator,
         metrics=chunc_metrics,
         callbacks=chunc_callbacks,
         metric_type='test',
@@ -187,53 +240,8 @@ if __name__ == "__main__":
     
     chunc_trainer.train(
         chunc_loader,
-        epochs=100,
+        iterations=NUM_ITERATIONS,
+        init_epochs=INIT_EPOCHS,
+        iter_epochs=ITER_EPOCHS,
         checkpoint=25
-    )
-
-    # run mapper
-    chunc_mapper = MSSMMapper()
-
-    # input mapper
-    inputs = chunc_dataset.normalize(chunc_dataset.event_features)
-    outputs, latent = chunc_model(chunc_dataset.event_features.unsqueeze(0))
-    inputs = inputs.cpu().numpy()
-    outputs = outputs.detach().cpu().numpy()
-    latent = latent.detach().cpu().numpy()
-
-    dist_labels = np.linalg.norm(latent, 2, -1)
-    valid_labels = chunc_dataset.event_classes.numpy().flatten()
-    output_labels = np.linalg.norm((inputs - outputs), 2, -1)
-    labels = np.vstack((valid_labels,dist_labels,output_labels)).T
-
-    # input graph
-    inputs_graph = chunc_mapper.parameter_mapper(
-        inputs, labels=valid_labels
-    )
-    # latent graph
-    latent_graph = chunc_mapper.parameter_mapper(
-        latent, labels=valid_labels
-    )
-    # outputs graph
-    outputs_graph = chunc_mapper.parameter_mapper(
-        outputs, labels=valid_labels
-    )
-
-    # input 
-    chunc_mapper.visualize_mapper(
-        inputs_graph, labels, 
-        label_names=['valid/invalid', 'latent_distance', 'output_l2'], 
-        output_file="inputs"
-    )
-    # latent
-    chunc_mapper.visualize_mapper(
-        latent_graph, labels, 
-        label_names=['valid/invalid', 'latent_distance', 'output_l2'], 
-        output_file="latent"
-    )
-    # output
-    chunc_mapper.visualize_mapper(
-        outputs_graph, labels, 
-        label_names=['valid/invalid', 'latent_distance', 'output_l2'], 
-        output_file="outputs"
     )

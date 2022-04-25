@@ -435,6 +435,7 @@ class MSSMGenerator:
     def run_parameters(self,
         input_file:     str,
         output_dir:     str='mssm_output/',
+        output_flag:    str='',
         num_events:     int=-1,
         num_workers:    int=1,
         save_super_invalid: bool=True,
@@ -472,7 +473,10 @@ class MSSMGenerator:
             except Exception as e:
                 pass
         # generate final output file
-        now = datetime.now().strftime("%m-%d-%Y-%H:%M:%S")
+        if output_flag != '':
+            now = output_flag
+        else:
+            now = datetime.now().strftime("%m-%d-%Y-%H:%M:%S")
         with open(f"{output_dir}/{self.param_space}_generated_{now}.txt", "w") as file:
             writer = csv.writer(file, delimiter=",")
             writer.writerows(final_outputs)

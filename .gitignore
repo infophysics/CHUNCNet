@@ -4,6 +4,9 @@ chunc.egg-info/
 *.pyc
 *.logs/
 *.log
+*.png
+*.html
+*runs/
 *.npz
 *.csv
 *.txt

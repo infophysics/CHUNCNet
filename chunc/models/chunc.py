@@ -168,6 +168,7 @@ class CHUNC(GenericModel):
         """
         Returns an output given a input from the latent space
         """
+        x = x.to(self.device)
         for layer in self.decoder_dict.keys():
             x = self.decoder_dict[layer](x)
         for layer in self.output_dict.keys():

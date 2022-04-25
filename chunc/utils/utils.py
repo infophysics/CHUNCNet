@@ -7,6 +7,8 @@ import pandas as pd
 import torch
 import inspect
 import os
+from os import listdir
+from os.path import isfile, join
 
 """
 Get the names of the arrays in an .npz file
@@ -173,3 +175,7 @@ def concatenate_csv(
     combined_csv = pd.concat([pd.read_csv(f) for f in files])
     combined_csv.to_csv(output_file, header=None, index=False,)
     
+def get_files(
+    directory
+):
+    return [f for f in listdir(directory) if isfile(join(directory, f))]

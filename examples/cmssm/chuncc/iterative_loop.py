@@ -20,13 +20,13 @@ from chunc.optimizers import Optimizer
 from chunc.metrics import MetricHandler
 from chunc.trainer import IterativeTrainer
 from chunc.utils.callbacks import CallbackHandler
-from chunc.generator import Generator
+from chunc.generator import CHUNCCGenerator
 from chunc.utils.distributions import generate_sphere
 from chunc.utils.distributions import generate_concentric_spheres
 from chunc.utils.distributions import generate_gaussian
 from chunc.models import CHUNCC
 from chunc.utils.mssm import MSSMGenerator
-from chunc.sampler import Sampler
+from chunc.sampler import CHUNCCSampler
 from chunc.utils.utils import concatenate_csv
 
 
@@ -180,7 +180,7 @@ if __name__ == "__main__":
         callback_config
     )
     """Generate samples from the latent variables"""
-    chuncc_sampler = Sampler(
+    chuncc_sampler = CHUNCCSampler(
         model=chuncc_model,
         latent_variables=[0,1,2,3,4],
         binary_variable=5,
@@ -201,7 +201,7 @@ if __name__ == "__main__":
         'num_workers':  16,
         'binary_bin':   9,
     }
-    chuncc_generator = Generator(chuncc_generator_config)
+    chuncc_generator = CHUNCCGenerator(chuncc_generator_config)
     # create trainer
     chuncc_trainer = IterativeTrainer(
         model=chuncc_model,
