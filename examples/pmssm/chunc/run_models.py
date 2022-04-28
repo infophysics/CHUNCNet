@@ -33,15 +33,20 @@ if __name__ == "__main__":
         and then feed that into a dataloader.
         """
         features = [
-                'gut_m0', 
-                'gut_m12', 
-                'gut_A0', 
-                'gut_tanb', 
-                'sign_mu'
+            'gut_m1', 'gut_m2', 
+            'gut_m3', 'gut_mmu', 
+            'gut_mA', 'gut_At', 
+            'gut_Ab', 'gut_Atau', 
+            'gut_mL1','gut_mL3', 
+            'gut_me1','gut_mtau1', 
+            'gut_mQ1','gut_mQ3', 
+            'gut_mu1','gut_mu3', 
+            'gut_md1','gut_md3', 
+            'gut_tanb'
         ]
         chunc_dataset = CHUNCDataset(
             name="chunc_dataset",
-            input_file=f'datasets/cmssm_{constraint}_symmetric.npz',
+            input_file=f'datasets/pmssm_{constraint}_symmetric.npz',
             features = features,
             classes = ['valid']
         )
@@ -58,16 +63,16 @@ if __name__ == "__main__":
         Construct the chunc Model, specify the loss and the 
         optimizer and metrics.
         """
-        chunc_cmssm_config = {
+        chunc_pmssm_config = {
             # dimension of the input variables
-            'input_dimension':      5,
+            'input_dimension':      19,
             # encoder parameters
             'encoder_dimensions':   [25, 50, 100, 50, 25],
             'encoder_activation':   'leaky_relu',
             'encoder_activation_params':    {'negative_slope': 0.02},
             'encoder_normalization':'bias',
             # desired dimension of the latent space
-            'latent_dimension':     5,
+            'latent_dimension':     19,
             # decoder parameters
             'decoder_dimensions':   [25, 50, 100, 50, 25],
             'decoder_activation':   'leaky_relu',
@@ -78,8 +83,8 @@ if __name__ == "__main__":
             'output_activation_params':     {},
         }
         chunc_model = CHUNC(
-            name = f'chunc_cmssm_{constraint}',
-            cfg  = chunc_cmssm_config
+            name = f'chunc_pmssm_{constraint}',
+            cfg  = chunc_pmssm_config
         ) 
 
         # create loss, optimizer and metrics
@@ -96,10 +101,10 @@ if __name__ == "__main__":
             },
             'LatentWassersteinLoss': {
                 'alpha':    1.0,
-                'latent_variables': [0,1,2,3,4],
+                'latent_variables': [ii for ii in range(19)],
                 'distribution':     generate_concentric_spheres(
                     number_of_samples=10000,
-                    dimension=5,
+                    dimension=19,
                     inner_radius=0.3,
                     outer_radius=1.0,
                     thickness=0.3,
@@ -109,7 +114,7 @@ if __name__ == "__main__":
             },
             'LatentClusterLoss':    {
                 'alpha':    1.0,
-                'latent_variables': [0,1,2,3,4],
+                'latent_variables': [ii for ii in range(19)],
                 'cluster_type': 'fixed',
                 'fixed_value':  1.0,
             }
@@ -139,12 +144,12 @@ if __name__ == "__main__":
             'latent': {
                 'criterion_list':   chunc_loss,
                 'metrics_list':     chunc_metrics,
-                'latent_variables': [0,1,2,3,4],
+                'latent_variables': [ii for ii in range(19)],
             },
             'cluster': {
                 'criterion_list':   chunc_loss,
                 'metrics_list':     chunc_metrics,
-                'latent_variables': [0,1,2,3,4],
+                'latent_variables': [ii for ii in range(19)],
             },
             'output':   {
                 'criterion_list':   chunc_loss,
@@ -185,4 +190,4 @@ if __name__ == "__main__":
         )
 
         # clean up
-        save_model(f"cmssm_{constraint}")
+        save_model(f"pmssm_{constraint}")

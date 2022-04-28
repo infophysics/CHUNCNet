@@ -1,6 +1,6 @@
 """
 Example script which runs SoftSUSY/micrOMEGAs
-for cMSSM models.
+for pmssm models.
 """
 from random import sample
 import numpy as np
@@ -12,7 +12,7 @@ import csv
 
 from chunc.utils.mssm import MSSMGenerator
 from chunc.dataset.chunc import CHUNCDataset
-from chunc.dataset.cmssm import cMSSMDataset
+from chunc.dataset.pmssm import pmssmDataset
 from chunc.models import CHUNCC
 from chunc.utils.loader import Loader
 from chunc.sampler import CHUNCCSampler
@@ -26,10 +26,10 @@ if __name__ == "__main__":
 
     num_events = 10000
     models = [
-        "sample_models/cmssm_higgs_dm/models/chuncc_cmssm_higgs_dm/chuncc_cmssm_higgs_dm_trained_params.ckpt",
-        "sample_models/cmssm_higgs_dm_lsp/models/chuncc_cmssm_higgs_dm_lsp/chuncc_cmssm_higgs_dm_lsp_trained_params.ckpt"
+        "sample_models/pmssm_higgs_dm/models/chuncc_pmssm_higgs_dm/chuncc_pmssm_higgs_dm_trained_params.ckpt",
+        "sample_models/pmssm_higgs_dm_lsp/models/chuncc_pmssm_higgs_dm_lsp/chuncc_pmssm_higgs_dm_lsp_trained_params.ckpt"
     ]
-    model_names = ["cmssm_higgs_dm", "cmssm_higgs_dm_lsp"]
+    model_names = ["pmssm_higgs_dm", "pmssm_higgs_dm_lsp"]
     sigmas = [1.0,0.5,0.1,0.01,0.001,0.0001]
     num_iterations = 10
 
@@ -38,15 +38,20 @@ if __name__ == "__main__":
     and then feed that into a dataloader.
     """
     features = [
-            'gut_m0', 
-            'gut_m12', 
-            'gut_A0', 
-            'gut_tanb', 
-            'sign_mu'
+        'gut_m1', 'gut_m2', 
+        'gut_m3', 'gut_mmu', 
+        'gut_mA', 'gut_At', 
+        'gut_Ab', 'gut_Atau', 
+        'gut_mL1','gut_mL3', 
+        'gut_me1','gut_mtau1', 
+        'gut_mQ1','gut_mQ3', 
+        'gut_mu1','gut_mu3', 
+        'gut_md1','gut_md3', 
+        'gut_tanb'
     ]
     chuncc_dataset = CHUNCDataset(
         name="chuncc_dataset",
-        input_file='datasets/cmssm_higgs_dm_lsp_symmetric.npz',
+        input_file='datasets/pmssm_higgs_dm_lsp_symmetric.npz',
         features = features,
         classes = ['valid']
     )
@@ -61,27 +66,27 @@ if __name__ == "__main__":
     )
     for ii, model in enumerate(models):
         # load the trained model
-        chuncc_model = CHUNCC(name = 'chuncc_cmssm')
+        chuncc_model = CHUNCC(name = 'chuncc_pmssm')
         chuncc_model.load_model(model)
 
         """Generate samples from the latent variables"""
         chuncc_sampler = CHUNCCSampler(
             model=chuncc_model,
-            latent_variables=[0,1,2,3,4],
-            binary_variable=5,
+            latent_variables=[ii for ii in range(19)],
+            binary_variable=19,
             num_latent_bins=25,
             num_binary_bins=10,
         )
         mssm = MSSMGenerator(
             microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
             softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
-            param_space='cmssm',
+            param_space='pmssm',
         )
         chuncc_generator_config = {
             'loader':       chuncc_loader,
             'sampler':      chuncc_sampler,
             'mssm_generator':mssm,
-            'subspace':     'cmssm',
+            'subspace':     'pmssm',
             'num_events':   num_events,
             'num_workers':  16,
             'binary_bin':   9,
@@ -114,7 +119,7 @@ if __name__ == "__main__":
                 validities.append(temp_valid)
 
                 shutil.move(
-                    f"mssm_output/cmssm_generated_{0.0}_{sigma}_{iteration}.txt", 
+                    f"mssm_output/pmssm_generated_{0.0}_{sigma}_{iteration}.txt", 
                     f"old_outputs/{now}/"
                 )
 

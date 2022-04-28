@@ -25,8 +25,12 @@ from datetime import datetime
 
 if __name__ == "__main__":
 
-    num_events = 10
-    model = "chunc_cmssm/chunc_cmssm_trained_params.ckpt"
+    num_events = 10000
+    models = [
+        "sample_models/cmssm_higgs_dm/models/chunc_cmssm_higgs_dm/chunc_cmssm_higgs_dm_trained_params.ckpt",
+        "sample_models/cmssm_higgs_dm_lsp/models/chunc_cmssm_higgs_dm_lsp/chunc_cmssm_higgs_dm_lsp_trained_params.ckpt"
+    ]
+    model_names = ["cmssm_higgs_dm", "cmssm_higgs_dm_lsp"]
     sigmas = [1.0,0.5,0.1,0.01,0.001,0.0001]
     num_iterations = 10
 
@@ -56,65 +60,64 @@ if __name__ == "__main__":
         validation_seed=100,
         num_workers=4
     )
+    for ii, model in enumerate(models):
+        # load the trained model
+        chunc_model = CHUNC(name = 'chunc_cmssm')
+        chunc_model.load_model(model)
 
-    # load the trained model
-    model_file = f"models/{model}"
-    chunc_model = CHUNC(name = 'chunc_cmssm')
-    chunc_model.load_model(model_file)
+        """Generate samples from the latent variables"""
+        chunc_sampler = CHUNCSampler(
+            model=chunc_model,
+            latent_variables=[0,1,2,3,4],
+        )
+        mssm = MSSMGenerator(
+            microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
+            softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
+            param_space='cmssm',
+        )
+        chunc_generator_config = {
+            'loader':       chunc_loader,
+            'sampler':      chunc_sampler,
+            'mssm_generator':mssm,
+            'subspace':     'cmssm',
+            'num_events':   num_events,
+            'num_workers':  16,
+            'sample_mean':  0.0,
+            'sample_sigma': 0.01,
+            'variables':    features,
+        }
+        chunc_generator = CHUNCGenerator(chunc_generator_config)
+        """
+        We want to scan over different sigma values to see how
+        it correlates with validities.
+        """
+        
+        validities = [["sigma","total","higgs","dm","higgs_dm","higgs_dm_lsp"]]
 
-    """Generate samples from the latent variables"""
-    chunc_sampler = CHUNCSampler(
-        model=chunc_model,
-        latent_variables=[0,1,2,3,4],
-    )
-    mssm = MSSMGenerator(
-        microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
-        softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
-        param_space='cmssm',
-    )
-    chunc_generator_config = {
-        'loader':       chunc_loader,
-        'sampler':      chunc_sampler,
-        'mssm_generator':mssm,
-        'subspace':     'cmssm',
-        'num_events':   num_events,
-        'num_workers':  16,
-        'sample_mean':  0.0,
-        'sample_sigma': 0.01,
-        'variables':    features,
-    }
-    chunc_generator = CHUNCGenerator(chunc_generator_config)
-    """
-    We want to scan over different sigma values to see how
-    it correlates with validities.
-    """
-    
-    validities = [["sigma","total","higgs","dm","higgs_dm","higgs_dm_lsp"]]
+        now = datetime.now()
+        if not os.path.isdir(f"old_outputs/{now}"):
+            os.makedirs(f"old_outputs/{now}")
+        
+        for sigma in sigmas:
+            for iteration in range(num_iterations):
+                chunc_generator.generate(
+                    chunc_model,
+                    chunc_loader,
+                    mean=0.0,
+                    sigma=sigma,
+                    iteration=iteration,
+                )
+                num_valid = chunc_generator.check_validities()
+                temp_valid = [sigma, num_events]
+                for valid in num_valid:
+                    temp_valid.append(valid)
+                validities.append(temp_valid)
 
-    now = datetime.now()
-    if not os.path.isdir(f"old_outputs/{now}"):
-        os.makedirs(f"old_outputs/{now}")
-    
-    for sigma in sigmas:
-        for iteration in range(num_iterations):
-            chunc_generator.generate(
-                chunc_model,
-                chunc_loader,
-                mean=0.0,
-                sigma=sigma,
-                iteration=iteration,
-            )
-            num_valid = chunc_generator.check_validities()
-            temp_valid = [sigma, num_events]
-            for valid in num_valid:
-                temp_valid.append(valid)
-            validities.append(temp_valid)
+                shutil.move(
+                    f"mssm_output/cmssm_generated_{0.0}_{sigma}_{iteration}.txt", 
+                    f"old_outputs/{now}/"
+                )
 
-            shutil.move(
-                f"mssm_output/cmssm_generated_{0.0}_{sigma}_{iteration}.txt", 
-                f"old_outputs/{now}/"
-            )
-
-    with open("validities.csv", "w") as file:
-        writer = csv.writer(file, delimiter=",")
-        writer.writerows(validities)
+        with open(f"{model_names[ii]}_validities.csv", "w") as file:
+            writer = csv.writer(file, delimiter=",")
+            writer.writerows(validities)
