@@ -9,6 +9,9 @@ import inspect
 import os
 from os import listdir
 from os.path import isfile, join
+import shutil
+from datetime import datetime
+import seaborn as sns
 
 """
 Get the names of the arrays in an .npz file
@@ -179,3 +182,35 @@ def get_files(
     directory
 ):
     return [f for f in listdir(directory) if isfile(join(directory, f))]
+
+def save_model(
+    name:   str='',
+):
+    # clean up directories first
+    if name == '':
+        now = datetime.now()
+    else:
+        now = name + f"_{datetime.now()}"
+    os.makedirs(f"runs/{now}")
+    if os.path.isdir("predictions/"):
+        shutil.move("predictions/", f"runs/{now}/")
+    if os.path.isdir("iterations/"):
+        shutil.move("iterations/", f"runs/{now}/")
+    if os.path.isdir("plots/"):
+        shutil.move("plots/", f"runs/{now}/")
+    if os.path.isdir("models/"):
+        shutil.move("models/", f"runs/{now}/")
+    if os.path.isdir("mssm_input/"):
+        shutil.move("mssm_input/", f"runs/{now}/")
+    if os.path.isdir("mssm_output/"):
+        shutil.move("mssm_output/", f"runs/{now}/")
+    constraint_files = get_files("constraints/higgs_dm_lsp/")
+    for file in constraint_files:
+        if "iterative" in file:
+            shutil.move(f"constraints/higgs_dm_lsp/{file}", f"runs/{now}")
+    shutil.copy("training_loop.py", f"runs/{now}/")
+    shutil.move(".logs/", f"runs/{now}")
+    if os.path.isfile("validities.csv"):
+        shutil.move("validities.csv", f"runs/{now}")
+    if os.path.isdir("mapper/"):
+        shutil.move("mapper/", f"runs/{now}")

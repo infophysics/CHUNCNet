@@ -98,6 +98,30 @@ class LatentCallback(GenericCallback):
     def evaluate_training(self):
         # plot the latent distributions
         if self.latent_name != None:
+            # plot covariance of latent values
+            fig, axs = plt.subplots(figsize=(10,6))
+            cov = np.cov(
+                self.training_latent[:,self.latent_variables].cpu().numpy().T,
+            )
+            im = axs.imshow(cov)
+            # Show all ticks and label them with the respective list entries
+            axs.set_xticks(np.arange(len(self.latent_variables)), labels=self.latent_variables)
+            axs.set_yticks(np.arange(len(self.latent_variables)), labels=self.latent_variables)
+
+            # Rotate the tick labels and set their alignment.
+            plt.setp(axs.get_xticklabels(), rotation=45, 
+                ha="right", rotation_mode="anchor"
+            )
+            # Loop over data dimensions and create text annotations.
+            for i in range(len(self.latent_variables)):
+                for j in range(len(self.latent_variables)):
+                    text = axs.text(
+                        j, i, round(cov[i, j],2),
+                        ha="center", va="center", color="w"
+                    )
+            plt.title("Latent Covariance")
+            plt.tight_layout()
+            plt.savefig(f"plots/latent/covariance.png")
             # plot all variable inputs and outputs
             fig, axs = utils.generate_plot_grid(
                 len(self.latent_variables),

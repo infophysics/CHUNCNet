@@ -11,7 +11,7 @@ from chunc.metrics import MetricHandler
 from chunc.trainer import Trainer
 from chunc.utils.callbacks import CallbackHandler
 from chunc.utils.distributions import generate_concentric_spheres
-from chunc.utils.utils import get_files
+from chunc.utils.utils import get_files, save_model
 from chunc.models import CHUNC
 import numpy as np
 import torch
@@ -23,26 +23,7 @@ from datetime import datetime
 if __name__ == "__main__":
 
     # clean up directories first
-    now = datetime.now()
-    os.makedirs(f"runs/{now}")
-    if os.path.isdir("predictions/"):
-        shutil.move("predictions/", f"runs/{now}/")
-    if os.path.isdir("iterations/"):
-        shutil.move("iterations/", f"runs/{now}/")
-    if os.path.isdir("plots/"):
-        shutil.move("plots/", f"runs/{now}/")
-    if os.path.isdir("models/"):
-        shutil.move("models/", f"runs/{now}/")
-    if os.path.isdir("mssm_input/"):
-        shutil.move("mssm_input/", f"runs/{now}/")
-    if os.path.isdir("mssm_output/"):
-        shutil.move("mssm_output/", f"runs/{now}/")
-    if os.path.isdir("mapper/"):
-        shutil.move("mapper/", f"runs/{now}/")
-    constraint_files = get_files("constraints/higgs_dm_lsp/")
-    for file in constraint_files:
-        if "iterative" in file:
-            shutil.move(f"constraints/higgs_dm_lsp/{file}", f"runs/{now}")
+    save_model()
 
     """
     Now we load our dataset as a torch dataset (chuncDataset),
@@ -57,7 +38,7 @@ if __name__ == "__main__":
     ]
     chunc_dataset = CHUNCDataset(
         name="chunc_dataset",
-        input_file='datasets/cmssm_dataset_symmetric.npz',
+        input_file='datasets/cmssm_higgs_dm_lsp_symmetric.npz',
         features = features,
         classes = ['valid']
     )
@@ -94,7 +75,7 @@ if __name__ == "__main__":
         'output_activation_params':     {},
     }
     chunc_model = CHUNC(
-        name = 'chunc_cmssm',
+        name = 'chunc_cmssm_test',
         cfg  = chunc_cmssm_config
     ) 
 
@@ -187,53 +168,13 @@ if __name__ == "__main__":
     
     chunc_trainer.train(
         chunc_loader,
-        epochs=100,
+        epochs=10,
         checkpoint=25
     )
 
     # run mapper
-    chunc_mapper = MSSMMapper()
-
-    # input mapper
-    inputs = chunc_dataset.normalize(chunc_dataset.event_features)
-    outputs, latent = chunc_model(chunc_dataset.event_features.unsqueeze(0))
-    inputs = inputs.cpu().numpy()
-    outputs = outputs.detach().cpu().numpy()
-    latent = latent.detach().cpu().numpy()
-
-    dist_labels = np.linalg.norm(latent, 2, -1)
-    valid_labels = chunc_dataset.event_classes.numpy().flatten()
-    output_labels = np.linalg.norm((inputs - outputs), 2, -1)
-    labels = np.vstack((valid_labels,dist_labels,output_labels)).T
-
-    # input graph
-    inputs_graph = chunc_mapper.parameter_mapper(
-        inputs, labels=valid_labels
+    chunc_mapper = MSSMMapper(
+        chunc_dataset,
+        chunc_model
     )
-    # latent graph
-    latent_graph = chunc_mapper.parameter_mapper(
-        latent, labels=valid_labels
-    )
-    # outputs graph
-    outputs_graph = chunc_mapper.parameter_mapper(
-        outputs, labels=valid_labels
-    )
-
-    # input 
-    chunc_mapper.visualize_mapper(
-        inputs_graph, labels, 
-        label_names=['valid/invalid', 'latent_distance', 'output_l2'], 
-        output_file="inputs"
-    )
-    # latent
-    chunc_mapper.visualize_mapper(
-        latent_graph, labels, 
-        label_names=['valid/invalid', 'latent_distance', 'output_l2'], 
-        output_file="latent"
-    )
-    # output
-    chunc_mapper.visualize_mapper(
-        outputs_graph, labels, 
-        label_names=['valid/invalid', 'latent_distance', 'output_l2'], 
-        output_file="outputs"
-    )
+    chunc_mapper.run_mapper()

@@ -27,33 +27,15 @@ from chunc.utils.distributions import generate_gaussian
 from chunc.models import CHUNC
 from chunc.utils.mssm import MSSMGenerator
 from chunc.sampler import CHUNCSampler
-from chunc.utils.utils import concatenate_csv, get_files
+from chunc.utils.utils import concatenate_csv, get_files, save_model
 
 
 if __name__ == "__main__":
-
+    # clean up directories first
+    save_model()
     NUM_ITERATIONS = 10
     INIT_EPOCHS = 100
     ITER_EPOCHS = 25
-    # clean up directories first
-    now = datetime.now()
-    os.makedirs(f"runs/{now}")
-    if os.path.isdir("predictions/"):
-        shutil.move("predictions/", f"runs/{now}/")
-    if os.path.isdir("iterations/"):
-        shutil.move("iterations/", f"runs/{now}/")
-    if os.path.isdir("plots/"):
-        shutil.move("plots/", f"runs/{now}/")
-    if os.path.isdir("models/"):
-        shutil.move("models/", f"runs/{now}/")
-    if os.path.isdir("mssm_input/"):
-        shutil.move("mssm_input/", f"runs/{now}/")
-    if os.path.isdir("mssm_output/"):
-        shutil.move("mssm_output/", f"runs/{now}/")
-    constraint_files = get_files("constraints/higgs_dm_lsp/")
-    for file in constraint_files:
-        if "iterative" in file:
-            shutil.move(f"constraints/higgs_dm_lsp/{file}", f"runs/{now}")
     """
     First, we create the initial dataset from the parameter files.
     Then, generate the constrained and unconstrained subspaces

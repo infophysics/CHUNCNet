@@ -19,13 +19,23 @@ if __name__ == "__main__":
         input_dir = '../../../cmssm/cmssm_random_new/',
     )
     if apply_constraints:
-        dataset.generate_constrained_dataset()
-        dataset.generate_unconstrained_dataset(max_num_files = 100)
+        dataset.generate_constrained_dataset(
+            #max_num_files=1000,
+            apply_dm=True,
+            apply_higgs=True,
+            apply_lsp=False
+        )
+        dataset.generate_unconstrained_dataset(
+            max_num_files=100,
+            apply_dm=True,
+            apply_higgs=True,
+            apply_lsp=False
+        )
     dataset.generate_training_set(
-        constrained_file    = 'constraints/higgs_dm_lsp/constrained_data.csv',
-        unconstrained_file  = 'constraints/higgs_dm_lsp/unconstrained_data.csv',
+        constrained_file    = 'constraints/higgs_dm/constrained_data.csv',
+        unconstrained_file  = 'constraints/higgs_dm/unconstrained_data.csv',
         symmetric_events    = True,
         labeling    = 'binary',
         save        = True,
-        output_file = 'cmssm_dataset_symmetric.npz'
+        output_file = 'cmssm_higgs_dm_symmetric.npz'
     )

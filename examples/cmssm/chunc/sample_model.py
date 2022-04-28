@@ -15,92 +15,106 @@ from chunc.dataset.chunc import CHUNCDataset
 from chunc.dataset.cmssm import cMSSMDataset
 from chunc.models import CHUNC
 from chunc.utils.loader import Loader
-from chunc.sampler import Sampler
-"""
-Now we load our dataset as a torch dataset (SWAEDataset),
-and then feed that into a dataloader.
-"""
-features = [
-        'gut_m0', 
-        'gut_m12', 
-        'gut_A0', 
-        'gut_tanb', 
-        'sign_mu'
-]
-swae_dataset = CHUNCDataset(
-    name="swae_dataset",
-    input_file='datasets/cmssm_dataset_symmetric.npz',
-    features = features,
-    classes = ['valid']
-)
-swae_loader = Loader(
-    swae_dataset, 
-    batch_size=64,
-    test_split=0.3,
-    test_seed=100,
-    validation_split=0.3,
-    validation_seed=100,
-    num_workers=4
-)
+from chunc.sampler import CHUNCSampler
+from chunc.sampler import CHUNCSampler
+from chunc.generator import CHUNCGenerator
+from chunc.utils.mssm import MSSMGenerator
+import os
+import shutil
+from datetime import datetime
 
-# load the trained model
-model_file = "models/swae_cmssm/swae_cmssm_trained_params.ckpt"
-swae_model = CHUNC(name = 'swae_cmssm')
-swae_model.load_model(model_file)
+if __name__ == "__main__":
 
-"""Generate samples from the latent variables"""
-swae_sampler = Sampler(
-    model=swae_model,
-    latent_variables=[0,1,2,3,4],
-    binary_variable=5
-)
-swae_sampler.build_histograms(
-    swae_loader,
-    num_latent_bins=25,
-    num_binary_bins=10,
-)
-valid_samples = swae_sampler.sample_histograms(
-    num_samples=1000,
-    binary_bin=9,
-    sample_type='valid'
-)
+    num_events = 10
+    model = "chunc_cmssm/chunc_cmssm_trained_params.ckpt"
+    sigmas = [1.0,0.5,0.1,0.01,0.001,0.0001]
+    num_iterations = 10
 
-"""Generate the samples from the model"""
-generated_samples = swae_model.sample(valid_samples)
-generated_samples = swae_dataset.unnormalize(generated_samples, detach=True)
+    """
+    Now we load our dataset as a torch dataset,
+    and then feed that into a dataloader.
+    """
+    features = [
+            'gut_m0', 
+            'gut_m12', 
+            'gut_A0', 
+            'gut_tanb', 
+            'sign_mu'
+    ]
+    chunc_dataset = CHUNCDataset(
+        name="chunc_dataset",
+        input_file='datasets/cmssm_higgs_dm_lsp_symmetric.npz',
+        features = features,
+        classes = ['valid']
+    )
+    chunc_loader = Loader(
+        chunc_dataset, 
+        batch_size=64,
+        test_split=0.3,
+        test_seed=100,
+        validation_split=0.3,
+        validation_seed=100,
+        num_workers=4
+    )
 
-for ii, sample in enumerate(generated_samples):
-    if sample[4] < 0:
-        generated_samples[ii][4] = -1
-    else:
-        generated_samples[ii][4] = 1
-with open("cmssm_samples.txt", "w") as file:
-    writer = csv.writer(file, delimiter=",")
-    writer.writerows(generated_samples)
+    # load the trained model
+    model_file = f"models/{model}"
+    chunc_model = CHUNC(name = 'chunc_cmssm')
+    chunc_model.load_model(model_file)
 
-# create the MSSM object which takes the 
-# path to micromegas, softsusy and the
-# parameter subspace
-mssm = MSSMGenerator(
-    microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
-    softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
-    param_space='cmssm',
-)
-# run the parameters and dump the output
-# to the standard folder mssm_output.
-mssm.run_parameters(
-    input_file="cmssm_samples.txt",
-    num_events=1000,
-    num_workers=16,
-    save_super_invalid=False,
-)
+    """Generate samples from the latent variables"""
+    chunc_sampler = CHUNCSampler(
+        model=chunc_model,
+        latent_variables=[0,1,2,3,4],
+    )
+    mssm = MSSMGenerator(
+        microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
+        softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
+        param_space='cmssm',
+    )
+    chunc_generator_config = {
+        'loader':       chunc_loader,
+        'sampler':      chunc_sampler,
+        'mssm_generator':mssm,
+        'subspace':     'cmssm',
+        'num_events':   num_events,
+        'num_workers':  16,
+        'sample_mean':  0.0,
+        'sample_sigma': 0.01,
+        'variables':    features,
+    }
+    chunc_generator = CHUNCGenerator(chunc_generator_config)
+    """
+    We want to scan over different sigma values to see how
+    it correlates with validities.
+    """
+    
+    validities = [["sigma","total","higgs","dm","higgs_dm","higgs_dm_lsp"]]
 
-dataset = cMSSMDataset(
-    input_dir = 'mssm_output/',
-)
-num_valid = dataset.get_number_of_valid(
-    apply_dm=True,
-    apply_higgs=True,
-    apply_lsp=False,
-)
-print(num_valid)
+    now = datetime.now()
+    if not os.path.isdir(f"old_outputs/{now}"):
+        os.makedirs(f"old_outputs/{now}")
+    
+    for sigma in sigmas:
+        for iteration in range(num_iterations):
+            chunc_generator.generate(
+                chunc_model,
+                chunc_loader,
+                mean=0.0,
+                sigma=sigma,
+                iteration=iteration,
+            )
+            num_valid = chunc_generator.check_validities()
+            temp_valid = [sigma, num_events]
+            for valid in num_valid:
+                temp_valid.append(valid)
+            validities.append(temp_valid)
+
+            shutil.move(
+                f"mssm_output/cmssm_generated_{0.0}_{sigma}_{iteration}.txt", 
+                f"old_outputs/{now}/"
+            )
+
+    with open("validities.csv", "w") as file:
+        writer = csv.writer(file, delimiter=",")
+        writer.writerows(validities)
