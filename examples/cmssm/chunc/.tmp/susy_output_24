@@ -1,0 +1,1663 @@
+# SOFTSUSY4.1.10 SLHA compliant output
+# B.C. Allanach, Comput. Phys. Commun. 143 (2002) 305-331, hep-ph/0104145
+Block SPINFO          # Program information
+     1    SOFTSUSY    # spectrum calculator
+     2    4.1.10       # version number
+Block MODSEL  # Select model
+     1    0   # nonUniversal
+Block SMINPUTS             # Standard Model inputs
+     1    1.27934000e+02   # alpha_em^(-1)(MZ) SM MSbar
+     2    1.16637000e-05   # G_Fermi
+     3    1.17200000e-01   # alpha_s(MZ)MSbar
+     4    9.11876000e+01   # MZ(pole)
+     5    4.25000000e+00   # mb(mb)
+     6    1.74200000e+02   # Mtop(pole)
+     7    1.77700000e+00   # Mtau(pole)
+Block MINPAR               # SUSY breaking input parameters
+     3    4.26037700e+01   # tanb, DRbar, Feynman gauge
+     4   -1.00000000e+00   # sign(mu)
+Block EXTPAR               # non-universal SUSY breaking parameters
+      0    1.42672167e+16  # MX scale
+      1    1.45208300e+03  # M_1(MX)
+      2    1.45208300e+03  # M_2(MX)
+      3    1.45208300e+03  # M_3(MX)
+     11    4.63735800e+03  # At(MX)
+     12    4.63735800e+03  # Ab(MX)
+     13    4.63735800e+03  # Atau(MX)
+     21    1.21452700e+07  # mHd^2(MX)
+     22    1.21452700e+07  # mHu^2(MX)
+     31    3.48500600e+03  # meL(MX)
+     32    3.48500600e+03  # mmuL(MX)
+     33    3.48500600e+03  # mtauL(MX)
+     34    3.48500600e+03  # meR(MX)
+     35    3.48500600e+03  # mmuR(MX)
+     36    3.48500600e+03  # mtauR(MX)
+     41    3.48500600e+03  # mqL1(MX)
+     42    3.48500600e+03  # mqL2(MX)
+     43    3.48500600e+03  # mqL3(MX)
+     44    3.48500600e+03  # muR(MX)
+     45    3.48500600e+03  # mcR(MX)
+     46    3.48500600e+03  # mtR(MX)
+     47    3.48500600e+03  # mdR(MX)
+     48    3.48500600e+03  # msR(MX)
+     49    3.48500600e+03  # mbR(MX)
+# SOFTSUSY-specific non SLHA information:
+# mixing=0 Desired accuracy=1.00000000e-04 Achieved accuracy=1.65143953e-05
+# 3-loop RGE corrections are off. 2-loop Yukawa/g3 thresholds are off
+# 2-loop SUSY QCD computation of squark/gluino pole masses are off
+# Matching scale=1.74200000e+02
+Block MASS                      # Mass spectrum
+# PDG code     mass             particle
+        24     8.03717723e+01   # MW
+        25     1.21636431e+02   # h0
+        35     1.92168970e+03   # H0
+        36     1.92164565e+03   # A0
+        37     1.92331692e+03   # H+
+   1000021     3.21941925e+03   # ~g
+   1000022     6.35342830e+02   # ~neutralino(1)
+   1000023     1.19164447e+03   # ~neutralino(2)
+   1000024     1.19180442e+03   # ~chargino(1)
+   1000025    -1.45858965e+03   # ~neutralino(3)
+   1000035     1.46894101e+03   # ~neutralino(4)
+   1000037     1.46934038e+03   # ~chargino(2)
+   1000001     4.38876863e+03   # ~d_L
+   1000002     4.38817981e+03   # ~u_L
+   1000003     4.38864302e+03   # ~s_L
+   1000004     4.38805419e+03   # ~c_L
+   1000005     3.38697512e+03   # ~b_1
+   1000006     2.98767912e+03   # ~t_1
+   1000011     3.60078105e+03   # ~e_L
+   1000012     3.59956809e+03   # ~nue_L
+   1000013     3.59986798e+03   # ~mu_L
+   1000014     3.59865480e+03   # ~numu_L
+   1000015     2.74411871e+03   # ~stau_1
+   1000016     3.24357042e+03   # ~nu_tau_L
+   2000001     4.31327561e+03   # ~d_R
+   2000002     4.32092336e+03   # ~u_R
+   2000003     4.31303645e+03   # ~s_R
+   2000004     4.32090540e+03   # ~c_R
+   2000005     3.57597791e+03   # ~b_2
+   2000006     3.39303902e+03   # ~t_2
+   2000011     3.52229455e+03   # ~e_R
+   2000013     3.52042138e+03   # ~mu_R
+   2000015     3.24549026e+03   # ~stau_2
+Block alpha                     # Effective Higgs mixing parameter
+          -2.39385527e-02       # alpha - evaluated at p^2=0
+Block nmix                  # neutralino mixing matrix Q=3.11497079e+03
+  1  1     9.99162489e-01   # N_{1,1}
+  1  2    -2.26270368e-03   # N_{1,2}
+  1  3    -3.76473069e-02   # N_{1,3}
+  1  4    -1.58707510e-02   # N_{1,4}
+  2  1     9.01130017e-03   # N_{2,1}
+  2  2     9.85104057e-01   # N_{2,2}
+  2  3     1.35459969e-01   # N_{2,3}
+  2  4     1.05543305e-01   # N_{2,4}
+  3  1    -1.53360556e-02   # N_{3,1}
+  3  2     2.15105322e-02   # N_{3,2}
+  3  3    -7.06465804e-01   # N_{3,3}
+  3  4     7.07253964e-01   # N_{3,4}
+  4  1     3.68499953e-02   # N_{4,1}
+  4  2    -1.70593590e-01   # N_{4,2}
+  4  3     6.93642087e-01   # N_{4,3}
+  4  4     6.98856609e-01   # N_{4,4}
+Block Umix                  # chargino U mixing matrix  at Q=3.11497079e+03
+  1  1     9.81428708e-01   # U_{1,1}
+  1  2     1.91827244e-01   # U_{1,2}
+  2  1    -1.91827244e-01   # U_{2,1}
+  2  2     9.81428708e-01   # U_{2,2}
+Block Vmix                  # chargino V mixing matrix  at Q=3.11497079e+03
+  1  1     9.88769748e-01   # V_{1,1}
+  1  2    -1.49446930e-01   # V_{1,2}
+  2  1    -1.49446930e-01   # V_{2,1}
+  2  2    -9.88769748e-01   # V_{2,2}
+Block stopmix               # stop mixing matrix at Q=3.11497079e+03
+  1  1     3.72732820e-02   # F_{11}
+  1  2     9.99305110e-01   # F_{12}
+  2  1     9.99305110e-01   # F_{21}
+  2  2    -3.72732820e-02   # F_{22}
+Block sbotmix               # sbottom mixing matrix at Q=3.11497079e+03
+  1  1     9.93266421e-01   # F_{11}
+  1  2    -1.15852568e-01   # F_{12}
+  2  1     1.15852568e-01   # F_{21}
+  2  2     9.93266421e-01   # F_{22}
+Block staumix               # stau mixing matrix at Q=3.11497079e+03
+  1  1    -3.63863022e-02   # F_{11}
+  1  2     9.99337799e-01   # F_{12}
+  2  1     9.99337799e-01   # F_{21}
+  2  2     3.63863022e-02   # F_{22}
+Block gauge Q= 9.11876000e+01  # SM gauge couplings
+     1     3.53072601e-01   # g'(Q)MSSM DRbar
+     2     6.29670184e-01   # g(Q)MSSM DRbar
+     3     1.07332032e+00   # g3(Q)MSSM DRbar
+Block yu Q= 9.11876000e+01  
+  3  3     8.74507917e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 9.11876000e+01  
+  3  3     6.80565209e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 9.11876000e+01  
+  3  3     4.11357875e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 9.11876000e+01 # Higgs mixing parameters
+     1    -1.37116812e+03    # mu(Q)MSSM DRbar
+     2     4.27350209e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.51113242e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.84341756e+06    # mA^2(Q)MSSM DRbar
+Block msoft Q= 9.11876000e+01  # MSSM DRbar SUSY breaking parameters
+     1     5.95065093e+02      # M_1(Q)
+     2     1.11425903e+03      # M_2(Q)
+     3     3.37979409e+03      # M_3(Q)
+    21     6.48072969e+04      # mH1^2(Q)
+    22    -3.79311227e+06      # mH2^2(Q)
+    31     3.60050669e+03      # meL(Q)
+    32     3.59948661e+03      # mmuL(Q)
+    33     3.22427928e+03      # mtauL(Q)
+    34     3.51899088e+03      # meR(Q)
+    35     3.51689293e+03      # mmuR(Q)
+    36     2.68647213e+03      # mtauR(Q)
+    41     4.59449681e+03      # mqL1(Q)
+    42     4.59432891e+03      # mqL2(Q)
+    43     3.52872676e+03      # mqL3(Q)
+    44     4.53376985e+03      # muR(Q)
+    45     4.53374637e+03      # mcR(Q)
+    46     3.12365517e+03      # mtR(Q)
+    47     4.52685413e+03      # mdR(Q)
+    48     4.52653363e+03      # msR(Q)
+    49     3.71971685e+03      # mbR(Q)
+Block au Q= 9.11876000e+01  
+  1  1    -5.11909897e+03      # Au(Q)MSSM DRbar
+  2  2    -5.11898893e+03      # Ac(Q)MSSM DRbar
+  3  3    -1.35484116e+03      # At(Q)MSSM DRbar
+Block ad Q= 9.11876000e+01  
+  1  1    -5.02191456e+03      # Ad(Q)MSSM DRbar
+  2  2    -5.02164010e+03      # As(Q)MSSM DRbar
+  3  3    -1.06434401e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 9.11876000e+01  
+  1  1    -1.55387476e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.55318139e+03      # Amu(Q)MSSM DRbar
+  3  3     2.41035301e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 3.00163038e+02  # SM gauge couplings
+     1     3.56847535e-01   # g'(Q)MSSM DRbar
+     2     6.31920562e-01   # g(Q)MSSM DRbar
+     3     1.04720326e+00   # g3(Q)MSSM DRbar
+Block yu Q= 3.00163038e+02  
+  3  3     8.58893956e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 3.00163038e+02  
+  3  3     6.62126018e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 3.00163038e+02  
+  3  3     4.12921267e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 3.00163038e+02 # Higgs mixing parameters
+     1    -1.39776710e+03    # mu(Q)MSSM DRbar
+     2     4.24944153e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.48002787e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4     5.81824945e+05    # mA^2(Q)MSSM DRbar
+Block msoft Q= 3.00163038e+02  # MSSM DRbar SUSY breaking parameters
+     1     6.09158616e+02      # M_1(Q)
+     2     1.12579040e+03      # M_2(Q)
+     3     3.22263916e+03      # M_3(Q)
+    21     6.85799482e+05      # mH1^2(Q)
+    22    -3.10048773e+06      # mH2^2(Q)
+    31     3.59795782e+03      # meL(Q)
+    32     3.59697342e+03      # mmuL(Q)
+    33     3.23073682e+03      # mtauL(Q)
+    34     3.51874260e+03      # meR(Q)
+    35     3.51671934e+03      # mmuR(Q)
+    36     2.70853572e+03      # mtauR(Q)
+    41     4.48959417e+03      # mqL1(Q)
+    42     4.48944132e+03      # mqL2(Q)
+    43     3.44808096e+03      # mqL3(Q)
+    44     4.42831342e+03      # muR(Q)
+    45     4.42829186e+03      # mcR(Q)
+    46     3.04016246e+03      # mtR(Q)
+    47     4.42116461e+03      # mdR(Q)
+    48     4.42087284e+03      # msR(Q)
+    49     3.63976271e+03      # mbR(Q)
+Block au Q= 3.00163038e+02  
+  1  1    -4.84609745e+03      # Au(Q)MSSM DRbar
+  2  2    -4.84600208e+03      # Ac(Q)MSSM DRbar
+  3  3    -1.12874489e+03      # At(Q)MSSM DRbar
+Block ad Q= 3.00163038e+02  
+  1  1    -4.71833721e+03      # Ad(Q)MSSM DRbar
+  2  2    -4.71809997e+03      # As(Q)MSSM DRbar
+  3  3    -7.92782412e+02      # Ab(Q)MSSM DRbar
+Block ae Q= 3.00163038e+02  
+  1  1    -1.54622830e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.54557855e+03      # Amu(Q)MSSM DRbar
+  3  3     2.43654697e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 9.88049353e+02  # SM gauge couplings
+     1     3.60743656e-01   # g'(Q)MSSM DRbar
+     2     6.34184380e-01   # g(Q)MSSM DRbar
+     3     1.02287862e+00   # g3(Q)MSSM DRbar
+Block yu Q= 9.88049353e+02  
+  3  3     8.44126239e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 9.88049353e+02  
+  3  3     6.44691267e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 9.88049353e+02  
+  3  3     4.14221577e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 9.88049353e+02 # Higgs mixing parameters
+     1    -1.42308974e+03    # mu(Q)MSSM DRbar
+     2     4.22580424e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.45093950e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4     2.08152351e+06    # mA^2(Q)MSSM DRbar
+Block msoft Q= 9.88049353e+02  # MSSM DRbar SUSY breaking parameters
+     1     6.23771573e+02      # M_1(Q)
+     2     1.13722455e+03      # M_2(Q)
+     3     3.07941697e+03      # M_3(Q)
+    21     1.25731671e+06      # mH1^2(Q)
+    22    -2.46619005e+06      # mH2^2(Q)
+    31     3.59530607e+03      # meL(Q)
+    32     3.59435809e+03      # mmuL(Q)
+    33     3.23749711e+03      # mtauL(Q)
+    34     3.51846992e+03      # meR(Q)
+    35     3.51652285e+03      # mmuR(Q)
+    36     2.73141079e+03      # mtauR(Q)
+    41     4.39629929e+03      # mqL1(Q)
+    42     4.39615993e+03      # mqL2(Q)
+    43     3.37944678e+03      # mqL3(Q)
+    44     4.33478758e+03      # muR(Q)
+    45     4.33476776e+03      # mcR(Q)
+    46     2.97024986e+03      # mtR(Q)
+    47     4.32743586e+03      # mdR(Q)
+    48     4.32716989e+03      # msR(Q)
+    49     3.57153928e+03      # mbR(Q)
+Block au Q= 9.88049353e+02  
+  1  1    -4.59036883e+03      # Au(Q)MSSM DRbar
+  2  2    -4.59028619e+03      # Ac(Q)MSSM DRbar
+  3  3    -9.09574996e+02      # At(Q)MSSM DRbar
+Block ad Q= 9.88049353e+02  
+  1  1    -4.43472600e+03      # Ad(Q)MSSM DRbar
+  2  2    -4.43452093e+03      # As(Q)MSSM DRbar
+  3  3    -5.32460080e+02      # Ab(Q)MSSM DRbar
+Block ae Q= 9.88049353e+02  
+  1  1    -1.53139120e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.53078481e+03      # Amu(Q)MSSM DRbar
+  3  3     2.47027900e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 3.25237088e+03  # SM gauge couplings
+     1     3.64767890e-01   # g'(Q)MSSM DRbar
+     2     6.36462864e-01   # g(Q)MSSM DRbar
+     3     1.00015230e+00   # g3(Q)MSSM DRbar
+Block yu Q= 3.25237088e+03  
+  3  3     8.30090778e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 3.25237088e+03  
+  3  3     6.28148016e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 3.25237088e+03  
+  3  3     4.15271000e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 3.25237088e+03 # Higgs mixing parameters
+     1    -1.44717331e+03    # mu(Q)MSSM DRbar
+     2     4.20258170e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.42369959e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4     2.72007371e+06    # mA^2(Q)MSSM DRbar
+Block msoft Q= 3.25237088e+03  # MSSM DRbar SUSY breaking parameters
+     1     6.38952592e+02      # M_1(Q)
+     2     1.14859454e+03      # M_2(Q)
+     3     2.94837267e+03      # M_3(Q)
+    21     1.78963381e+06      # mH1^2(Q)
+    22    -1.87808810e+06      # mH2^2(Q)
+    31     3.59255188e+03      # meL(Q)
+    32     3.59164096e+03      # mmuL(Q)
+    33     3.24455089e+03      # mtauL(Q)
+    34     3.51817098e+03      # meR(Q)
+    35     3.51630132e+03      # mmuR(Q)
+    36     2.75505551e+03      # mtauR(Q)
+    41     4.31293280e+03      # mqL1(Q)
+    42     4.31280561e+03      # mqL2(Q)
+    43     3.32132950e+03      # mqL3(Q)
+    44     4.25149252e+03      # muR(Q)
+    45     4.25147429e+03      # mcR(Q)
+    46     2.91239196e+03      # mtR(Q)
+    47     4.24396680e+03      # mdR(Q)
+    48     4.24372409e+03      # msR(Q)
+    49     3.51353684e+03      # mbR(Q)
+Block au Q= 3.25237088e+03  
+  1  1    -4.34928199e+03      # Au(Q)MSSM DRbar
+  2  2    -4.34921043e+03      # Ac(Q)MSSM DRbar
+  3  3    -6.95673822e+02      # At(Q)MSSM DRbar
+Block ad Q= 3.25237088e+03  
+  1  1    -4.16843479e+03      # Ad(Q)MSSM DRbar
+  2  2    -4.16825764e+03      # As(Q)MSSM DRbar
+  3  3    -2.81727412e+02      # Ab(Q)MSSM DRbar
+Block ae Q= 3.25237088e+03  
+  1  1    -1.51021091e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.50964738e+03      # Amu(Q)MSSM DRbar
+  3  3     2.51073832e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 1.07058583e+04  # SM gauge couplings
+     1     3.68927689e-01   # g'(Q)MSSM DRbar
+     2     6.38757145e-01   # g(Q)MSSM DRbar
+     3     9.78858203e-01   # g3(Q)MSSM DRbar
+Block yu Q= 1.07058583e+04  
+  3  3     8.16689988e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 1.07058583e+04  
+  3  3     6.12400127e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 1.07058583e+04  
+  3  3     4.16080011e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 1.07058583e+04 # Higgs mixing parameters
+     1    -1.47004925e+03    # mu(Q)MSSM DRbar
+     2     4.17976774e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.39816423e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4     2.55477101e+06    # mA^2(Q)MSSM DRbar
+Block msoft Q= 1.07058583e+04  # MSSM DRbar SUSY breaking parameters
+     1     6.54752457e+02      # M_1(Q)
+     2     1.15992871e+03      # M_2(Q)
+     3     2.82803234e+03      # M_3(Q)
+    21     2.29091089e+06      # mH1^2(Q)
+    22    -1.32625404e+06      # mH2^2(Q)
+    31     3.58969510e+03      # meL(Q)
+    32     3.58882173e+03      # mmuL(Q)
+    33     3.25189027e+03      # mtauL(Q)
+    34     3.51784366e+03      # meR(Q)
+    35     3.51605235e+03      # mmuR(Q)
+    36     2.77943327e+03      # mtauR(Q)
+    41     4.23810204e+03      # mqL1(Q)
+    42     4.23798586e+03      # mqL2(Q)
+    43     3.27248932e+03      # mqL3(Q)
+    44     4.17701693e+03      # muR(Q)
+    45     4.17700017e+03      # mcR(Q)
+    46     2.86532030e+03      # mtR(Q)
+    47     4.16934506e+03      # mdR(Q)
+    48     4.16912341e+03      # msR(Q)
+    49     3.46449360e+03      # mbR(Q)
+Block au Q= 1.07058583e+04  
+  1  1    -4.12063687e+03      # Au(Q)MSSM DRbar
+  2  2    -4.12057497e+03      # Ac(Q)MSSM DRbar
+  3  3    -4.85662298e+02      # At(Q)MSSM DRbar
+Block ad Q= 1.07058583e+04  
+  1  1    -3.91725603e+03      # Ad(Q)MSSM DRbar
+  2  2    -3.91710315e+03      # As(Q)MSSM DRbar
+  3  3    -3.92205848e+01      # Ab(Q)MSSM DRbar
+Block ae Q= 1.07058583e+04  
+  1  1    -1.48339640e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.48287499e+03      # Amu(Q)MSSM DRbar
+  3  3     2.55724743e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 3.52405694e+04  # SM gauge couplings
+     1     3.73231091e-01   # g'(Q)MSSM DRbar
+     2     6.41068280e-01   # g(Q)MSSM DRbar
+     3     9.58853309e-01   # g3(Q)MSSM DRbar
+Block yu Q= 3.52405694e+04  
+  3  3     8.03839767e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 3.52405694e+04  
+  3  3     5.97365239e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 3.52405694e+04  
+  3  3     4.16657641e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 3.52405694e+04 # Higgs mixing parameters
+     1    -1.49174408e+03    # mu(Q)MSSM DRbar
+     2     4.15735811e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.37420923e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4     1.63726145e+06    # mA^2(Q)MSSM DRbar
+Block msoft Q= 3.52405694e+04  # MSSM DRbar SUSY breaking parameters
+     1     6.71224818e+02      # M_1(Q)
+     2     1.17125156e+03      # M_2(Q)
+     3     2.71714918e+03      # M_3(Q)
+    21     2.76768478e+06      # mH1^2(Q)
+    22    -8.02437687e+05      # mH2^2(Q)
+    31     3.58673506e+03      # meL(Q)
+    32     3.58589963e+03      # mmuL(Q)
+    33     3.25950840e+03      # mtauL(Q)
+    34     3.51748552e+03      # meR(Q)
+    35     3.51577330e+03      # mmuR(Q)
+    36     2.80451146e+03      # mtauR(Q)
+    41     4.17064441e+03      # mqL1(Q)
+    42     4.17053824e+03      # mqL2(Q)
+    43     3.23189181e+03      # mqL3(Q)
+    44     4.11018123e+03      # muR(Q)
+    45     4.11016581e+03      # mcR(Q)
+    46     2.82797411e+03      # mtR(Q)
+    47     4.10239022e+03      # mdR(Q)
+    48     4.10218773e+03      # msR(Q)
+    49     3.42334654e+03      # mbR(Q)
+Block au Q= 3.52405694e+04  
+  1  1    -3.90258126e+03      # Au(Q)MSSM DRbar
+  2  2    -3.90252779e+03      # Ac(Q)MSSM DRbar
+  3  3    -2.78387523e+02      # At(Q)MSSM DRbar
+Block ad Q= 3.52405694e+04  
+  1  1    -3.67933495e+03      # Ad(Q)MSSM DRbar
+  2  2    -3.67920322e+03      # As(Q)MSSM DRbar
+  3  3     1.96194238e+02      # Ab(Q)MSSM DRbar
+Block ae Q= 3.52405694e+04  
+  1  1    -1.45154574e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.45106551e+03      # Amu(Q)MSSM DRbar
+  3  3     2.60923502e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 1.16001697e+05  # SM gauge couplings
+     1     3.77686787e-01   # g'(Q)MSSM DRbar
+     2     6.43397261e-01   # g(Q)MSSM DRbar
+     3     9.40013702e-01   # g3(Q)MSSM DRbar
+Block yu Q= 1.16001697e+05  
+  3  3     7.91467188e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 1.16001697e+05  
+  3  3     5.82972381e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 1.16001697e+05  
+  3  3     4.17011694e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 1.16001697e+05 # Higgs mixing parameters
+     1    -1.51228018e+03    # mu(Q)MSSM DRbar
+     2     4.13535020e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.35172695e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4     1.46865382e+04    # mA^2(Q)MSSM DRbar
+Block msoft Q= 1.16001697e+05  # MSSM DRbar SUSY breaking parameters
+     1     6.88426892e+02      # M_1(Q)
+     2     1.18258455e+03      # M_2(Q)
+     3     2.61466166e+03      # M_3(Q)
+    21     3.22523008e+06      # mH1^2(Q)
+    22    -2.99681058e+05      # mH2^2(Q)
+    31     3.58367058e+03      # meL(Q)
+    32     3.58287339e+03      # mmuL(Q)
+    33     3.26739907e+03      # mtauL(Q)
+    34     3.51709380e+03      # meR(Q)
+    35     3.51546120e+03      # mmuR(Q)
+    36     2.83026044e+03      # mtauR(Q)
+    41     4.10958340e+03      # mqL1(Q)
+    42     4.10948636e+03      # mqL2(Q)
+    43     3.19866902e+03      # mqL3(Q)
+    44     4.04999344e+03      # muR(Q)
+    45     4.04997927e+03      # mcR(Q)
+    46     2.79946153e+03      # mtR(Q)
+    47     4.04210975e+03      # mdR(Q)
+    48     4.04192474e+03      # msR(Q)
+    49     3.38919311e+03      # mbR(Q)
+Block au Q= 1.16001697e+05  
+  1  1    -3.69354636e+03      # Au(Q)MSSM DRbar
+  2  2    -3.69350027e+03      # Ac(Q)MSSM DRbar
+  3  3    -7.28823767e+01      # At(Q)MSSM DRbar
+Block ad Q= 1.16001697e+05  
+  1  1    -3.45310302e+03      # Ad(Q)MSSM DRbar
+  2  2    -3.45298974e+03      # As(Q)MSSM DRbar
+  3  3     4.25464151e+02      # Ab(Q)MSSM DRbar
+Block ae Q= 1.16001697e+05  
+  1  1    -1.41516725e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.41472710e+03      # Amu(Q)MSSM DRbar
+  3  3     2.66621514e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 3.81843823e+05  # SM gauge couplings
+     1     3.82304196e-01   # g'(Q)MSSM DRbar
+     2     6.45745036e-01   # g(Q)MSSM DRbar
+     3     9.22231436e-01   # g3(Q)MSSM DRbar
+Block yu Q= 3.81843823e+05  
+  3  3     7.79508678e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 3.81843823e+05  
+  3  3     5.69160077e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 3.81843823e+05  
+  3  3     4.17148936e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 3.81843823e+05 # Higgs mixing parameters
+     1    -1.53167643e+03    # mu(Q)MSSM DRbar
+     2     4.11374276e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.33062368e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -2.26940555e+06    # mA^2(Q)MSSM DRbar
+Block msoft Q= 3.81843823e+05  # MSSM DRbar SUSY breaking parameters
+     1     7.06420198e+02      # M_1(Q)
+     2     1.19394660e+03      # M_2(Q)
+     3     2.51966047e+03      # M_3(Q)
+    21     3.66782775e+06      # mH1^2(Q)
+    22     1.87967180e+05      # mH2^2(Q)
+    31     3.58050006e+03      # meL(Q)
+    32     3.57974133e+03      # mmuL(Q)
+    33     3.27555648e+03      # mtauL(Q)
+    34     3.51666534e+03      # meR(Q)
+    35     3.51511271e+03      # mmuR(Q)
+    36     2.85665265e+03      # mtauR(Q)
+    41     4.05409406e+03      # mqL1(Q)
+    42     4.05400538e+03      # mqL2(Q)
+    43     3.17208882e+03      # mqL3(Q)
+    44     3.99561461e+03      # muR(Q)
+    45     3.99560159e+03      # mcR(Q)
+    46     2.77902872e+03      # mtR(Q)
+    47     3.98766436e+03      # mdR(Q)
+    48     3.98749537e+03      # msR(Q)
+    49     3.36126134e+03      # mbR(Q)
+Block au Q= 3.81843823e+05  
+  1  1    -3.49219651e+03      # Au(Q)MSSM DRbar
+  2  2    -3.49215688e+03      # Ac(Q)MSSM DRbar
+  3  3     1.31665892e+02      # At(Q)MSSM DRbar
+Block ad Q= 3.81843823e+05  
+  1  1    -3.23722588e+03      # Ad(Q)MSSM DRbar
+  2  2    -3.23712872e+03      # As(Q)MSSM DRbar
+  3  3     6.49383365e+02      # Ab(Q)MSSM DRbar
+Block ae Q= 3.81843823e+05  
+  1  1    -1.37469586e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.37429451e+03      # Amu(Q)MSSM DRbar
+  3  3     2.72777118e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 1.25691872e+06  # SM gauge couplings
+     1     3.87093547e-01   # g'(Q)MSSM DRbar
+     2     6.48112508e-01   # g(Q)MSSM DRbar
+     3     9.05411989e-01   # g3(Q)MSSM DRbar
+Block yu Q= 1.25691872e+06  
+  3  3     7.67908547e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 1.25691872e+06  
+  3  3     5.55874809e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 1.25691872e+06  
+  3  3     4.17075232e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 1.25691872e+06 # Higgs mixing parameters
+     1    -1.54994874e+03    # mu(Q)MSSM DRbar
+     2     4.09253569e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.31081752e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -5.17433023e+06    # mA^2(Q)MSSM DRbar
+Block msoft Q= 1.25691872e+06  # MSSM DRbar SUSY breaking parameters
+     1     7.25271329e+02      # M_1(Q)
+     2     1.20535456e+03      # M_2(Q)
+     3     2.43136228e+03      # M_3(Q)
+    21     4.09896734e+06      # mH1^2(Q)
+    22     6.65664796e+05      # mH2^2(Q)
+    31     3.57722150e+03      # meL(Q)
+    32     3.57650136e+03      # mmuL(Q)
+    33     3.28397496e+03      # mtauL(Q)
+    34     3.51619655e+03      # meR(Q)
+    35     3.51472410e+03      # mmuR(Q)
+    36     2.88366192e+03      # mtauR(Q)
+    41     4.00347580e+03      # mqL1(Q)
+    42     4.00339481e+03      # mqL2(Q)
+    43     3.15153032e+03      # mqL3(Q)
+    44     3.94633141e+03      # muR(Q)
+    45     3.94631945e+03      # mcR(Q)
+    46     2.76603477e+03      # mtR(Q)
+    47     3.93834065e+03      # mdR(Q)
+    48     3.93818638e+03      # msR(Q)
+    49     3.33888612e+03      # mbR(Q)
+Block au Q= 1.25691872e+06  
+  1  1    -3.29738941e+03      # Au(Q)MSSM DRbar
+  2  2    -3.29735545e+03      # Ac(Q)MSSM DRbar
+  3  3     3.35940316e+02      # At(Q)MSSM DRbar
+Block ad Q= 1.25691872e+06  
+  1  1    -3.03056205e+03      # Ad(Q)MSSM DRbar
+  2  2    -3.03047896e+03      # As(Q)MSSM DRbar
+  3  3     8.68619971e+02      # Ab(Q)MSSM DRbar
+Block ae Q= 1.25691872e+06  
+  1  1    -1.33050582e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.33014187e+03      # Amu(Q)MSSM DRbar
+  3  3     2.79354332e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 4.13741059e+06  # SM gauge couplings
+     1     3.92065978e-01   # g'(Q)MSSM DRbar
+     2     6.50500549e-01   # g(Q)MSSM DRbar
+     3     8.89472205e-01   # g3(Q)MSSM DRbar
+Block yu Q= 4.13741059e+06  
+  3  3     7.56617803e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 4.13741059e+06  
+  3  3     5.43069783e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 4.13741059e+06  
+  3  3     4.16795676e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 4.13741059e+06 # Higgs mixing parameters
+     1    -1.56711052e+03    # mu(Q)MSSM DRbar
+     2     4.07172983e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.29223667e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -8.66167907e+06    # mA^2(Q)MSSM DRbar
+Block msoft Q= 4.13741059e+06  # MSSM DRbar SUSY breaking parameters
+     1     7.45052803e+02      # M_1(Q)
+     2     1.21682360e+03      # M_2(Q)
+     3     2.34908878e+03      # M_3(Q)
+    21     4.52150087e+06      # mH1^2(Q)
+    22     1.13793580e+06      # mH2^2(Q)
+    31     3.57383245e+03      # meL(Q)
+    32     3.57315100e+03      # mmuL(Q)
+    33     3.29264874e+03      # mtauL(Q)
+    34     3.51568334e+03      # meR(Q)
+    35     3.51429113e+03      # mmuR(Q)
+    36     2.91126276e+03      # mtauR(Q)
+    41     3.95713059e+03      # mqL1(Q)
+    42     3.95705669e+03      # mqL2(Q)
+    43     3.13646404e+03      # mqL3(Q)
+    44     3.90153421e+03      # muR(Q)
+    45     3.90152325e+03      # mcR(Q)
+    46     2.75993129e+03      # mtR(Q)
+    47     3.89352922e+03      # mdR(Q)
+    48     3.89338853e+03      # msR(Q)
+    49     3.32149032e+03      # mbR(Q)
+Block au Q= 4.13741059e+06  
+  1  1    -3.10814455e+03      # Au(Q)MSSM DRbar
+  2  2    -3.10811555e+03      # Ac(Q)MSSM DRbar
+  3  3     5.40513727e+02      # At(Q)MSSM DRbar
+Block ad Q= 4.13741059e+06  
+  1  1    -2.83213003e+03      # Ad(Q)MSSM DRbar
+  2  2    -2.83205925e+03      # As(Q)MSSM DRbar
+  3  3     1.08373730e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 4.13741059e+06  
+  1  1    -1.28292081e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.28259274e+03      # Amu(Q)MSSM DRbar
+  3  3     2.86321873e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 1.36191514e+07  # SM gauge couplings
+     1     3.97233643e-01   # g'(Q)MSSM DRbar
+     2     6.52910006e-01   # g(Q)MSSM DRbar
+     3     8.74338596e-01   # g3(Q)MSSM DRbar
+Block yu Q= 1.36191514e+07  
+  3  3     7.45593189e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 1.36191514e+07  
+  3  3     5.30703911e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 1.36191514e+07  
+  3  3     4.16314688e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 1.36191514e+07 # Higgs mixing parameters
+     1    -1.58317306e+03    # mu(Q)MSSM DRbar
+     2     4.05132679e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.27481802e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.26948459e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 1.36191514e+07  # MSSM DRbar SUSY breaking parameters
+     1     7.65844013e+02      # M_1(Q)
+     2     1.22836746e+03      # M_2(Q)
+     3     2.27224970e+03      # M_3(Q)
+    21     4.93776114e+06      # mH1^2(Q)
+    22     1.60879054e+06      # mH2^2(Q)
+    31     3.57033009e+03      # meL(Q)
+    32     3.56968735e+03      # mmuL(Q)
+    33     3.30157173e+03      # mtauL(Q)
+    34     3.51512103e+03      # meR(Q)
+    35     3.51380901e+03      # mmuR(Q)
+    36     2.93942987e+03      # mtauR(Q)
+    41     3.91454556e+03      # mqL1(Q)
+    42     3.91447821e+03      # mqL2(Q)
+    43     3.12643576e+03      # mqL3(Q)
+    44     3.86069958e+03      # muR(Q)
+    45     3.86068955e+03      # mcR(Q)
+    46     2.76024541e+03      # mtR(Q)
+    47     3.85270712e+03      # mdR(Q)
+    48     3.85257898e+03      # msR(Q)
+    49     3.30856972e+03      # mbR(Q)
+Block au Q= 1.36191514e+07  
+  1  1    -2.92361777e+03      # Au(Q)MSSM DRbar
+  2  2    -2.92359312e+03      # Ac(Q)MSSM DRbar
+  3  3     7.45864339e+02      # At(Q)MSSM DRbar
+Block ad Q= 1.36191514e+07  
+  1  1    -2.64108184e+03      # Ad(Q)MSSM DRbar
+  2  2    -2.64102180e+03      # As(Q)MSSM DRbar
+  3  3     1.29521109e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 1.36191514e+07  
+  1  1    -1.23222180e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.23192799e+03      # Amu(Q)MSSM DRbar
+  3  3     2.93652377e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 4.48302824e+07  # SM gauge couplings
+     1     4.02609839e-01   # g'(Q)MSSM DRbar
+     2     6.55341706e-01   # g(Q)MSSM DRbar
+     3     8.59945955e-01   # g3(Q)MSSM DRbar
+Block yu Q= 4.48302824e+07  
+  3  3     7.34796394e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 4.48302824e+07  
+  3  3     5.18740980e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 4.48302824e+07  
+  3  3     4.15636093e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 4.48302824e+07 # Higgs mixing parameters
+     1    -1.59814590e+03    # mu(Q)MSSM DRbar
+     2     4.03132878e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.25850600e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.72386442e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 4.48302824e+07  # MSSM DRbar SUSY breaking parameters
+     1     7.87732289e+02      # M_1(Q)
+     2     1.23999872e+03      # M_2(Q)
+     3     2.20032901e+03      # M_3(Q)
+    21     5.34965352e+06      # mH1^2(Q)
+    22     2.08181577e+06      # mH2^2(Q)
+    31     3.56671117e+03      # meL(Q)
+    32     3.56610712e+03      # mmuL(Q)
+    33     3.31073738e+03      # mtauL(Q)
+    34     3.51450429e+03      # meR(Q)
+    35     3.51327229e+03      # mmuR(Q)
+    36     2.96813753e+03      # mtauR(Q)
+    41     3.87527884e+03      # mqL1(Q)
+    42     3.87521756e+03      # mqL2(Q)
+    43     3.12105329e+03      # mqL3(Q)
+    44     3.82337599e+03      # muR(Q)
+    45     3.82336682e+03      # mcR(Q)
+    46     2.76656561e+03      # mtR(Q)
+    47     3.81542364e+03      # mdR(Q)
+    48     3.81530715e+03      # msR(Q)
+    49     3.29968076e+03      # mbR(Q)
+Block au Q= 4.48302824e+07  
+  1  1    -2.74308077e+03      # Au(Q)MSSM DRbar
+  2  2    -2.74305993e+03      # Ac(Q)MSSM DRbar
+  3  3     9.52388321e+02      # At(Q)MSSM DRbar
+Block ad Q= 4.48302824e+07  
+  1  1    -2.45668150e+03      # Ad(Q)MSSM DRbar
+  2  2    -2.45663084e+03      # As(Q)MSSM DRbar
+  3  3     1.50344343e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 4.48302824e+07  
+  1  1    -1.17865340e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.17839212e+03      # Amu(Q)MSSM DRbar
+  3  3     3.01321786e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 1.47568241e+08  # SM gauge couplings
+     1     4.08209149e-01   # g'(Q)MSSM DRbar
+     2     6.57796460e-01   # g(Q)MSSM DRbar
+     3     8.46236194e-01   # g3(Q)MSSM DRbar
+Block yu Q= 1.47568241e+08  
+  3  3     7.24193395e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 1.47568241e+08  
+  3  3     5.07148958e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 1.47568241e+08  
+  3  3     4.14763198e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 1.47568241e+08 # Higgs mixing parameters
+     1    -1.61203708e+03    # mu(Q)MSSM DRbar
+     2     4.01173850e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.24325156e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -2.22589993e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 1.47568241e+08  # MSSM DRbar SUSY breaking parameters
+     1     8.10814127e+02      # M_1(Q)
+     2     1.25172896e+03      # M_2(Q)
+     3     2.13287371e+03      # M_3(Q)
+    21     5.75872789e+06      # mH1^2(Q)
+    22     2.56024179e+06      # mH2^2(Q)
+    31     3.56297204e+03      # meL(Q)
+    32     3.56240660e+03      # mmuL(Q)
+    33     3.32013842e+03      # mtauL(Q)
+    34     3.51382698e+03      # meR(Q)
+    35     3.51267476e+03      # mmuR(Q)
+    36     2.99735924e+03      # mtauR(Q)
+    41     3.83894811e+03      # mqL1(Q)
+    42     3.83889249e+03      # mqL2(Q)
+    43     3.11997540e+03      # mqL3(Q)
+    44     3.78917219e+03      # muR(Q)
+    45     3.78916384e+03      # mcR(Q)
+    46     2.77852980e+03      # mtR(Q)
+    47     3.78128872e+03      # mdR(Q)
+    48     3.78118306e+03      # msR(Q)
+    49     3.29443072e+03      # mbR(Q)
+Block au Q= 1.47568241e+08  
+  1  1    -2.56590428e+03      # Au(Q)MSSM DRbar
+  2  2    -2.56588677e+03      # Ac(Q)MSSM DRbar
+  3  3     1.16041002e+03      # At(Q)MSSM DRbar
+Block ad Q= 1.47568241e+08  
+  1  1    -2.27828750e+03      # Ad(Q)MSSM DRbar
+  2  2    -2.27824501e+03      # As(Q)MSSM DRbar
+  3  3     1.70877417e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 1.47568241e+08  
+  1  1    -1.12242879e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.12219827e+03      # Amu(Q)MSSM DRbar
+  3  3     3.09308859e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 4.85751698e+08  # SM gauge couplings
+     1     4.14047611e-01   # g'(Q)MSSM DRbar
+     2     6.60275069e-01   # g(Q)MSSM DRbar
+     3     8.33157380e-01   # g3(Q)MSSM DRbar
+Block yu Q= 4.85751698e+08  
+  3  3     7.13753918e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 4.85751698e+08  
+  3  3     4.95899417e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 4.85751698e+08  
+  3  3     4.13698836e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 4.85751698e+08 # Higgs mixing parameters
+     1    -1.62485343e+03    # mu(Q)MSSM DRbar
+     2     3.99255900e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.22901136e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -2.77227023e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 4.85751698e+08  # MSSM DRbar SUSY breaking parameters
+     1     8.35196610e+02      # M_1(Q)
+     2     1.26356897e+03      # M_2(Q)
+     3     2.06948444e+03      # M_3(Q)
+    21     6.16623540e+06      # mH1^2(Q)
+    22     3.04699188e+06      # mH2^2(Q)
+    31     3.55910856e+03      # meL(Q)
+    32     3.55858163e+03      # mmuL(Q)
+    33     3.32976673e+03      # mtauL(Q)
+    34     3.51308208e+03      # meR(Q)
+    35     3.51200928e+03      # mmuR(Q)
+    36     3.02706718e+03      # mtauR(Q)
+    41     3.80522123e+03      # mqL1(Q)
+    42     3.80517088e+03      # mqL2(Q)
+    43     3.12290270e+03      # mqL3(Q)
+    44     3.75774774e+03      # muR(Q)
+    45     3.75774014e+03      # mcR(Q)
+    46     2.79581528e+03      # mtR(Q)
+    47     3.74996346e+03      # mdR(Q)
+    48     3.74986790e+03      # msR(Q)
+    49     3.29246961e+03      # mbR(Q)
+Block au Q= 4.85751698e+08  
+  1  1    -2.39154432e+03      # Au(Q)MSSM DRbar
+  2  2    -2.39152971e+03      # Ac(Q)MSSM DRbar
+  3  3     1.37019038e+03      # At(Q)MSSM DRbar
+Block ad Q= 4.85751698e+08  
+  1  1    -2.10533830e+03      # Ad(Q)MSSM DRbar
+  2  2    -2.10530292e+03      # As(Q)MSSM DRbar
+  3  3     1.91149033e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 4.85751698e+08  
+  1  1    -1.06373378e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.06353218e+03      # Amu(Q)MSSM DRbar
+  3  3     3.17594788e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 1.59895320e+09  # SM gauge couplings
+     1     4.20142911e-01   # g'(Q)MSSM DRbar
+     2     6.62778329e-01   # g(Q)MSSM DRbar
+     3     8.20662925e-01   # g3(Q)MSSM DRbar
+Block yu Q= 1.59895320e+09  
+  3  3     7.03450982e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 1.59895320e+09  
+  3  3     4.84967049e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 1.59895320e+09  
+  3  3     4.12445421e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 1.59895320e+09 # Higgs mixing parameters
+     1    -1.63660077e+03    # mu(Q)MSSM DRbar
+     2     3.97379355e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.21574712e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -3.35972162e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 1.59895320e+09  # MSSM DRbar SUSY breaking parameters
+     1     8.60999055e+02      # M_1(Q)
+     2     1.27552885e+03      # M_2(Q)
+     3     2.00980787e+03      # M_3(Q)
+    21     6.57317367e+06      # mH1^2(Q)
+    22     3.54471787e+06      # mH2^2(Q)
+    31     3.55511612e+03      # meL(Q)
+    32     3.55462755e+03      # mmuL(Q)
+    33     3.33961318e+03      # mtauL(Q)
+    34     3.51226143e+03      # meR(Q)
+    35     3.51126765e+03      # mmuR(Q)
+    36     3.05723187e+03      # mtauR(Q)
+    41     3.77380845e+03      # mqL1(Q)
+    42     3.77376304e+03      # mqL2(Q)
+    43     3.12956998e+03      # mqL3(Q)
+    44     3.72880506e+03      # muR(Q)
+    45     3.72879818e+03      # mcR(Q)
+    46     2.81813014e+03      # mtR(Q)
+    47     3.72115228e+03      # mdR(Q)
+    48     3.72106617e+03      # msR(Q)
+    49     3.29348364e+03      # mbR(Q)
+Block au Q= 1.59895320e+09  
+  1  1    -2.21953067e+03      # Au(Q)MSSM DRbar
+  2  2    -2.21951858e+03      # Ac(Q)MSSM DRbar
+  3  3     1.58193397e+03      # At(Q)MSSM DRbar
+Block ad Q= 1.59895320e+09  
+  1  1    -1.93734039e+03      # Ad(Q)MSSM DRbar
+  2  2    -1.93731118e+03      # As(Q)MSSM DRbar
+  3  3     2.11183389e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 1.59895320e+09  
+  1  1    -1.00272987e+03      # Ae(Q)MSSM DRbar
+  2  2    -1.00255528e+03      # Amu(Q)MSSM DRbar
+  3  3     3.26162890e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 5.26328854e+09  # SM gauge couplings
+     1     4.26514607e-01   # g'(Q)MSSM DRbar
+     2     6.65307030e-01   # g(Q)MSSM DRbar
+     3     8.08710903e-01   # g3(Q)MSSM DRbar
+Block yu Q= 5.26328854e+09  
+  3  3     6.93260517e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 5.26328854e+09  
+  3  3     4.74329259e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 5.26328854e+09  
+  3  3     4.11004977e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 5.26328854e+09 # Higgs mixing parameters
+     1    -1.64728410e+03    # mu(Q)MSSM DRbar
+     2     3.95544558e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.20342501e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -3.98505256e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 5.26328854e+09  # MSSM DRbar SUSY breaking parameters
+     1     8.88354962e+02      # M_1(Q)
+     2     1.28761811e+03      # M_2(Q)
+     3     1.95353023e+03      # M_3(Q)
+    21     6.98032309e+06      # mH1^2(Q)
+    22     4.05582482e+06      # mH2^2(Q)
+    31     3.55098958e+03      # meL(Q)
+    32     3.55053919e+03      # mmuL(Q)
+    33     3.34966741e+03      # mtauL(Q)
+    34     3.51135564e+03      # meR(Q)
+    35     3.51044038e+03      # mmuR(Q)
+    36     3.08782169e+03      # mtauR(Q)
+    41     3.74445608e+03      # mqL1(Q)
+    42     3.74441529e+03      # mqL2(Q)
+    43     3.13973970e+03      # mqL3(Q)
+    44     3.70208293e+03      # muR(Q)
+    45     3.70207673e+03      # mcR(Q)
+    46     2.84520608e+03      # mtR(Q)
+    47     3.69459649e+03      # mdR(Q)
+    48     3.69451923e+03      # msR(Q)
+    49     3.29718976e+03      # mbR(Q)
+Block au Q= 5.26328854e+09  
+  1  1    -2.04945726e+03      # Au(Q)MSSM DRbar
+  2  2    -2.04944735e+03      # Ac(Q)MSSM DRbar
+  3  3     1.79579491e+03      # At(Q)MSSM DRbar
+Block ad Q= 5.26328854e+09  
+  1  1    -1.77385826e+03      # Ad(Q)MSSM DRbar
+  2  2    -1.77383437e+03      # As(Q)MSSM DRbar
+  3  3     2.31000836e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 5.26328854e+09  
+  1  1    -9.39556692e+02      # Ae(Q)MSSM DRbar
+  2  2    -9.39407199e+02      # Amu(Q)MSSM DRbar
+  3  3     3.34998378e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 1.73252139e+10  # SM gauge couplings
+     1     4.33184397e-01   # g'(Q)MSSM DRbar
+     2     6.67861962e-01   # g(Q)MSSM DRbar
+     3     7.97263464e-01   # g3(Q)MSSM DRbar
+Block yu Q= 1.73252139e+10  
+  3  3     6.83161034e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 1.73252139e+10  
+  3  3     4.63965812e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 1.73252139e+10  
+  3  3     4.09379170e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 1.73252139e+10 # Higgs mixing parameters
+     1    -1.65690776e+03    # mu(Q)MSSM DRbar
+     2     3.93751854e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.19201516e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -4.64510246e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 1.73252139e+10  # MSSM DRbar SUSY breaking parameters
+     1     9.17414315e+02      # M_1(Q)
+     2     1.29984582e+03      # M_2(Q)
+     3     1.90037198e+03      # M_3(Q)
+    21     7.38827606e+06      # mH1^2(Q)
+    22     4.58248724e+06      # mH2^2(Q)
+    31     3.54672316e+03      # meL(Q)
+    32     3.54631075e+03      # mmuL(Q)
+    33     3.35991771e+03      # mtauL(Q)
+    34     3.51035373e+03      # meR(Q)
+    35     3.50951645e+03      # mmuR(Q)
+    36     3.11880251e+03      # mtauR(Q)
+    41     3.71694113e+03      # mqL1(Q)
+    42     3.71690469e+03      # mqL2(Q)
+    43     3.15319653e+03      # mqL3(Q)
+    44     3.67735101e+03      # muR(Q)
+    45     3.67734545e+03      # mcR(Q)
+    46     2.87679229e+03      # mtR(Q)
+    47     3.67006880e+03      # mdR(Q)
+    48     3.66999986e+03      # msR(Q)
+    49     3.30333122e+03      # mbR(Q)
+Block au Q= 1.73252139e+10  
+  1  1    -1.88097405e+03      # Au(Q)MSSM DRbar
+  2  2    -1.88096603e+03      # Ac(Q)MSSM DRbar
+  3  3     2.01188202e+03      # At(Q)MSSM DRbar
+Block ad Q= 1.73252139e+10  
+  1  1    -1.61450596e+03      # Ad(Q)MSSM DRbar
+  2  2    -1.61448665e+03      # As(Q)MSSM DRbar
+  3  3     2.50618438e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 1.73252139e+10  
+  1  1    -8.74333899e+02      # Ae(Q)MSSM DRbar
+  2  2    -8.74207545e+02      # Amu(Q)MSSM DRbar
+  3  3     3.44088182e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 5.70295615e+10  # SM gauge couplings
+     1     4.40176431e-01   # g'(Q)MSSM DRbar
+     2     6.70443919e-01   # g(Q)MSSM DRbar
+     3     7.86286347e-01   # g3(Q)MSSM DRbar
+Block yu Q= 5.70295615e+10  
+  3  3     6.73133353e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 5.70295615e+10  
+  3  3     4.53858539e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 5.70295615e+10  
+  3  3     4.07569323e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 5.70295615e+10 # Higgs mixing parameters
+     1    -1.66547561e+03    # mu(Q)MSSM DRbar
+     2     3.92001585e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.18149127e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -5.33674376e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 5.70295615e+10  # MSSM DRbar SUSY breaking parameters
+     1     9.48346327e+02      # M_1(Q)
+     2     1.31222066e+03      # M_2(Q)
+     3     1.85008325e+03      # M_3(Q)
+    21     7.79746084e+06      # mH1^2(Q)
+    22     5.12665836e+06      # mH2^2(Q)
+    31     3.54231044e+03      # meL(Q)
+    32     3.54193578e+03      # mmuL(Q)
+    33     3.37035082e+03      # mtauL(Q)
+    34     3.50924292e+03      # meR(Q)
+    35     3.50848299e+03      # mmuR(Q)
+    36     3.15013721e+03      # mtauR(Q)
+    41     3.69106687e+03      # mqL1(Q)
+    42     3.69103454e+03      # mqL2(Q)
+    43     3.16974276e+03      # mqL3(Q)
+    44     3.65440517e+03      # muR(Q)
+    45     3.65440021e+03      # mcR(Q)
+    46     2.91265035e+03      # mtR(Q)
+    47     3.64736887e+03      # mdR(Q)
+    48     3.64730776e+03      # msR(Q)
+    49     3.31167384e+03      # mbR(Q)
+Block au Q= 5.70295615e+10  
+  1  1    -1.71378001e+03      # Au(Q)MSSM DRbar
+  2  2    -1.71377361e+03      # Ac(Q)MSSM DRbar
+  3  3     2.23026326e+03      # At(Q)MSSM DRbar
+Block ad Q= 5.70295615e+10  
+  1  1    -1.45894000e+03      # Ad(Q)MSSM DRbar
+  2  2    -1.45892461e+03      # As(Q)MSSM DRbar
+  3  3     2.70050441e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 5.70295615e+10  
+  1  1    -8.07162458e+02      # Ae(Q)MSSM DRbar
+  2  2    -8.07057269e+02      # Amu(Q)MSSM DRbar
+  3  3     3.53420823e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 1.87724717e+11  # SM gauge couplings
+     1     4.47517679e-01   # g'(Q)MSSM DRbar
+     2     6.73053699e-01   # g(Q)MSSM DRbar
+     3     7.75748450e-01   # g3(Q)MSSM DRbar
+Block yu Q= 1.87724717e+11  
+  3  3     6.63160349e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 1.87724717e+11  
+  3  3     4.43991080e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 1.87724717e+11  
+  3  3     4.05576431e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 1.87724717e+11 # Higgs mixing parameters
+     1    -1.67299109e+03    # mu(Q)MSSM DRbar
+     2     3.90294082e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.17183024e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -6.05687690e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 1.87724717e+11  # MSSM DRbar SUSY breaking parameters
+     1     9.81342733e+02      # M_1(Q)
+     2     1.32475100e+03      # M_2(Q)
+     3     1.80244005e+03      # M_3(Q)
+    21     8.20816102e+06      # mH1^2(Q)
+    22     5.69007430e+06      # mH2^2(Q)
+    31     3.53774420e+03      # meL(Q)
+    32     3.53740703e+03      # mmuL(Q)
+    33     3.38095174e+03      # mtauL(Q)
+    34     3.50800816e+03      # meR(Q)
+    35     3.50732494e+03      # mmuR(Q)
+    36     3.18178526e+03      # mtauR(Q)
+    41     3.66665912e+03      # mqL1(Q)
+    42     3.66663066e+03      # mqL2(Q)
+    43     3.18919437e+03      # mqL3(Q)
+    44     3.63306358e+03      # muR(Q)
+    45     3.63305920e+03      # mcR(Q)
+    46     2.95254993e+03      # mtR(Q)
+    47     3.62631946e+03      # mdR(Q)
+    48     3.62626574e+03      # msR(Q)
+    49     3.32200298e+03      # mbR(Q)
+Block au Q= 1.87724717e+11  
+  1  1    -1.54761705e+03      # Au(Q)MSSM DRbar
+  2  2    -1.54761203e+03      # Ac(Q)MSSM DRbar
+  3  3     2.45096985e+03      # At(Q)MSSM DRbar
+Block ad Q= 1.87724717e+11  
+  1  1    -1.30685323e+03      # Ad(Q)MSSM DRbar
+  2  2    -1.30684117e+03      # As(Q)MSSM DRbar
+  3  3     2.89308685e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 1.87724717e+11  
+  1  1    -7.38125538e+02      # Ae(Q)MSSM DRbar
+  2  2    -7.38039536e+02      # Amu(Q)MSSM DRbar
+  3  3     3.62986338e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 6.17935128e+11  # SM gauge couplings
+     1     4.55238371e-01   # g'(Q)MSSM DRbar
+     2     6.75692109e-01   # g(Q)MSSM DRbar
+     3     7.65621469e-01   # g3(Q)MSSM DRbar
+Block yu Q= 6.17935128e+11  
+  3  3     6.53226752e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 6.17935128e+11  
+  3  3     4.34348663e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 6.17935128e+11  
+  3  3     4.03401163e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 6.17935128e+11 # Higgs mixing parameters
+     1    -1.67945733e+03    # mu(Q)MSSM DRbar
+     2     3.88629657e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.16301189e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -6.80242788e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 6.17935128e+11  # MSSM DRbar SUSY breaking parameters
+     1     1.01662177e+03      # M_1(Q)
+     2     1.33744495e+03      # M_2(Q)
+     3     1.75724101e+03      # M_3(Q)
+    21     8.62053147e+06      # mH1^2(Q)
+    22     6.27425388e+06      # mH2^2(Q)
+    31     3.53301632e+03      # meL(Q)
+    32     3.53271635e+03      # mmuL(Q)
+    33     3.39170355e+03      # mtauL(Q)
+    34     3.50663173e+03      # meR(Q)
+    35     3.50602450e+03      # mmuR(Q)
+    36     3.21370211e+03      # mtauR(Q)
+    41     3.64356307e+03      # mqL1(Q)
+    42     3.64353828e+03      # mqL2(Q)
+    43     3.21137777e+03      # mqL3(Q)
+    44     3.61316333e+03      # muR(Q)
+    45     3.61315950e+03      # mcR(Q)
+    46     2.99626528e+03      # mtR(Q)
+    47     3.60676319e+03      # mdR(Q)
+    48     3.60671645e+03      # msR(Q)
+    49     3.33412091e+03      # mbR(Q)
+Block au Q= 6.17935128e+11  
+  1  1    -1.38226460e+03      # Au(Q)MSSM DRbar
+  2  2    -1.38226075e+03      # Ac(Q)MSSM DRbar
+  3  3     2.67399994e+03      # At(Q)MSSM DRbar
+Block ad Q= 6.17935128e+11  
+  1  1    -1.15796963e+03      # Ad(Q)MSSM DRbar
+  2  2    -1.15796038e+03      # As(Q)MSSM DRbar
+  3  3     3.08402968e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 6.17935128e+11  
+  1  1    -6.67288952e+02      # Ae(Q)MSSM DRbar
+  2  2    -6.67220155e+02      # Amu(Q)MSSM DRbar
+  3  3     3.72776237e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 2.03406258e+12  # SM gauge couplings
+     1     4.63372525e-01   # g'(Q)MSSM DRbar
+     2     6.78359962e-01   # g(Q)MSSM DRbar
+     3     7.55879586e-01   # g3(Q)MSSM DRbar
+Block yu Q= 2.03406258e+12  
+  3  3     6.43318945e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 2.03406258e+12  
+  3  3     4.24917912e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 2.03406258e+12  
+  3  3     4.01043859e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 2.03406258e+12 # Higgs mixing parameters
+     1    -1.68487724e+03    # mu(Q)MSSM DRbar
+     2     3.87008596e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.15501875e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -7.57034809e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 2.03406258e+12  # MSSM DRbar SUSY breaking parameters
+     1     1.05443300e+03      # M_1(Q)
+     2     1.35031046e+03      # M_2(Q)
+     3     1.71430461e+03      # M_3(Q)
+    21     9.03461145e+06      # mH1^2(Q)
+    22     6.88049544e+06      # mH2^2(Q)
+    31     3.52811760e+03      # meL(Q)
+    32     3.52785454e+03      # mmuL(Q)
+    33     3.40258720e+03      # mtauL(Q)
+    34     3.50509260e+03      # meR(Q)
+    35     3.50456061e+03      # mmuR(Q)
+    36     3.24583868e+03      # mtauR(Q)
+    41     3.62164064e+03      # mqL1(Q)
+    42     3.62161933e+03      # mqL2(Q)
+    43     3.23612701e+03      # mqL3(Q)
+    44     3.59455744e+03      # muR(Q)
+    45     3.59455413e+03      # mcR(Q)
+    46     3.04357235e+03      # mtR(Q)
+    47     3.58855980e+03      # mdR(Q)
+    48     3.58851968e+03      # msR(Q)
+    49     3.34784466e+03      # mbR(Q)
+Block au Q= 2.03406258e+12  
+  1  1    -1.21753482e+03      # Au(Q)MSSM DRbar
+  2  2    -1.21753193e+03      # Ac(Q)MSSM DRbar
+  3  3     2.89932218e+03      # At(Q)MSSM DRbar
+Block ad Q= 2.03406258e+12  
+  1  1    -1.01203969e+03      # Ad(Q)MSSM DRbar
+  2  2    -1.01203277e+03      # As(Q)MSSM DRbar
+  3  3     3.27341362e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 2.03406258e+12  
+  1  1    -5.94701165e+02      # Ae(Q)MSSM DRbar
+  2  2    -5.94647601e+02      # Amu(Q)MSSM DRbar
+  3  3     3.82783516e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 6.69554198e+12  # SM gauge couplings
+     1     4.71958580e-01   # g'(Q)MSSM DRbar
+     2     6.81058089e-01   # g(Q)MSSM DRbar
+     3     7.46499192e-01   # g3(Q)MSSM DRbar
+Block yu Q= 6.69554198e+12  
+  3  3     6.33424803e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 6.69554198e+12  
+  3  3     4.15686676e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 6.69554198e+12  
+  3  3     3.98504522e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 6.69554198e+12 # Higgs mixing parameters
+     1    -1.68925354e+03    # mu(Q)MSSM DRbar
+     2     3.85431156e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.14783581e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -8.35761628e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 6.69554198e+12  # MSSM DRbar SUSY breaking parameters
+     1     1.09506325e+03      # M_1(Q)
+     2     1.36335534e+03      # M_2(Q)
+     3     1.67346682e+03      # M_3(Q)
+    21     9.45033537e+06      # mH1^2(Q)
+    22     7.50987121e+06      # mH2^2(Q)
+    31     3.52303757e+03      # meL(Q)
+    32     3.52281110e+03      # mmuL(Q)
+    33     3.41358123e+03      # mtauL(Q)
+    34     3.50336566e+03      # meR(Q)
+    35     3.50290812e+03      # mmuR(Q)
+    36     3.27814052e+03      # mtauR(Q)
+    41     3.60076818e+03      # mqL1(Q)
+    42     3.60075018e+03      # mqL2(Q)
+    43     3.26328150e+03      # mqL3(Q)
+    44     3.57711225e+03      # muR(Q)
+    45     3.57710944e+03      # mcR(Q)
+    46     3.09424644e+03      # mtR(Q)
+    47     3.57158376e+03      # mdR(Q)
+    48     3.57154991e+03      # msR(Q)
+    49     3.36300421e+03      # mbR(Q)
+Block au Q= 6.69554198e+12  
+  1  1    -1.05326810e+03      # Au(Q)MSSM DRbar
+  2  2    -1.05326601e+03      # Ac(Q)MSSM DRbar
+  3  3     3.12687911e+03      # At(Q)MSSM DRbar
+Block ad Q= 6.69554198e+12  
+  1  1    -8.68836404e+02      # Ad(Q)MSSM DRbar
+  2  2    -8.68831410e+02      # As(Q)MSSM DRbar
+  3  3     3.46130502e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 6.69554198e+12  
+  1  1    -5.20392876e+02      # Ae(Q)MSSM DRbar
+  2  2    -5.20352584e+02      # Amu(Q)MSSM DRbar
+  3  3     3.93002707e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 2.20397754e+13  # SM gauge couplings
+     1     4.81040166e-01   # g'(Q)MSSM DRbar
+     2     6.83787331e-01   # g(Q)MSSM DRbar
+     3     7.37458655e-01   # g3(Q)MSSM DRbar
+Block yu Q= 2.20397754e+13  
+  3  3     6.23533527e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 2.20397754e+13  
+  3  3     4.06643880e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 2.20397754e+13  
+  3  3     3.95782793e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 2.20397754e+13 # Higgs mixing parameters
+     1    -1.69258878e+03    # mu(Q)MSSM DRbar
+     2     3.83897559e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.14145041e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -9.16124242e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 2.20397754e+13  # MSSM DRbar SUSY breaking parameters
+     1     1.13884393e+03      # M_1(Q)
+     2     1.37658733e+03      # M_2(Q)
+     3     1.63457906e+03      # M_3(Q)
+    21     9.86754139e+06      # mH1^2(Q)
+    22     8.16322002e+06      # mH2^2(Q)
+    31     3.51776426e+03      # meL(Q)
+    32     3.51757403e+03      # mmuL(Q)
+    33     3.42466152e+03      # mtauL(Q)
+    34     3.50142077e+03      # meR(Q)
+    35     3.50103684e+03      # mmuR(Q)
+    36     3.31054700e+03      # mtauR(Q)
+    41     3.58083455e+03      # mqL1(Q)
+    42     3.58081970e+03      # mqL2(Q)
+    43     3.29268415e+03      # mqL3(Q)
+    44     3.56070503e+03      # muR(Q)
+    45     3.56070270e+03      # mcR(Q)
+    46     3.14806038e+03      # mtR(Q)
+    47     3.55572224e+03      # mdR(Q)
+    48     3.55569436e+03      # msR(Q)
+    49     3.37944086e+03      # mbR(Q)
+Block au Q= 2.20397754e+13  
+  1  1    -8.89328888e+02      # Au(Q)MSSM DRbar
+  2  2    -8.89327449e+02      # Ac(Q)MSSM DRbar
+  3  3     3.35659067e+03      # At(Q)MSSM DRbar
+Block ad Q= 2.20397754e+13  
+  1  1    -7.28151687e+02      # Ad(Q)MSSM DRbar
+  2  2    -7.28148240e+02      # As(Q)MSSM DRbar
+  3  3     3.64775856e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 2.20397754e+13  
+  1  1    -4.44376109e+02      # Ae(Q)MSSM DRbar
+  2  2    -4.44347148e+02      # Amu(Q)MSSM DRbar
+  3  3     4.03429974e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 7.25485254e+13  # SM gauge couplings
+     1     4.90667040e-01   # g'(Q)MSSM DRbar
+     2     6.86548547e-01   # g(Q)MSSM DRbar
+     3     7.28738113e-01   # g3(Q)MSSM DRbar
+Block yu Q= 7.25485254e+13  
+  3  3     6.13635500e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 7.25485254e+13  
+  3  3     3.97779391e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 7.25485254e+13  
+  3  3     3.92877924e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 7.25485254e+13 # Higgs mixing parameters
+     1    -1.69488536e+03    # mu(Q)MSSM DRbar
+     2     3.82407988e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.13585214e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -9.97827337e+07    # mA^2(Q)MSSM DRbar
+Block msoft Q= 7.25485254e+13  # MSSM DRbar SUSY breaking parameters
+     1     1.18616009e+03      # M_1(Q)
+     2     1.39001414e+03      # M_2(Q)
+     3     1.59750644e+03      # M_3(Q)
+    21     1.02859783e+07      # mH1^2(Q)
+    22     8.84113891e+06      # mH2^2(Q)
+    31     3.51228380e+03      # meL(Q)
+    32     3.51212946e+03      # mmuL(Q)
+    33     3.43580092e+03      # mtauL(Q)
+    34     3.49922150e+03      # meR(Q)
+    35     3.49891031e+03      # mmuR(Q)
+    36     3.34299015e+03      # mtauR(Q)
+    41     3.56173941e+03      # mqL1(Q)
+    42     3.56172756e+03      # mqL2(Q)
+    43     3.32417981e+03      # mqL3(Q)
+    44     3.54522177e+03      # muR(Q)
+    45     3.54521990e+03      # mcR(Q)
+    46     3.20478297e+03      # mtR(Q)
+    47     3.54087328e+03      # mdR(Q)
+    48     3.54085107e+03      # msR(Q)
+    49     3.39700592e+03      # mbR(Q)
+Block au Q= 7.25485254e+13  
+  1  1    -7.25601649e+02      # Au(Q)MSSM DRbar
+  2  2    -7.25600719e+02      # Ac(Q)MSSM DRbar
+  3  3     3.58835762e+03      # At(Q)MSSM DRbar
+Block ad Q= 7.25485254e+13  
+  1  1    -5.89793051e+02      # Ad(Q)MSSM DRbar
+  2  2    -5.89790819e+02      # As(Q)MSSM DRbar
+  3  3     3.83281977e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 7.25485254e+13  
+  1  1    -3.66642777e+02      # Ae(Q)MSSM DRbar
+  2  2    -3.66623233e+02      # Amu(Q)MSSM DRbar
+  3  3     4.14063268e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 2.38808629e+14  # SM gauge couplings
+     1     5.00896246e-01   # g'(Q)MSSM DRbar
+     2     6.89342615e-01   # g(Q)MSSM DRbar
+     3     7.20319290e-01   # g3(Q)MSSM DRbar
+Block yu Q= 2.38808629e+14  
+  3  3     6.03722144e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 2.38808629e+14  
+  3  3     3.89083899e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 2.38808629e+14  
+  3  3     3.89788737e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 2.38808629e+14 # Higgs mixing parameters
+     1    -1.69614544e+03    # mu(Q)MSSM DRbar
+     2     3.80962582e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.13103274e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.08058003e+08    # mA^2(Q)MSSM DRbar
+Block msoft Q= 2.38808629e+14  # MSSM DRbar SUSY breaking parameters
+     1     1.23746183e+03      # M_1(Q)
+     2     1.40364350e+03      # M_2(Q)
+     3     1.56212625e+03      # M_3(Q)
+    21     1.07053107e+07      # mH1^2(Q)
+    22     9.54397398e+06      # mH2^2(Q)
+    31     3.50658005e+03      # meL(Q)
+    32     3.50646124e+03      # mmuL(Q)
+    33     3.44696881e+03      # mtauL(Q)
+    34     3.49672348e+03      # meR(Q)
+    35     3.49648413e+03      # mmuR(Q)
+    36     3.37539325e+03      # mtauR(Q)
+    41     3.54339176e+03      # mqL1(Q)
+    42     3.54338278e+03      # mqL2(Q)
+    43     3.35761409e+03      # mqL3(Q)
+    44     3.53055498e+03      # muR(Q)
+    45     3.53055356e+03      # mcR(Q)
+    46     3.26417783e+03      # mtR(Q)
+    47     3.52694418e+03      # mdR(Q)
+    48     3.52692738e+03      # msR(Q)
+    49     3.41555948e+03      # mbR(Q)
+Block au Q= 2.38808629e+14  
+  1  1    -5.61986807e+02      # Au(Q)MSSM DRbar
+  2  2    -5.61986261e+02      # Ac(Q)MSSM DRbar
+  3  3     3.82206534e+03      # At(Q)MSSM DRbar
+Block ad Q= 2.38808629e+14  
+  1  1    -4.53580566e+02      # Ad(Q)MSSM DRbar
+  2  2    -4.53579252e+02      # As(Q)MSSM DRbar
+  3  3     4.01652744e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 2.38808629e+14  
+  1  1    -2.87162595e+02      # Ae(Q)MSSM DRbar
+  2  2    -2.87150583e+02      # Amu(Q)MSSM DRbar
+  3  3     4.24902546e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 7.86088499e+14  # SM gauge couplings
+     1     5.11793545e-01   # g'(Q)MSSM DRbar
+     2     6.92170438e-01   # g(Q)MSSM DRbar
+     3     7.12185343e-01   # g3(Q)MSSM DRbar
+Block yu Q= 7.86088499e+14  
+  3  3     5.93785777e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 7.86088499e+14  
+  3  3     3.80548802e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 7.86088499e+14  
+  3  3     3.86513569e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 7.86088499e+14 # Higgs mixing parameters
+     1    -1.69637092e+03    # mu(Q)MSSM DRbar
+     2     3.79561435e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.12698612e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.16409676e+08    # mA^2(Q)MSSM DRbar
+Block msoft Q= 7.86088499e+14  # MSSM DRbar SUSY breaking parameters
+     1     1.29327875e+03      # M_1(Q)
+     2     1.41748324e+03      # M_2(Q)
+     3     1.52832666e+03      # M_3(Q)
+    21     1.11251220e+07      # mH1^2(Q)
+    22     1.02718108e+07      # mH2^2(Q)
+    31     3.50063404e+03      # meL(Q)
+    32     3.50055034e+03      # mmuL(Q)
+    33     3.45813058e+03      # mtauL(Q)
+    34     3.49387224e+03      # meR(Q)
+    35     3.49370379e+03      # mmuR(Q)
+    36     3.40766895e+03      # mtauR(Q)
+    41     3.52570870e+03      # mqL1(Q)
+    42     3.52570247e+03      # mqL2(Q)
+    43     3.39283241e+03      # mqL3(Q)
+    44     3.51660151e+03      # muR(Q)
+    45     3.51660052e+03      # mcR(Q)
+    46     3.32600231e+03      # mtR(Q)
+    47     3.51385003e+03      # mdR(Q)
+    48     3.51383840e+03      # msR(Q)
+    49     3.43496928e+03      # mbR(Q)
+Block au Q= 7.86088499e+14  
+  1  1    -3.98396620e+02      # Au(Q)MSSM DRbar
+  2  2    -3.98396347e+02      # Ac(Q)MSSM DRbar
+  3  3     4.05758772e+03      # At(Q)MSSM DRbar
+Block ad Q= 7.86088499e+14  
+  1  1    -3.19343911e+02      # Ad(Q)MSSM DRbar
+  2  2    -3.19343251e+02      # As(Q)MSSM DRbar
+  3  3     4.19891609e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 7.86088499e+14  
+  1  1    -2.05880219e+02      # Ae(Q)MSSM DRbar
+  2  2    -2.05873887e+02      # Amu(Q)MSSM DRbar
+  3  3     4.35950065e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 2.58757454e+15  # SM gauge couplings
+     1     5.23435210e-01   # g'(Q)MSSM DRbar
+     2     6.95032938e-01   # g(Q)MSSM DRbar
+     3     7.04320719e-01   # g3(Q)MSSM DRbar
+Block yu Q= 2.58757454e+15  
+  3  3     5.83819468e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 2.58757454e+15  
+  3  3     3.72166112e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 2.58757454e+15  
+  3  3     3.83050199e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 2.58757454e+15 # Higgs mixing parameters
+     1    -1.69556332e+03    # mu(Q)MSSM DRbar
+     2     3.78204593e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.12370833e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.24809839e+08    # mA^2(Q)MSSM DRbar
+Block msoft Q= 2.58757454e+15  # MSSM DRbar SUSY breaking parameters
+     1     1.35423835e+03      # M_1(Q)
+     2     1.43154130e+03      # M_2(Q)
+     3     1.49600555e+03      # M_3(Q)
+    21     1.15449161e+07      # mH1^2(Q)
+    22     1.10244647e+07      # mH2^2(Q)
+    31     3.49442317e+03      # meL(Q)
+    32     3.49437418e+03      # mmuL(Q)
+    33     3.46924693e+03      # mtauL(Q)
+    34     3.49060037e+03      # meR(Q)
+    35     3.49050187e+03      # mmuR(Q)
+    36     3.43971684e+03      # mtauR(Q)
+    41     3.50861425e+03      # mqL1(Q)
+    42     3.50861065e+03      # mqL2(Q)
+    43     3.42967930e+03      # mqL3(Q)
+    44     3.50326021e+03      # muR(Q)
+    45     3.50325964e+03      # mcR(Q)
+    46     3.39000652e+03      # mtR(Q)
+    47     3.50151234e+03      # mdR(Q)
+    48     3.50150564e+03      # msR(Q)
+    49     3.45510973e+03      # mbR(Q)
+Block au Q= 2.58757454e+15  
+  1  1    -2.34750787e+02      # Au(Q)MSSM DRbar
+  2  2    -2.34750688e+02      # Ac(Q)MSSM DRbar
+  3  3     4.29479159e+03      # At(Q)MSSM DRbar
+Block ad Q= 2.58757454e+15  
+  1  1    -1.86919461e+02      # Ad(Q)MSSM DRbar
+  2  2    -1.86919220e+02      # As(Q)MSSM DRbar
+  3  3     4.38001850e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 2.58757454e+15  
+  1  1    -1.22711385e+02      # Ae(Q)MSSM DRbar
+  2  2    -1.22708920e+02      # Amu(Q)MSSM DRbar
+  3  3     4.47210778e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 8.51754222e+15  # SM gauge couplings
+     1     5.35910292e-01   # g'(Q)MSSM DRbar
+     2     6.97931069e-01   # g(Q)MSSM DRbar
+     3     6.96711033e-01   # g3(Q)MSSM DRbar
+Block yu Q= 8.51754222e+15  
+  3  3     5.73816891e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 8.51754222e+15  
+  3  3     3.63928348e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 8.51754222e+15  
+  3  3     3.79395758e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 8.51754222e+15 # Higgs mixing parameters
+     1    -1.69372359e+03    # mu(Q)MSSM DRbar
+     2     3.76892052e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.12119768e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.33231348e+08    # mA^2(Q)MSSM DRbar
+Block msoft Q= 8.51754222e+15  # MSSM DRbar SUSY breaking parameters
+     1     1.42108989e+03      # M_1(Q)
+     2     1.44582584e+03      # M_2(Q)
+     3     1.46506953e+03      # M_3(Q)
+    21     1.19641163e+07      # mH1^2(Q)
+    22     1.18014702e+07      # mH2^2(Q)
+    31     3.48792026e+03      # meL(Q)
+    32     3.48790555e+03      # mmuL(Q)
+    33     3.48027291e+03      # mtauL(Q)
+    34     3.48682366e+03      # meR(Q)
+    35     3.48679411e+03      # mmuR(Q)
+    36     3.47142014e+03      # mtauR(Q)
+    41     3.49203833e+03      # mqL1(Q)
+    42     3.49203726e+03      # mqL2(Q)
+    43     3.46799793e+03      # mqL3(Q)
+    44     3.49042924e+03      # muR(Q)
+    45     3.49042907e+03      # mcR(Q)
+    46     3.45593227e+03      # mtR(Q)
+    47     3.48985766e+03      # mdR(Q)
+    48     3.48985568e+03      # msR(Q)
+    49     3.47586084e+03      # mbR(Q)
+Block au Q= 8.51754222e+15  
+  1  1    -7.09716312e+01      # Au(Q)MSSM DRbar
+  2  2    -7.09716190e+01      # Ac(Q)MSSM DRbar
+  3  3     4.53354167e+03      # At(Q)MSSM DRbar
+Block ad Q= 8.51754222e+15  
+  1  1    -5.61472684e+01      # Ad(Q)MSSM DRbar
+  2  2    -5.61472367e+01      # As(Q)MSSM DRbar
+  3  3     4.55986844e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 8.51754222e+15  
+  1  1    -3.75377759e+01      # Ae(Q)MSSM DRbar
+  2  2    -3.75374070e+01      # Amu(Q)MSSM DRbar
+  3  3     4.58692861e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 2.80372698e+16  # SM gauge couplings
+     1     5.49323515e-01   # g'(Q)MSSM DRbar
+     2     7.00865814e-01   # g(Q)MSSM DRbar
+     3     6.89342962e-01   # g3(Q)MSSM DRbar
+Block yu Q= 2.80372698e+16  
+  3  3     5.63772160e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 2.80372698e+16  
+  3  3     3.55828447e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 2.80372698e+16  
+  3  3     3.75546614e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 2.80372698e+16 # Higgs mixing parameters
+     1    -1.69085192e+03    # mu(Q)MSSM DRbar
+     2     3.75623759e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.11945485e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.41647978e+08    # mA^2(Q)MSSM DRbar
+Block msoft Q= 2.80372698e+16  # MSSM DRbar SUSY breaking parameters
+     1     1.49473543e+03      # M_1(Q)
+     2     1.46034527e+03      # M_2(Q)
+     3     1.43543310e+03      # M_3(Q)
+    21     1.23820615e+07      # mH1^2(Q)
+    22     1.26020699e+07      # mH2^2(Q)
+    31     3.48109218e+03      # meL(Q)
+    32     3.48111131e+03      # mmuL(Q)
+    33     3.49115668e+03      # mtauL(Q)
+    34     3.48243577e+03      # meR(Q)
+    35     3.48247418e+03      # mmuR(Q)
+    36     3.50264120e+03      # mtauR(Q)
+    41     3.47591581e+03      # mqL1(Q)
+    42     3.47591718e+03      # mqL2(Q)
+    43     3.50762974e+03      # mqL3(Q)
+    44     3.47800294e+03      # muR(Q)
+    45     3.47800316e+03      # mcR(Q)
+    46     3.52351174e+03      # mtR(Q)
+    47     3.47881622e+03      # mdR(Q)
+    48     3.47881875e+03      # msR(Q)
+    49     3.49710720e+03      # mbR(Q)
+Block au Q= 2.80372698e+16  
+  1  1     9.30213668e+01      # Au(Q)MSSM DRbar
+  2  2     9.30213718e+01      # Ac(Q)MSSM DRbar
+  3  3     4.77370622e+03      # At(Q)MSSM DRbar
+Block ad Q= 2.80372698e+16  
+  1  1     7.31321857e+01      # Ad(Q)MSSM DRbar
+  2  2     7.31321936e+01      # As(Q)MSSM DRbar
+  3  3     4.73850366e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 2.80372698e+16  
+  1  1     4.97998058e+01      # Ae(Q)MSSM DRbar
+  2  2     4.97998064e+01      # Amu(Q)MSSM DRbar
+  3  3     4.70408404e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 9.22905316e+16  # SM gauge couplings
+     1     5.63799017e-01   # g'(Q)MSSM DRbar
+     2     7.03838192e-01   # g(Q)MSSM DRbar
+     3     6.82204146e-01   # g3(Q)MSSM DRbar
+Block yu Q= 9.22905316e+16  
+  3  3     5.53679654e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 9.22905316e+16  
+  3  3     3.47859672e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 9.22905316e+16  
+  3  3     3.71498218e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 9.22905316e+16 # Higgs mixing parameters
+     1    -1.68694746e+03    # mu(Q)MSSM DRbar
+     2     3.74399608e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.11848309e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.50034598e+08    # mA^2(Q)MSSM DRbar
+Block msoft Q= 9.22905316e+16  # MSSM DRbar SUSY breaking parameters
+     1     1.57627108e+03      # M_1(Q)
+     2     1.47510833e+03      # M_2(Q)
+     3     1.40701788e+03      # M_3(Q)
+    21     1.27979981e+07      # mH1^2(Q)
+    22     1.34252022e+07      # mH2^2(Q)
+    31     3.47389799e+03      # meL(Q)
+    32     3.47395050e+03      # mmuL(Q)
+    33     3.50183781e+03      # mtauL(Q)
+    34     3.47730103e+03      # meR(Q)
+    35     3.47740637e+03      # mmuR(Q)
+    36     3.53321532e+03      # mtauR(Q)
+    41     3.46018563e+03      # mqL1(Q)
+    42     3.46018934e+03      # mqL2(Q)
+    43     3.54841425e+03      # mqL3(Q)
+    44     3.46586785e+03      # muR(Q)
+    45     3.46586845e+03      # mcR(Q)
+    46     3.59246570e+03      # mtR(Q)
+    47     3.46832039e+03      # mdR(Q)
+    48     3.46832726e+03      # msR(Q)
+    49     3.51873675e+03      # mbR(Q)
+Block au Q= 9.22905316e+16  
+  1  1     2.57318002e+02      # Au(Q)MSSM DRbar
+  2  2     2.57318070e+02      # Ac(Q)MSSM DRbar
+  3  3     5.01516386e+03      # At(Q)MSSM DRbar
+Block ad Q= 9.22905316e+16  
+  1  1     2.01081666e+02      # Ad(Q)MSSM DRbar
+  2  2     2.01081814e+02      # As(Q)MSSM DRbar
+  3  3     4.91596946e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 9.22905316e+16  
+  1  1     1.39510549e+02      # Ae(Q)MSSM DRbar
+  2  2     1.39511863e+02      # Amu(Q)MSSM DRbar
+  3  3     4.82374334e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 3.03793567e+17  # SM gauge couplings
+     1     5.79485240e-01   # g'(Q)MSSM DRbar
+     2     7.06849259e-01   # g(Q)MSSM DRbar
+     3     6.75283104e-01   # g3(Q)MSSM DRbar
+Block yu Q= 3.03793567e+17  
+  3  3     5.43533812e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 3.03793567e+17  
+  3  3     3.40015507e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 3.03793567e+17  
+  3  3     3.67244917e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 3.03793567e+17 # Higgs mixing parameters
+     1    -1.68200790e+03    # mu(Q)MSSM DRbar
+     2     3.73219444e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.11828854e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.58367387e+08    # mA^2(Q)MSSM DRbar
+Block msoft Q= 3.03793567e+17  # MSSM DRbar SUSY breaking parameters
+     1     1.66704216e+03      # M_1(Q)
+     2     1.49012424e+03      # M_2(Q)
+     3     1.37975198e+03      # M_3(Q)
+    21     1.32110677e+07      # mH1^2(Q)
+    22     1.42694848e+07      # mH2^2(Q)
+    31     3.46628631e+03      # meL(Q)
+    32     3.46637171e+03      # mmuL(Q)
+    33     3.51224485e+03      # mtauL(Q)
+    34     3.47124409e+03      # meR(Q)
+    35     3.47141533e+03      # mmuR(Q)
+    36     3.56294199e+03      # mtauR(Q)
+    41     3.44478983e+03      # mqL1(Q)
+    42     3.44479579e+03      # mqL2(Q)
+    43     3.59018887e+03      # mqL3(Q)
+    44     3.45389750e+03      # muR(Q)
+    45     3.45389847e+03      # mcR(Q)
+    46     3.66250086e+03      # mtR(Q)
+    47     3.45830299e+03      # mdR(Q)
+    48     3.45831401e+03      # msR(Q)
+    49     3.54063938e+03      # mbR(Q)
+Block au Q= 3.03793567e+17  
+  1  1     4.22025159e+02      # Au(Q)MSSM DRbar
+  2  2     4.22025352e+02      # Ac(Q)MSSM DRbar
+  3  3     5.25781174e+03      # At(Q)MSSM DRbar
+Block ad Q= 3.03793567e+17  
+  1  1     3.27871524e+02      # Ad(Q)MSSM DRbar
+  2  2     3.27871959e+02      # As(Q)MSSM DRbar
+  3  3     5.09232286e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 3.03793567e+17  
+  1  1     2.31865883e+02      # Ae(Q)MSSM DRbar
+  2  2     2.31870145e+02      # Amu(Q)MSSM DRbar
+  3  3     4.94613654e+03      # Atau(Q)MSSM DRbar
+Block gauge Q= 1.00000000e+18  # SM gauge couplings
+     1     5.96561422e-01   # g'(Q)MSSM DRbar
+     2     7.09900120e-01   # g(Q)MSSM DRbar
+     3     6.68569158e-01   # g3(Q)MSSM DRbar
+Block yu Q= 1.00000000e+18  
+  3  3     5.33328897e-01   # Yt(Q)MSSM DRbar
+Block yd Q= 1.00000000e+18  
+  3  3     3.32289559e-01   # Yb(Q)MSSM DRbar
+Block ye Q= 1.00000000e+18  
+  3  3     3.62779702e-01   # Ytau(Q)MSSM DRbar
+Block hmix Q= 1.00000000e+18 # Higgs mixing parameters
+     1    -1.67602897e+03    # mu(Q)MSSM DRbar
+     2     3.72083065e+01    # tan beta(Q)MSSM DRbar Feynman gauge
+     3     2.11888063e+02    # higgs vev(Q)MSSM DRbar Feynman gauge
+     4    -1.66624101e+08    # mA^2(Q)MSSM DRbar
+Block msoft Q= 1.00000000e+18  # MSSM DRbar SUSY breaking parameters
+     1     1.76871852e+03      # M_1(Q)
+     2     1.50540274e+03      # M_2(Q)
+     3     1.35356944e+03      # M_3(Q)
+    21     1.36202856e+07      # mH1^2(Q)
+    22     1.51331942e+07      # mH2^2(Q)
+    31     3.45819162e+03      # meL(Q)
+    32     3.45830942e+03      # mmuL(Q)
+    33     3.52229194e+03      # mtauL(Q)
+    34     3.46403525e+03      # meR(Q)
+    35     3.46427138e+03      # mmuR(Q)
+    36     3.59157243e+03      # mtauR(Q)
+    41     3.42967261e+03      # mqL1(Q)
+    42     3.42968075e+03      # mqL2(Q)
+    43     3.63278882e+03      # mqL3(Q)
+    44     3.44194533e+03      # muR(Q)
+    45     3.44194667e+03      # mcR(Q)
+    46     3.73330594e+03      # mtR(Q)
+    47     3.44869506e+03      # mdR(Q)
+    48     3.44871007e+03      # msR(Q)
+    49     3.56270516e+03      # mbR(Q)
+Block au Q= 1.00000000e+18  
+  1  1     5.87276634e+02      # Au(Q)MSSM DRbar
+  2  2     5.87277008e+02      # Ac(Q)MSSM DRbar
+  3  3     5.50157586e+03      # At(Q)MSSM DRbar
+Block ad Q= 1.00000000e+18  
+  1  1     4.53685063e+02      # Ad(Q)MSSM DRbar
+  2  2     4.53685913e+02      # As(Q)MSSM DRbar
+  3  3     5.26763799e+03      # Ab(Q)MSSM DRbar
+Block ae Q= 1.00000000e+18  
+  1  1     3.27216119e+02      # Ae(Q)MSSM DRbar
+  2  2     3.27224917e+02      # Amu(Q)MSSM DRbar
+  3  3     5.07157118e+03      # Atau(Q)MSSM DRbar

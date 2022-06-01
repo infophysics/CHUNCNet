@@ -3,14 +3,7 @@ Class for sampling from latent space distributions of CHUNC models
 """
 import numpy as np
 import torch
-
-from chunc.utils.logger import Logger
-
-"""
-Class for sampling from latent space distributions of CHUNC models
-"""
-import numpy as np
-import torch
+from sklearn.neighbors import KernelDensity
 
 from chunc.utils.logger import Logger
 
@@ -37,6 +30,52 @@ class CHUNCSampler:
             sample_mean,sample_sigma,
             size=(num_samples,len(self.latent_variables))
         )
+        return torch.tensor(valid_samples, dtype=torch.float)
+
+class CHUNCKDESampler:
+    """
+    """
+    def __init__(self,
+        model,
+        latent_variables:   list=[],
+    ):
+        self.name = model.name + "_sampler"
+        self.logger = Logger(self.name, output='both', file_mode='w')
+        self.logger.info(f"constructing model sampler.")
+        self.model = model
+        self.latent_variables = latent_variables
+        self.kder = KernelDensity(kernel="gaussian", bandwidth=0.1)
+        self.device = model.device
+
+    def sample_latent(self,
+        loader,     
+        num_samples:    int=100,
+    ):
+        inference_loader = loader.all_loader
+        inference_loop = enumerate(inference_loader, 0)
+        
+        # set up array for latent
+        latent = torch.empty(size=(0,len(self.latent_variables)), dtype=torch.float, device=self.device)
+        targets = torch.empty(size=(0,1), dtype=torch.float, device=self.device)
+        
+        self.logger.info(f"running inference on dataset '{loader.dataset.name}'.")
+        # make sure to set model to eval() during validation!
+        self.model.eval()
+        with torch.no_grad():
+            for ii, data in inference_loop:
+                # get the network output
+                outputs = self.model(data)
+                latent = torch.cat((latent, outputs[1][:,self.latent_variables]), dim=0)
+                targets = torch.cat((targets,data[1].to(self.device)), dim=0)
+        
+        latent = latent.cpu()
+        targets = targets.cpu()
+        valid_mask = (targets == 1)
+        
+        kder = self.kder.fit(latent[valid_mask.flatten()])
+
+        valid_samples = kder.sample(n_samples=num_samples)
+
         return torch.tensor(valid_samples, dtype=torch.float)
 
         
@@ -159,16 +198,6 @@ class CHUNCCSampler:
             if sample_type == 'valid':
                 return torch.tensor(valid_samples, dtype=torch.float)
 
-        # first get bin samples
-        bin_samples = []
-        sample_probs = np.random.uniform(0,1.0,num_samples)
-        for ii in range(len(sample_probs)):
-            bin_samples.append(np.random.uniform(
-                low=self.latent_binary_hist['binary_edges'][binary_bin],
-                high=self.latent_binary_hist['binary_edges'][binary_bin+1],
-                size=1
-            )[0])
-
         # generate invalid samples
         invalid_samples = []
         if sample_type == 'invalid' or sample_type == 'all':
@@ -191,3 +220,20 @@ class CHUNCCSampler:
                 return torch.tensor(invalid_samples, dtype=torch.float)
         if sample_type == 'all':
             return torch.tensor(np.concatenate((valid_samples, invalid_samples)), dtype=torch.float)
+    
+    def sample_kde(self,
+        num_samples:    int=100,
+        binary_bin:     int=0,
+        sample_type:    str='valid',
+    ):
+        if binary_bin >= self.num_binary_bins:
+            self.logger.error(f"specified binary bin: {binary_bin} is out of bounds!")
+        # first get bin samples
+        bin_samples = []
+        sample_probs = np.random.uniform(0,1.0,num_samples)
+        for ii in range(len(sample_probs)):
+            bin_samples.append(np.random.uniform(
+                low=self.latent_binary_hist['binary_edges'][binary_bin],
+                high=self.latent_binary_hist['binary_edges'][binary_bin+1],
+                size=1
+            )[0])

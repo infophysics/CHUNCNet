@@ -24,8 +24,8 @@ if __name__ == "__main__":
     # clean up folders
     save_model()
 
-    constraints = ["higgs_dm","higgs_dm_lsp"]
-    epochs = [200, 200]
+    constraints = ["higgs_dm"]
+    epochs = [100]
 
     for ii, constraint in enumerate(constraints):
         """
@@ -170,14 +170,14 @@ if __name__ == "__main__":
             checkpoint=25
         )
 
-        # run mapper
-        chuncc_mapper = MSSMMapper(
-            chuncc_dataset,
-            chuncc_model
-        )
-        chuncc_mapper.run_mapper(
-            num_covers=50
-        )
+        # # run mapper
+        # chuncc_mapper = MSSMMapper(
+        #     chuncc_dataset,
+        #     chuncc_model
+        # )
+        # chuncc_mapper.run_mapper(
+        #     num_covers=50
+        # )
 
         # clean up
         save_model(f"cmssm_{constraint}")

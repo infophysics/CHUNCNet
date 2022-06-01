@@ -15,7 +15,7 @@ from chunc.dataset.chunc import CHUNCDataset
 from chunc.dataset.cmssm import cMSSMDataset
 from chunc.models import CHUNC
 from chunc.utils.loader import Loader
-from chunc.sampler import CHUNCSampler
+from chunc.sampler import CHUNCKDESampler
 from chunc.sampler import CHUNCSampler
 from chunc.generator import CHUNCGenerator
 from chunc.utils.mssm import MSSMGenerator
@@ -25,13 +25,13 @@ from datetime import datetime
 
 if __name__ == "__main__":
 
-    num_events = 10000
+    num_events = 100
     models = [
-        "sample_models/cmssm_higgs_dm/models/chunc_cmssm_higgs_dm/chunc_cmssm_higgs_dm_trained_params.ckpt",
-        "sample_models/cmssm_higgs_dm_lsp/models/chunc_cmssm_higgs_dm_lsp/chunc_cmssm_higgs_dm_lsp_trained_params.ckpt"
+        "sample_models/cmssm_higgs_dm2/models/chunc_cmssm_higgs_dm/chunc_cmssm_higgs_dm_trained_params.ckpt",
+        "sample_models/cmssm_higgs_dm_lsp2/models/chunc_cmssm_higgs_dm_lsp/chunc_cmssm_higgs_dm_lsp_trained_params.ckpt"
     ]
     model_names = ["cmssm_higgs_dm", "cmssm_higgs_dm_lsp"]
-    sigmas = [1.0,0.5,0.1,0.01,0.001,0.0001]
+    sigmas = [1.0,0.5,0.1,0.01,0.03,0.001,0.0001]
     num_iterations = 10
 
     """
@@ -66,7 +66,7 @@ if __name__ == "__main__":
         chunc_model.load_model(model)
 
         """Generate samples from the latent variables"""
-        chunc_sampler = CHUNCSampler(
+        chunc_sampler = CHUNCKDESampler(
             model=chunc_model,
             latent_variables=[0,1,2,3,4],
         )
@@ -118,6 +118,6 @@ if __name__ == "__main__":
                     f"old_outputs/{now}/"
                 )
 
-        with open(f"{model_names[ii]}_validities.csv", "w") as file:
+        with open(f"{model_names[ii]}_validities3.csv", "w") as file:
             writer = csv.writer(file, delimiter=",")
             writer.writerows(validities)

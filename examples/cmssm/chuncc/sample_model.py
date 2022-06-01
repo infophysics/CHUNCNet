@@ -24,13 +24,12 @@ from datetime import datetime
 
 if __name__ == "__main__":
 
-    num_events = 10000
+    num_events = 1000
     models = [
-        "sample_models/cmssm_higgs_dm/models/chuncc_cmssm_higgs_dm/chuncc_cmssm_higgs_dm_trained_params.ckpt",
-        "sample_models/cmssm_higgs_dm_lsp/models/chuncc_cmssm_higgs_dm_lsp/chuncc_cmssm_higgs_dm_lsp_trained_params.ckpt"
+        "sample_models/cmssm_higgs_dm2/models/chuncc_cmssm/chuncc_cmssm_trained_params.ckpt",
+        #"sample_models/cmssm_higgs_dm_lsp/models/chuncc_cmssm/chuncc_cmssm_trained_params.ckpt"
     ]
-    model_names = ["cmssm_higgs_dm", "cmssm_higgs_dm_lsp"]
-    sigmas = [1.0,0.5,0.1,0.01,0.001,0.0001]
+    model_names = ["cmssm_higgs_dm"]
     num_iterations = 10
 
     """
@@ -85,6 +84,7 @@ if __name__ == "__main__":
             'num_events':   num_events,
             'num_workers':  16,
             'binary_bin':   9,
+            'variables':    features,
         }
         chuncc_generator = CHUNCCGenerator(chuncc_generator_config)
         """
@@ -92,31 +92,28 @@ if __name__ == "__main__":
         it correlates with validities.
         """
         
-        validities = [["sigma","total","higgs","dm","higgs_dm","higgs_dm_lsp"]]
+        validities = [["total","higgs","dm","higgs_dm","higgs_dm_lsp"]]
 
         now = datetime.now()
         if not os.path.isdir(f"old_outputs/{now}"):
             os.makedirs(f"old_outputs/{now}")
         
-        for sigma in sigmas:
-            for iteration in range(num_iterations):
-                chuncc_generator.generate(
-                    chuncc_model,
-                    chuncc_loader,
-                    mean=0.0,
-                    sigma=sigma,
-                    iteration=iteration,
-                )
-                num_valid = chuncc_generator.check_validities()
-                temp_valid = [sigma, num_events]
-                for valid in num_valid:
-                    temp_valid.append(valid)
-                validities.append(temp_valid)
+        for iteration in range(num_iterations):
+            chuncc_generator.generate(
+                chuncc_model,
+                chuncc_loader,   
+                iteration=iteration,
+            )
+            num_valid = chuncc_generator.check_validities()
+            temp_valid = [num_events]
+            for valid in num_valid:
+                temp_valid.append(valid)
+            validities.append(temp_valid)
 
-                shutil.move(
-                    f"mssm_output/cmssm_generated_{0.0}_{sigma}_{iteration}.txt", 
-                    f"old_outputs/{now}/"
-                )
+            shutil.move(
+                f"mssm_output/cmssm_generated_{iteration}.txt", 
+                f"old_outputs/{now}/"
+            )
 
         with open(f"{model_names[ii]}_validities.csv", "w") as file:
             writer = csv.writer(file, delimiter=",")

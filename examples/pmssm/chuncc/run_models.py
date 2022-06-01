@@ -24,8 +24,8 @@ if __name__ == "__main__":
     # clean up folders
     save_model()
 
-    constraints = ["higgs_dm","higgs_dm_lsp"]
-    epochs = [200, 200]
+    constraints = ["higgs_dm_lsp"]
+    epochs = [200]
 
     for ii, constraint in enumerate(constraints):
         """
@@ -46,7 +46,7 @@ if __name__ == "__main__":
         ]
         chuncc_dataset = CHUNCDataset(
             name="chunc_dataset",
-            input_file=f'datasets/pmssm_{constraint}_symmetric.npz',
+            input_file=f'datasets/pmssm_{constraint}_symmetric_no_gap.npz',
             features = features,
             classes = ['valid']
         )
@@ -67,7 +67,7 @@ if __name__ == "__main__":
             # dimension of the input variables
             'input_dimension':      19,
             # encoder parameters
-            'encoder_dimensions':   [25, 50, 100, 50, 25],
+            'encoder_dimensions':   [50, 100, 200, 100, 50],
             'encoder_activation':   'leaky_relu',
             'encoder_activation_params':    {'negative_slope': 0.02},
             'encoder_normalization':'bias',
@@ -77,7 +77,7 @@ if __name__ == "__main__":
             'latent_binary_activation': 'sigmoid',
             'latent_binary_activation_params':  {},
             # decoder parameters
-            'decoder_dimensions':   [25, 50, 100, 50, 25],
+            'decoder_dimensions':   [50, 100, 200, 100, 50],
             'decoder_activation':   'leaky_relu',
             'decoder_activation_params':    {'negative_slope': 0.02},
             'decoder_normalization':'bias',
@@ -86,7 +86,7 @@ if __name__ == "__main__":
             'output_activation_params':     {},
         }
         chuncc_model = CHUNCC(
-            name = 'chuncc_pmssm',
+            name = f'chuncc_pmssm_{constraint}_no_gap',
             cfg  = chuncc_pmssm_config
         ) 
 
@@ -105,7 +105,7 @@ if __name__ == "__main__":
             'LatentWassersteinLoss': {
                 'alpha':    1.0,
                 'latent_variables': [ii for ii in range(19)],
-                'distribution':     generate_gaussian(dimension=5),
+                'distribution':     generate_gaussian(dimension=19),
                 'num_projections':  1000,
             },
             'LatentBinaryLoss': {
@@ -175,14 +175,14 @@ if __name__ == "__main__":
             checkpoint=25
         )
 
-        # run mapper
-        chuncc_mapper = MSSMMapper(
-            chuncc_dataset,
-            chuncc_model
-        )
-        chuncc_mapper.run_mapper(
-            num_covers=50
-        )
+        # # run mapper
+        # chuncc_mapper = MSSMMapper(
+        #     chuncc_dataset,
+        #     chuncc_model
+        # )
+        # chuncc_mapper.run_mapper(
+        #     num_covers=50
+        # )
 
         # clean up
-        save_model(f"pmssm_{constraint}")
+        save_model(f"pmssm_{constraint}_no_gap")

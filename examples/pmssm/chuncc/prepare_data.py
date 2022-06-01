@@ -5,7 +5,7 @@ import os
 from datetime import datetime
 
 from chunc.dataset.parameters import *
-from chunc.dataset.cmssm import pMSSMDataset
+from chunc.dataset.pmssm import pMSSMDataset
 
 if __name__ == "__main__":
 
@@ -24,8 +24,9 @@ if __name__ == "__main__":
     dataset.generate_training_set(
         constrained_file    = 'constraints/higgs_dm_lsp/constrained_data.csv',
         unconstrained_file  = 'constraints/higgs_dm_lsp/unconstrained_data.csv',
+        close_gap           = True,
         symmetric_events    = True,
         labeling    = 'binary',
         save        = True,
-        output_file = 'pmssm_dataset_symmetric.npz'
+        output_file = 'pmssm_higgs_dm_lsp_symmetric_no_gap.npz'
     )

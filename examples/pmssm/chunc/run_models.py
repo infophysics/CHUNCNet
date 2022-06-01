@@ -24,8 +24,8 @@ if __name__ == "__main__":
     # clean up folders
     save_model()
 
-    constraints = ["higgs_dm","higgs_dm_lsp"]
-    epochs = [200, 200]
+    constraints = ["higgs_dm_lsp"]
+    epochs = [100]
 
     for ii, constraint in enumerate(constraints):
         """
@@ -46,7 +46,7 @@ if __name__ == "__main__":
         ]
         chunc_dataset = CHUNCDataset(
             name="chunc_dataset",
-            input_file=f'datasets/pmssm_{constraint}_symmetric.npz',
+            input_file=f'datasets/pmssm_{constraint}_symmetric_no_gap.npz',
             features = features,
             classes = ['valid']
         )
@@ -67,14 +67,14 @@ if __name__ == "__main__":
             # dimension of the input variables
             'input_dimension':      19,
             # encoder parameters
-            'encoder_dimensions':   [25, 50, 100, 50, 25],
+            'encoder_dimensions':   [50, 100, 200, 100, 50],
             'encoder_activation':   'leaky_relu',
             'encoder_activation_params':    {'negative_slope': 0.02},
             'encoder_normalization':'bias',
             # desired dimension of the latent space
             'latent_dimension':     19,
             # decoder parameters
-            'decoder_dimensions':   [25, 50, 100, 50, 25],
+            'decoder_dimensions':   [50, 100, 200, 100, 50],
             'decoder_activation':   'leaky_relu',
             'decoder_activation_params':    {'negative_slope': 0.02},
             'decoder_normalization':'bias',
@@ -83,7 +83,7 @@ if __name__ == "__main__":
             'output_activation_params':     {},
         }
         chunc_model = CHUNC(
-            name = f'chunc_pmssm_{constraint}',
+            name = f'chunc_pmssm_{constraint}_no_gap',
             cfg  = chunc_pmssm_config
         ) 
 
@@ -180,14 +180,14 @@ if __name__ == "__main__":
             checkpoint=25
         )
 
-        # run mapper
-        chunc_mapper = MSSMMapper(
-            chunc_dataset,
-            chunc_model
-        )
-        chunc_mapper.run_mapper(
-            num_covers=50
-        )
+        # # run mapper
+        # chunc_mapper = MSSMMapper(
+        #     chunc_dataset,
+        #     chunc_model
+        # )
+        # chunc_mapper.run_mapper(
+        #     num_covers=50
+        # )
 
         # clean up
-        save_model(f"pmssm_{constraint}")
+        save_model(f"pmssm_{constraint}_no_gap")

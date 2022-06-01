@@ -12,7 +12,7 @@ import csv
 
 from chunc.utils.mssm import MSSMGenerator
 from chunc.dataset.chunc import CHUNCDataset
-from chunc.dataset.pmssm import pmssmDataset
+from chunc.dataset.pmssm import pMSSMDataset
 from chunc.models import CHUNCC
 from chunc.utils.loader import Loader
 from chunc.sampler import CHUNCCSampler
@@ -24,13 +24,12 @@ from datetime import datetime
 
 if __name__ == "__main__":
 
-    num_events = 10000
+    num_events = 1000
     models = [
-        "sample_models/pmssm_higgs_dm/models/chuncc_pmssm_higgs_dm/chuncc_pmssm_higgs_dm_trained_params.ckpt",
-        "sample_models/pmssm_higgs_dm_lsp/models/chuncc_pmssm_higgs_dm_lsp/chuncc_pmssm_higgs_dm_lsp_trained_params.ckpt"
+        #"sample_models/pmssm_higgs_dm/models/chuncc_pmssm_higgs_dm/chuncc_pmssm_higgs_dm_trained_params.ckpt",
+        "sample_models/pmssm_higgs_dm_lsp_no_gap/models/chuncc_pmssm_higgs_dm_lsp_no_gap/chuncc_pmssm_higgs_dm_lsp_no_gap_trained_params.ckpt"
     ]
-    model_names = ["pmssm_higgs_dm", "pmssm_higgs_dm_lsp"]
-    sigmas = [1.0,0.5,0.1,0.01,0.001,0.0001]
+    model_names = ["pmssm_higgs_dm_lsp_no_gap"]
     num_iterations = 10
 
     """
@@ -51,7 +50,7 @@ if __name__ == "__main__":
     ]
     chuncc_dataset = CHUNCDataset(
         name="chuncc_dataset",
-        input_file='datasets/pmssm_higgs_dm_lsp_symmetric.npz',
+        input_file='datasets/pmssm_higgs_dm_lsp_symmetric_no_gap.npz',
         features = features,
         classes = ['valid']
     )
@@ -75,7 +74,7 @@ if __name__ == "__main__":
             latent_variables=[ii for ii in range(19)],
             binary_variable=19,
             num_latent_bins=25,
-            num_binary_bins=10,
+            num_binary_bins=25,
         )
         mssm = MSSMGenerator(
             microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
@@ -89,7 +88,8 @@ if __name__ == "__main__":
             'subspace':     'pmssm',
             'num_events':   num_events,
             'num_workers':  16,
-            'binary_bin':   9,
+            'binary_bin':   24,
+            'variables':    features,
         }
         chuncc_generator = CHUNCCGenerator(chuncc_generator_config)
         """
@@ -97,31 +97,28 @@ if __name__ == "__main__":
         it correlates with validities.
         """
         
-        validities = [["sigma","total","higgs","dm","higgs_dm","higgs_dm_lsp"]]
+        validities = [["total","higgs","dm","higgs_dm","higgs_dm_lsp"]]
 
         now = datetime.now()
         if not os.path.isdir(f"old_outputs/{now}"):
             os.makedirs(f"old_outputs/{now}")
         
-        for sigma in sigmas:
-            for iteration in range(num_iterations):
-                chuncc_generator.generate(
-                    chuncc_model,
-                    chuncc_loader,
-                    mean=0.0,
-                    sigma=sigma,
-                    iteration=iteration,
-                )
-                num_valid = chuncc_generator.check_validities()
-                temp_valid = [sigma, num_events]
-                for valid in num_valid:
-                    temp_valid.append(valid)
-                validities.append(temp_valid)
+        for iteration in range(num_iterations):
+            chuncc_generator.generate(
+                chuncc_model,
+                chuncc_loader,   
+                iteration=iteration,
+            )
+            num_valid = chuncc_generator.check_validities()
+            temp_valid = [num_events]
+            for valid in num_valid:
+                temp_valid.append(valid)
+            validities.append(temp_valid)
 
-                shutil.move(
-                    f"mssm_output/pmssm_generated_{0.0}_{sigma}_{iteration}.txt", 
-                    f"old_outputs/{now}/"
-                )
+            shutil.move(
+                f"mssm_output/pmssm_generated_{iteration}.txt", 
+                f"old_outputs/{now}/"
+            )
 
         with open(f"{model_names[ii]}_validities.csv", "w") as file:
             writer = csv.writer(file, delimiter=",")

@@ -13,7 +13,7 @@ dm = []
 higgs_dm = []
 higgs_dm_lsp = []
 
-with open("pmssm_higgs_dm_validities.csv", "r") as file:
+with open("pmssm_higgs_dm_lsp_validities.csv", "r") as file:
     reader = csv.reader(file, delimiter=",")
     next(reader)
     for row in reader:
@@ -40,6 +40,11 @@ higgs_std = [np.std(higgs[(sigma == s)]) for s in unique_sigma]
 dm_std = [np.std(dm[(sigma == s)]) for s in unique_sigma]
 higgs_dm_std = [np.std(higgs_dm[(sigma == s)]) for s in unique_sigma]
 higgs_dm_lsp_std = [np.std(higgs_dm_lsp[(sigma == s)]) for s in unique_sigma]
+
+for ii, sigma in enumerate(unique_sigma):
+    print(
+        sigma,round(higgs_mean[ii],5),round(higgs_std[ii],5),round(dm_mean[ii],5),round(dm_std[ii],5),round(higgs_dm_mean[ii],5),round(higgs_dm_std[ii],5),round(higgs_dm_lsp_mean[ii],5),round(higgs_dm_lsp_std[ii],5)
+    )
 
 fig, axs = plt.subplots(figsize=(10,6))
 axs.errorbar(unique_sigma, higgs_mean, yerr=higgs_std, label="higgs", capsize=2)

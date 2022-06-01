@@ -12,7 +12,7 @@ import csv
 
 from chunc.utils.mssm import MSSMGenerator
 from chunc.dataset.chunc import CHUNCDataset
-from chunc.dataset.pmssm import pmssmDataset
+from chunc.dataset.pmssm import pMSSMDataset
 from chunc.models import CHUNC
 from chunc.utils.loader import Loader
 from chunc.sampler import CHUNCSampler
@@ -25,13 +25,15 @@ from datetime import datetime
 
 if __name__ == "__main__":
 
-    num_events = 10000
+    num_events = 1000
     models = [
-        "sample_models/pmssm_higgs_dm/models/chunc_pmssm_higgs_dm/chunc_pmssm_higgs_dm_trained_params.ckpt",
-        "sample_models/pmssm_higgs_dm_lsp/models/chunc_pmssm_higgs_dm_lsp/chunc_pmssm_higgs_dm_lsp_trained_params.ckpt"
+        #"sample_models/pmssm_higgs_dm/models/chunc_pmssm_higgs_dm/chunc_pmssm_higgs_dm_trained_params.ckpt",
+        #"sample_models/pmssm_higgs_dm_lsp/models/chunc_pmssm_higgs_dm_lsp/chunc_pmssm_higgs_dm_lsp_trained_params.ckpt"
+        #"sample_models/pmssm_higgs_dm_lsp/models/chunc_pmssm_higgs_dm_lsp/chunc_pmssm_higgs_dm_lsp_trained_params.ckpt"
+        "sample_models/pmssm_higgs_dm_lsp_no_gap/models/chunc_pmssm_higgs_dm_lsp_no_gap/chunc_pmssm_higgs_dm_lsp_no_gap_trained_params.ckpt"
     ]
-    model_names = ["pmssm_higgs_dm", "pmssm_higgs_dm_lsp"]
-    sigmas = [1.0,0.5,0.1,0.01,0.001,0.0001]
+    model_names = ["pmssm_higgs_dm_lsp_no_gap"]
+    sigmas = [1.0,0.5,0.1,0.03,0.01,0.001,0.0001]
     num_iterations = 10
 
     """
@@ -52,9 +54,9 @@ if __name__ == "__main__":
     ]
     chunc_dataset = CHUNCDataset(
         name="chunc_dataset",
-        input_file='datasets/pmssm_higgs_dm_lsp_symmetric.npz',
+        input_file='datasets/pmssm_higgs_dm_lsp_symmetric_no_gap.npz',
         features = features,
-        classes = ['valid']
+        classes = ['valid'],
     )
     chunc_loader = Loader(
         chunc_dataset, 
