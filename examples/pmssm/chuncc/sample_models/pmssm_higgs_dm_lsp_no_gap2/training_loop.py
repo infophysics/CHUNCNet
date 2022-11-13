@@ -1,5 +1,5 @@
 """
-Training loop for a CMSSM model   
+Training loop for a pmssm model   
 """
 # CHUNC imports
 from chunc.dataset.chunc import CHUNCDataset
@@ -10,29 +10,29 @@ from chunc.metrics import MetricHandler
 from chunc.trainer import Trainer
 from chunc.utils.callbacks import CallbackHandler
 from chunc.utils.distributions import generate_gaussian
-from chunc.utils.utils import get_files, save_model
 from chunc.models import CHUNCC
 
 
 if __name__ == "__main__":
-
-    # clean up directories first
-    save_model()
-
     """
     Now we load our dataset as a torch dataset (chunccDataset),
     and then feed that into a dataloader.
     """
     features = [
-            'gut_m0', 
-            'gut_m12', 
-            'gut_A0', 
-            'gut_tanb', 
-            'sign_mu'
+        'gut_m1', 'gut_m2', 
+        'gut_m3', 'gut_mmu', 
+        'gut_mA', 'gut_At', 
+        'gut_Ab', 'gut_Atau', 
+        'gut_mL1','gut_mL3', 
+        'gut_me1','gut_mtau1', 
+        'gut_mQ1','gut_mQ3', 
+        'gut_mu1','gut_mu3', 
+        'gut_md1','gut_md3', 
+        'gut_tanb'
     ]
     chuncc_dataset = CHUNCDataset(
         name="chuncc_dataset",
-        input_file='datasets/cmssm_dataset_symmetric.npz',
+        input_file='datasets/pmssm_higgs_dm_lsp_symmetric_no_gap.npz',
         features = features,
         classes = ['valid']
     )
@@ -49,21 +49,21 @@ if __name__ == "__main__":
     Construct the chuncc Model, specify the loss and the 
     optimizer and metrics.
     """
-    chuncc_cmssm_config = {
+    chuncc_pmssm_config = {
         # dimension of the input variables
-        'input_dimension':      5,
+        'input_dimension':      19,
         # encoder parameters
-        'encoder_dimensions':   [25, 50, 100, 50, 25],
+        'encoder_dimensions':   [50, 250, 500, 250, 50],
         'encoder_activation':   'leaky_relu',
         'encoder_activation_params':    {'negative_slope': 0.02},
         'encoder_normalization':'bias',
         # desired dimension of the latent space
-        'latent_dimension':     5,
+        'latent_dimension':     19,
         'latent_binary':        1,
         'latent_binary_activation': 'sigmoid',
         'latent_binary_activation_params':  {},
         # decoder parameters
-        'decoder_dimensions':   [25, 50, 100, 50, 25],
+        'decoder_dimensions':   [50, 250, 500, 250, 50],
         'decoder_activation':   'leaky_relu',
         'decoder_activation_params':    {'negative_slope': 0.02},
         'decoder_normalization':'bias',
@@ -72,8 +72,8 @@ if __name__ == "__main__":
         'output_activation_params':     {},
     }
     chuncc_model = CHUNCC(
-        name = 'chuncc_cmssm',
-        cfg  = chuncc_cmssm_config
+        name = 'chuncc_pmssm',
+        cfg  = chuncc_pmssm_config
     ) 
 
     # create loss, optimizer and metrics
@@ -90,13 +90,13 @@ if __name__ == "__main__":
         },
         'LatentWassersteinLoss': {
             'alpha':    1.0,
-            'latent_variables': [0,1,2,3,4],
-            'distribution':     generate_gaussian(dimension=5),
+            'latent_variables': [ii for ii in range(19)],
+            'distribution':     generate_gaussian(dimension=19),
             'num_projections':  1000,
         },
         'LatentBinaryLoss': {
             'alpha':    1.0,
-            'binary_variable':  5,
+            'binary_variable':  19,
             'reduction':    'mean',
         }
     }
@@ -109,7 +109,7 @@ if __name__ == "__main__":
     chuncc_metric_config = {
         'LatentBinaryAccuracy': {
             'cutoff':   0.5,
-            'binary_variable':  5,
+            'binary_variable':  19,
         },
         'LatentSaver':  {},
         'TargetSaver':  {},
@@ -128,8 +128,8 @@ if __name__ == "__main__":
         'latent': {
             'criterion_list':   chuncc_loss,
             'metrics_list':     chuncc_metrics,
-            'latent_variables': [0,1,2,3,4],
-            'binary_variable':  5,
+            'latent_variables': [ii for ii in range(19)],
+            'binary_variable':  19,
             'binary_bins':      10,
         },
         'output':   {

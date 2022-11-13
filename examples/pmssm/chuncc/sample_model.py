@@ -15,8 +15,8 @@ from chunc.dataset.chunc import CHUNCDataset
 from chunc.dataset.pmssm import pMSSMDataset
 from chunc.models import CHUNCC
 from chunc.utils.loader import Loader
-from chunc.sampler import CHUNCCSampler
-from chunc.generator import CHUNCCGenerator
+from chunc.sampler import CHUNCCKDESampler
+from chunc.generator import CHUNCCKDEGenerator
 from chunc.utils.mssm import MSSMGenerator
 import os
 import shutil
@@ -27,9 +27,10 @@ if __name__ == "__main__":
     num_events = 1000
     models = [
         #"sample_models/pmssm_higgs_dm/models/chuncc_pmssm_higgs_dm/chuncc_pmssm_higgs_dm_trained_params.ckpt",
-        "sample_models/pmssm_higgs_dm_lsp_no_gap/models/chuncc_pmssm_higgs_dm_lsp_no_gap/chuncc_pmssm_higgs_dm_lsp_no_gap_trained_params.ckpt"
+        "sample_models/pmssm_higgs_dm_lsp_no_gap2/models/chuncc_pmssm/chuncc_pmssm_trained_params.ckpt"
     ]
     model_names = ["pmssm_higgs_dm_lsp_no_gap"]
+    sigma=0.0001
     num_iterations = 10
 
     """
@@ -69,12 +70,15 @@ if __name__ == "__main__":
         chuncc_model.load_model(model)
 
         """Generate samples from the latent variables"""
-        chuncc_sampler = CHUNCCSampler(
+        chuncc_sampler = CHUNCCKDESampler(
             model=chuncc_model,
             latent_variables=[ii for ii in range(19)],
             binary_variable=19,
             num_latent_bins=25,
-            num_binary_bins=25,
+            num_binary_bins=10,
+            bandwidth=sigma,
+            kernel="tophat",
+            method="bin"
         )
         mssm = MSSMGenerator(
             microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
@@ -88,10 +92,10 @@ if __name__ == "__main__":
             'subspace':     'pmssm',
             'num_events':   num_events,
             'num_workers':  16,
-            'binary_bin':   24,
+            'binary_bin':   9,
             'variables':    features,
         }
-        chuncc_generator = CHUNCCGenerator(chuncc_generator_config)
+        chuncc_generator = CHUNCCKDEGenerator(chuncc_generator_config)
         """
         We want to scan over different sigma values to see how
         it correlates with validities.
@@ -120,6 +124,6 @@ if __name__ == "__main__":
                 f"old_outputs/{now}/"
             )
 
-        with open(f"{model_names[ii]}_validities.csv", "w") as file:
+        with open(f"{model_names[ii]}_validities_kde_bin.csv", "w") as file:
             writer = csv.writer(file, delimiter=",")
             writer.writerows(validities)

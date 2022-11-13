@@ -13,7 +13,7 @@ dm = []
 higgs_dm = []
 higgs_dm_lsp = []
 
-with open("pmssm_higgs_dm_lsp_no_gap_validities.csv", "r") as file:
+with open("pmssm_higgs_dm_lsp_no_gap_validities_kde_bin.csv", "r") as file:
     reader = csv.reader(file, delimiter=",")
     next(reader)
     for row in reader:

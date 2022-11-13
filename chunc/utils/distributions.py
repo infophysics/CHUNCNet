@@ -122,6 +122,24 @@ def generate_concentric_spheres(
         plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
         plt.tight_layout()
         plt.savefig("plots/distribution/concentric_r.png")
+
+        if (dimension == 2):
+            fig, axs = plt.subplots()
+            axs.scatter(
+                inner_sphere_vecs.numpy()[:,0],
+                inner_sphere_vecs.numpy()[:,1],  
+                label=f'inner_sphere', 
+            )
+            axs.scatter(
+                outer_sphere_vecs.numpy()[:,0],
+                outer_sphere_vecs.numpy()[:,1],
+                label=f'outer_sphere',
+            )
+            axs.set_xlabel(f'x')
+            axs.set_ylabel('y')
+            plt.legend(bbox_to_anchor=(1.05, 1.0), loc='upper left')
+            plt.tight_layout()
+            plt.savefig("plots/distribution/xy.png")
         
     return torchcon
 

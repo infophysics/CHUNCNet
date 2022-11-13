@@ -59,14 +59,14 @@ if __name__ == "__main__":
         # dimension of the input variables
         'input_dimension':      5,
         # encoder parameters
-        'encoder_dimensions':   [25, 50, 100, 50, 25],
+        'encoder_dimensions':   [50, 250, 500, 250, 50],
         'encoder_activation':   'leaky_relu',
         'encoder_activation_params':    {'negative_slope': 0.02},
         'encoder_normalization':'bias',
         # desired dimension of the latent space
         'latent_dimension':     5,
         # decoder parameters
-        'decoder_dimensions':   [25, 50, 100, 50, 25],
+        'decoder_dimensions':   [50, 250, 500, 250, 50],
         'decoder_activation':   'leaky_relu',
         'decoder_activation_params':    {'negative_slope': 0.02},
         'decoder_normalization':'bias',
@@ -97,7 +97,7 @@ if __name__ == "__main__":
             'distribution':     generate_concentric_spheres(
                 number_of_samples=10000,
                 dimension=5,
-                inner_radius=0.3,
+                inner_radius=0.1,
                 outer_radius=1.0,
                 thickness=0.3,
                 save_plot=True,
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     
     chunc_trainer.train(
         chunc_loader,
-        epochs=10,
+        epochs=500,
         checkpoint=25
     )
 

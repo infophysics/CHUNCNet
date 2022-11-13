@@ -3,15 +3,21 @@ Training loop for a CMSSM model
 """
 # CHUNC imports
 from chunc.dataset.chunc import CHUNCDataset
+from chunc.dataset.mapper import MSSMMapper
 from chunc.utils.loader import Loader
 from chunc.losses import LossHandler
 from chunc.optimizers import Optimizer
 from chunc.metrics import MetricHandler
 from chunc.trainer import Trainer
 from chunc.utils.callbacks import CallbackHandler
-from chunc.utils.distributions import generate_gaussian
+from chunc.utils.distributions import generate_concentric_spheres
 from chunc.utils.utils import get_files, save_model
-from chunc.models import CHUNCC
+from chunc.models import CHUNC
+import numpy as np
+import torch
+import os
+import shutil
+from datetime import datetime
 
 
 if __name__ == "__main__":
@@ -20,7 +26,7 @@ if __name__ == "__main__":
     save_model()
 
     """
-    Now we load our dataset as a torch dataset (chunccDataset),
+    Now we load our dataset as a torch dataset (chuncDataset),
     and then feed that into a dataloader.
     """
     features = [
@@ -30,26 +36,26 @@ if __name__ == "__main__":
             'gut_tanb', 
             'sign_mu'
     ]
-    chuncc_dataset = CHUNCDataset(
-        name="chuncc_dataset",
-        input_file='datasets/cmssm_dataset_symmetric.npz',
+    chunc_dataset = CHUNCDataset(
+        name="chunc_dataset",
+        input_file='datasets/cmssm_higgs_dm_lsp_symmetric.npz',
         features = features,
         classes = ['valid']
     )
-    chuncc_loader = Loader(
-        chuncc_dataset, 
+    chunc_loader = Loader(
+        chunc_dataset, 
         batch_size=64,
-        test_split=0.3,
+        test_split=0.1,
         test_seed=100,
-        validation_split=0.3,
+        validation_split=0.1,
         validation_seed=100,
         num_workers=4
     )
     """
-    Construct the chuncc Model, specify the loss and the 
+    Construct the chunc Model, specify the loss and the 
     optimizer and metrics.
     """
-    chuncc_cmssm_config = {
+    chunc_cmssm_config = {
         # dimension of the input variables
         'input_dimension':      5,
         # encoder parameters
@@ -59,9 +65,6 @@ if __name__ == "__main__":
         'encoder_normalization':'bias',
         # desired dimension of the latent space
         'latent_dimension':     5,
-        'latent_binary':        1,
-        'latent_binary_activation': 'sigmoid',
-        'latent_binary_activation_params':  {},
         # decoder parameters
         'decoder_dimensions':   [25, 50, 100, 50, 25],
         'decoder_activation':   'leaky_relu',
@@ -71,19 +74,19 @@ if __name__ == "__main__":
         'output_activation':    'linear',
         'output_activation_params':     {},
     }
-    chuncc_model = CHUNCC(
-        name = 'chuncc_cmssm',
-        cfg  = chuncc_cmssm_config
+    chunc_model = CHUNC(
+        name = 'chunc_cmssm_test',
+        cfg  = chunc_cmssm_config
     ) 
 
     # create loss, optimizer and metrics
-    chuncc_optimizer = Optimizer(
-        model=chuncc_model,
+    chunc_optimizer = Optimizer(
+        model=chunc_model,
         optimizer='Adam'
     )
 
     # create criterions
-    chuncc_loss_config = {
+    chunc_loss_config = {
         'L2OutputLoss':   {
             'alpha':    1.0,
             'reduction':'mean',
@@ -91,72 +94,87 @@ if __name__ == "__main__":
         'LatentWassersteinLoss': {
             'alpha':    1.0,
             'latent_variables': [0,1,2,3,4],
-            'distribution':     generate_gaussian(dimension=5),
+            'distribution':     generate_concentric_spheres(
+                number_of_samples=10000,
+                dimension=5,
+                inner_radius=0.3,
+                outer_radius=1.0,
+                thickness=0.3,
+                save_plot=True,
+            ),
             'num_projections':  1000,
         },
-        'LatentBinaryLoss': {
+        'LatentClusterLoss':    {
             'alpha':    1.0,
-            'binary_variable':  5,
-            'reduction':    'mean',
+            'latent_variables': [0,1,2,3,4],
+            'cluster_type': 'fixed',
+            'fixed_value':  1.0,
         }
+        
     }
-    chuncc_loss = LossHandler(
-        name="chuncc_loss",
-        cfg=chuncc_loss_config,
+    chunc_loss = LossHandler(
+        name="chunc_loss",
+        cfg=chunc_loss_config,
     )
     
     # create metrics
-    chuncc_metric_config = {
-        'LatentBinaryAccuracy': {
-            'cutoff':   0.5,
-            'binary_variable':  5,
-        },
+    chunc_metric_config = {
         'LatentSaver':  {},
         'TargetSaver':  {},
         'InputSaver':   {},
         'OutputSaver':  {},
     }
-    chuncc_metrics = MetricHandler(
-        "chuncc_metric",
-        cfg=chuncc_metric_config,
+    chunc_metrics = MetricHandler(
+        "chunc_metric",
+        cfg=chunc_metric_config,
     )
 
     # create callbacks
     callback_config = {
-        'loss':   {'criterion_list': chuncc_loss},
-        'metric': {'metrics_list':   chuncc_metrics},
+        'loss':   {'criterion_list': chunc_loss},
+        'metric': {'metrics_list':   chunc_metrics},
         'latent': {
-            'criterion_list':   chuncc_loss,
-            'metrics_list':     chuncc_metrics,
+            'criterion_list':   chunc_loss,
+            'metrics_list':     chunc_metrics,
             'latent_variables': [0,1,2,3,4],
-            'binary_variable':  5,
-            'binary_bins':      10,
+        },
+        'cluster': {
+            'criterion_list':   chunc_loss,
+            'metrics_list':     chunc_metrics,
+            'latent_variables': [0,1,2,3,4],
         },
         'output':   {
-            'criterion_list':   chuncc_loss,
-            'metrics_list':     chuncc_metrics,
+            'criterion_list':   chunc_loss,
+            'metrics_list':     chunc_metrics,
             'input_variables':  features,
         }
     }
-    chuncc_callbacks = CallbackHandler(
-        "chuncc_callbacks",
+    chunc_callbacks = CallbackHandler(
+        "chunc_callbacks",
         callback_config
     )
 
     # create trainer
-    chuncc_trainer = Trainer(
-        model=chuncc_model,
-        criterion=chuncc_loss,
-        optimizer=chuncc_optimizer,
-        metrics=chuncc_metrics,
-        callbacks=chuncc_callbacks,
+    chunc_trainer = Trainer(
+        model=chunc_model,
+        criterion=chunc_loss,
+        optimizer=chunc_optimizer,
+        metrics=chunc_metrics,
+        callbacks=chunc_callbacks,
         metric_type='test',
         gpu=True,
         gpu_device=0
     )
     
-    chuncc_trainer.train(
-        chuncc_loader,
-        epochs=100,
+    chunc_trainer.train(
+        chunc_loader,
+        epochs=10,
         checkpoint=25
     )
+
+    # run mapper
+    chunc_mapper = MSSMMapper(
+        chunc_dataset,
+        chunc_model
+    )
+    chunc_mapper.run_mapper()

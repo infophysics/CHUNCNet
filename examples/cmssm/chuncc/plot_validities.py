@@ -13,7 +13,7 @@ dm = []
 higgs_dm = []
 higgs_dm_lsp = []
 
-with open("cmssm_higgs_dm_lsp_validities.csv", "r") as file:
+with open("cmssm_higgs_dm_lsp_validities_kde_bin.csv", "r") as file:
     reader = csv.reader(file, delimiter=",")
     next(reader)
     for row in reader:
@@ -24,11 +24,11 @@ with open("cmssm_higgs_dm_lsp_validities.csv", "r") as file:
         higgs_dm_lsp.append(float(row[4])/float(row[0]))
 total = np.array(total)
 higgs_mean = np.mean(higgs)
-dm_mean =np.mean(dm)
+dm_mean = np.mean(dm)
 higgs_dm_mean = np.mean(higgs_dm)
 higgs_dm_lsp_mean = np.mean(higgs_dm_lsp)
 higgs_std = np.std(higgs)
-dm_std =np.std(dm)
+dm_std = np.std(dm)
 higgs_dm_std = np.std(higgs_dm)
 higgs_dm_lsp_std = np.std(higgs_dm_lsp)
 

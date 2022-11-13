@@ -14,7 +14,7 @@ if __name__ == "__main__":
     Then, generate the constrained and unconstrained subspaces
     and save the labeled training set to numpy files.
     """
-    apply_constraints = True
+    apply_constraints = False
     dataset = cMSSMDataset(
         input_dir = '../../../cmssm/cmssm_random_new/',
     )
@@ -31,11 +31,17 @@ if __name__ == "__main__":
             apply_higgs=True,
             apply_lsp=False
         )
-    dataset.generate_training_set(
-        constrained_file    = 'constraints/higgs_dm/constrained_data.csv',
-        unconstrained_file  = 'constraints/higgs_dm/unconstrained_data.csv',
-        symmetric_events    = True,
-        labeling    = 'binary',
-        save        = True,
-        output_file = 'cmssm_higgs_dm_symmetric.npz'
+    dataset.generate_unconstrained_testing_batches(
+        unconstrained_file  = 'constraints/higgs_dm_lsp/unconstrained_data.csv',
+        num_files = 10,
+        save = True,
+        output_file = "cmssm_higgs_dm_lsp_unconstrained"
     )
+    # dataset.generate_training_set(
+    #     constrained_file    = 'constraints/higgs_dm/constrained_data.csv',
+    #     unconstrained_file  = 'constraints/higgs_dm/unconstrained_data.csv',
+    #     symmetric_events    = True,
+    #     labeling    = 'binary',
+    #     save        = True,
+    #     output_file = 'cmssm_higgs_dm_symmetric.npz'
+    # )

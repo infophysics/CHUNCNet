@@ -25,13 +25,13 @@ from datetime import datetime
 
 if __name__ == "__main__":
 
-    num_events = 100
+    num_events = 1000
     models = [
         "sample_models/cmssm_higgs_dm2/models/chunc_cmssm_higgs_dm/chunc_cmssm_higgs_dm_trained_params.ckpt",
         "sample_models/cmssm_higgs_dm_lsp2/models/chunc_cmssm_higgs_dm_lsp/chunc_cmssm_higgs_dm_lsp_trained_params.ckpt"
     ]
     model_names = ["cmssm_higgs_dm", "cmssm_higgs_dm_lsp"]
-    sigmas = [1.0,0.5,0.1,0.01,0.03,0.001,0.0001]
+    sigmas = [0.001, 0.0001]
     num_iterations = 10
 
     """
@@ -65,28 +65,7 @@ if __name__ == "__main__":
         chunc_model = CHUNC(name = 'chunc_cmssm')
         chunc_model.load_model(model)
 
-        """Generate samples from the latent variables"""
-        chunc_sampler = CHUNCKDESampler(
-            model=chunc_model,
-            latent_variables=[0,1,2,3,4],
-        )
-        mssm = MSSMGenerator(
-            microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
-            softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
-            param_space='cmssm',
-        )
-        chunc_generator_config = {
-            'loader':       chunc_loader,
-            'sampler':      chunc_sampler,
-            'mssm_generator':mssm,
-            'subspace':     'cmssm',
-            'num_events':   num_events,
-            'num_workers':  16,
-            'sample_mean':  0.0,
-            'sample_sigma': 0.01,
-            'variables':    features,
-        }
-        chunc_generator = CHUNCGenerator(chunc_generator_config)
+        
         """
         We want to scan over different sigma values to see how
         it correlates with validities.
@@ -99,7 +78,34 @@ if __name__ == "__main__":
             os.makedirs(f"old_outputs/{now}")
         
         for sigma in sigmas:
+
+            """Generate samples from the latent variables"""
+            chunc_sampler = CHUNCKDESampler(
+                model=chunc_model,
+                latent_variables=[0,1,2,3,4],
+                bandwidth=sigma,
+                kernel="tophat"
+            )
+            mssm = MSSMGenerator(
+                microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
+                softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
+                param_space='cmssm',
+            )
+            chunc_generator_config = {
+                'loader':       chunc_loader,
+                'sampler':      chunc_sampler,
+                'mssm_generator':mssm,
+                'subspace':     'cmssm',
+                'num_events':   num_events,
+                'num_workers':  8,
+                'sample_mean':  0.0,
+                'sample_sigma': 0.01,
+                'variables':    features,
+            }
+            chunc_generator = CHUNCGenerator(chunc_generator_config)
             for iteration in range(num_iterations):
+
+
                 chunc_generator.generate(
                     chunc_model,
                     chunc_loader,
@@ -118,6 +124,6 @@ if __name__ == "__main__":
                     f"old_outputs/{now}/"
                 )
 
-        with open(f"{model_names[ii]}_validities3.csv", "w") as file:
+        with open(f"{model_names[ii]}_validities_tophat_2.csv", "w") as file:
             writer = csv.writer(file, delimiter=",")
             writer.writerows(validities)

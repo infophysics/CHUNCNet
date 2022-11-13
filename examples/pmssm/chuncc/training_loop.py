@@ -32,7 +32,7 @@ if __name__ == "__main__":
     ]
     chuncc_dataset = CHUNCDataset(
         name="chuncc_dataset",
-        input_file='datasets/pmssm_dataset_symmetric.npz',
+        input_file='datasets/pmssm_higgs_dm_lsp_symmetric_no_gap.npz',
         features = features,
         classes = ['valid']
     )
@@ -91,7 +91,7 @@ if __name__ == "__main__":
         'LatentWassersteinLoss': {
             'alpha':    1.0,
             'latent_variables': [ii for ii in range(19)],
-            'distribution':     generate_gaussian(dimension=5),
+            'distribution':     generate_gaussian(dimension=19),
             'num_projections':  1000,
         },
         'LatentBinaryLoss': {

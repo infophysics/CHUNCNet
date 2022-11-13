@@ -15,8 +15,8 @@ from chunc.dataset.chunc import CHUNCDataset
 from chunc.dataset.cmssm import cMSSMDataset
 from chunc.models import CHUNCC
 from chunc.utils.loader import Loader
-from chunc.sampler import CHUNCCSampler
-from chunc.generator import CHUNCCGenerator
+from chunc.sampler import CHUNCCKDESampler
+from chunc.generator import CHUNCCKDEGenerator
 from chunc.utils.mssm import MSSMGenerator
 import os
 import shutil
@@ -26,10 +26,11 @@ if __name__ == "__main__":
 
     num_events = 1000
     models = [
-        "sample_models/cmssm_higgs_dm2/models/chuncc_cmssm/chuncc_cmssm_trained_params.ckpt",
+        "sample_models/cmssm_higgs_dm_lsp2/models/chuncc_cmssm/chuncc_cmssm_trained_params.ckpt",
         #"sample_models/cmssm_higgs_dm_lsp/models/chuncc_cmssm/chuncc_cmssm_trained_params.ckpt"
     ]
-    model_names = ["cmssm_higgs_dm"]
+    model_names = ["cmssm_higgs_dm_lsp"]
+    sigma=0.0001
     num_iterations = 10
 
     """
@@ -64,12 +65,15 @@ if __name__ == "__main__":
         chuncc_model.load_model(model)
 
         """Generate samples from the latent variables"""
-        chuncc_sampler = CHUNCCSampler(
+        chuncc_sampler = CHUNCCKDESampler(
             model=chuncc_model,
             latent_variables=[0,1,2,3,4],
             binary_variable=5,
             num_latent_bins=25,
             num_binary_bins=10,
+            bandwidth=sigma,
+            kernel="tophat",
+            method='bin'
         )
         mssm = MSSMGenerator(
             microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
@@ -86,7 +90,7 @@ if __name__ == "__main__":
             'binary_bin':   9,
             'variables':    features,
         }
-        chuncc_generator = CHUNCCGenerator(chuncc_generator_config)
+        chuncc_generator = CHUNCCKDEGenerator(chuncc_generator_config)
         """
         We want to scan over different sigma values to see how
         it correlates with validities.
@@ -115,6 +119,6 @@ if __name__ == "__main__":
                 f"old_outputs/{now}/"
             )
 
-        with open(f"{model_names[ii]}_validities.csv", "w") as file:
+        with open(f"{model_names[ii]}_validities_kde_bin.csv", "w") as file:
             writer = csv.writer(file, delimiter=",")
             writer.writerows(validities)

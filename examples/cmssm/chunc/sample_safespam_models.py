@@ -1,6 +1,6 @@
 """
 Example script which runs SoftSUSY/micrOMEGAs
-for pmssm models.
+for cMSSM models.
 """
 from random import sample
 import numpy as np
@@ -12,7 +12,7 @@ import csv
 
 from chunc.utils.mssm import MSSMGenerator
 from chunc.dataset.chunc import CHUNCDataset
-from chunc.dataset.pmssm import pMSSMDataset
+from chunc.dataset.cmssm import cMSSMDataset
 from chunc.models import CHUNC
 from chunc.utils.loader import Loader
 from chunc.sampler import CHUNCKDESampler
@@ -27,13 +27,14 @@ if __name__ == "__main__":
 
     num_events = 1000
     models = [
-        #"sample_models/pmssm_higgs_dm/models/chunc_pmssm_higgs_dm/chunc_pmssm_higgs_dm_trained_params.ckpt",
-        #"sample_models/pmssm_higgs_dm_lsp/models/chunc_pmssm_higgs_dm_lsp/chunc_pmssm_higgs_dm_lsp_trained_params.ckpt"
-        #"sample_models/pmssm_higgs_dm_lsp/models/chunc_pmssm_higgs_dm_lsp/chunc_pmssm_higgs_dm_lsp_trained_params.ckpt"
-        "sample_models/pmssm_higgs_dm_lsp_no_gap/models/chunc_pmssm_higgs_dm_lsp_no_gap/chunc_pmssm_higgs_dm_lsp_no_gap_trained_params.ckpt"
+        #"sample_models/cmssm_safespam_higgs_dm2/models/safespam_cmssm_higgs_dm/safespam_cmssm_higgs_dm_trained_params.ckpt",
+        "sample_models/cmssm_safespam_higgs_dm_lsp2/models/safespam_cmssm_higgs_dm_lsp/safespam_cmssm_higgs_dm_lsp_trained_params.ckpt"
     ]
-    model_names = ["pmssm_higgs_dm_lsp_no_gap"]
-    sigmas = [0.0001]
+    model_names = [
+        #"cmssm_higgs_dm", 
+        "cmssm_higgs_dm_lsp"
+    ]
+    sigmas = [0.001, 0.0001]
     num_iterations = 10
 
     """
@@ -41,22 +42,17 @@ if __name__ == "__main__":
     and then feed that into a dataloader.
     """
     features = [
-        'gut_m1', 'gut_m2', 
-        'gut_m3', 'gut_mmu', 
-        'gut_mA', 'gut_At', 
-        'gut_Ab', 'gut_Atau', 
-        'gut_mL1','gut_mL3', 
-        'gut_me1','gut_mtau1', 
-        'gut_mQ1','gut_mQ3', 
-        'gut_mu1','gut_mu3', 
-        'gut_md1','gut_md3', 
-        'gut_tanb'
+            'gut_m0', 
+            'gut_m12', 
+            'gut_A0', 
+            'gut_tanb', 
+            'sign_mu'
     ]
     chunc_dataset = CHUNCDataset(
         name="chunc_dataset",
-        input_file='datasets/pmssm_higgs_dm_lsp_symmetric_no_gap.npz',
+        input_file='datasets/cmssm_higgs_dm_lsp_symmetric.npz',
         features = features,
-        classes = ['valid'],
+        classes = ['valid']
     )
     chunc_loader = Loader(
         chunc_dataset, 
@@ -69,7 +65,7 @@ if __name__ == "__main__":
     )
     for ii, model in enumerate(models):
         # load the trained model
-        chunc_model = CHUNC(name = 'chunc_pmssm')
+        chunc_model = CHUNC(name = 'safespam_cmssm')
         chunc_model.load_model(model)
 
         
@@ -85,31 +81,33 @@ if __name__ == "__main__":
             os.makedirs(f"old_outputs/{now}")
         
         for sigma in sigmas:
+
             """Generate samples from the latent variables"""
             chunc_sampler = CHUNCKDESampler(
                 model=chunc_model,
-                latent_variables=[ii for ii in range(19)],
-                bandwidth=sigma,
-                kernel="tophat"
+                latent_variables=[0,1],
+                bandwidth=sigma
             )
             mssm = MSSMGenerator(
                 microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
                 softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
-                param_space='pmssm',
+                param_space='cmssm',
             )
             chunc_generator_config = {
                 'loader':       chunc_loader,
                 'sampler':      chunc_sampler,
                 'mssm_generator':mssm,
-                'subspace':     'pmssm',
+                'subspace':     'cmssm',
                 'num_events':   num_events,
-                'num_workers':  8,
+                'num_workers':  16,
                 'sample_mean':  0.0,
                 'sample_sigma': 0.01,
                 'variables':    features,
             }
             chunc_generator = CHUNCGenerator(chunc_generator_config)
             for iteration in range(num_iterations):
+
+
                 chunc_generator.generate(
                     chunc_model,
                     chunc_loader,
@@ -124,10 +122,10 @@ if __name__ == "__main__":
                 validities.append(temp_valid)
 
                 shutil.move(
-                    f"mssm_output/pmssm_generated_{0.0}_{sigma}_{iteration}.txt", 
+                    f"mssm_output/cmssm_generated_{0.0}_{sigma}_{iteration}.txt", 
                     f"old_outputs/{now}/"
                 )
 
-        with open(f"{model_names[ii]}_validities_tophat.csv", "w") as file:
+        with open(f"{model_names[ii]}_safespam_validities.csv", "w") as file:
             writer = csv.writer(file, delimiter=",")
             writer.writerows(validities)
