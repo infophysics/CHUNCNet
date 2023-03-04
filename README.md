@@ -1,4 +1,5 @@
 # Constraint-driven High-dimensional UNcompressed (Categorical) Clustering (CHUNCNet)
+The code in this repository corresponds to the paper ``Visualization and Efficient Generation of Constrained High-dimensional Theoretical Parameter Spaces'' by J. Baretz, N. Carrara, J. Hollingsworth and D. Whiteson.  CHUNCNet is a collection of two generative models which expand on the *Sliced-Wasserstein Auto-Encoder* (SWAE) approach for the purposes of studying high-dimensional theoretical parameter spaces of *Minimal Super-Symmetric Models* (MSSM) (such as the CMSSM and PMSSM).
 
 ## Installation
 
