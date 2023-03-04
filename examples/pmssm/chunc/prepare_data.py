@@ -14,9 +14,9 @@ if __name__ == "__main__":
     Then, generate the constrained and unconstrained subspaces
     and save the labeled training set to numpy files.
     """
-    apply_constraints = False
+    apply_constraints = True
     dataset = pMSSMDataset(
-        input_dir = '../../../pmssm/pmssm_random_new/',
+        input_dir = '../../../pmssm/pmssm_rand/',
     )
     if apply_constraints:
         dataset.generate_constrained_dataset(

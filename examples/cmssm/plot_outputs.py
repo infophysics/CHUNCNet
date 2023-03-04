@@ -30,25 +30,25 @@ if __name__ == "__main__":
     Then, generate the constrained and unconstrained subspaces
     and save the labeled training set to numpy files.
     """
-    dataset = cMSSMDataset(
-        input_dir = 'old_outputs/2023-03-04 07:28:47.900202',
-    )
-    dataset.generate_constrained_dataset(
-        output_file="constrained_output",
-        #input_file="cmssm_generated_0.0_0.0001_0.txt",
-        #max_num_files=1000,
-        apply_dm=True,
-        apply_higgs=True,
-        apply_lsp=True
-    )
-    dataset.generate_unconstrained_dataset(
-        output_file="unconstraint_output",
-        #input_file="cmssm_generated_0.0_0.0001_0.txt",
-        max_num_files=100,
-        apply_dm=True,
-        apply_higgs=True,
-        apply_lsp=True
-    )
+    # dataset = cMSSMDataset(
+    #     input_dir = 'old_outputs/2023-03-04 07:28:47.900202',
+    # )
+    # dataset.generate_constrained_dataset(
+    #     output_file="constrained_output",
+    #     #input_file="cmssm_generated_0.0_0.0001_0.txt",
+    #     #max_num_files=1000,
+    #     apply_dm=True,
+    #     apply_higgs=True,
+    #     apply_lsp=True
+    # )
+    # dataset.generate_unconstrained_dataset(
+    #     output_file="unconstraint_output",
+    #     #input_file="cmssm_generated_0.0_0.0001_0.txt",
+    #     max_num_files=100,
+    #     apply_dm=True,
+    #     apply_higgs=True,
+    #     apply_lsp=True
+    # )
 
     chunc_1 = []
     chunc_2 = []
@@ -68,7 +68,7 @@ if __name__ == "__main__":
     input_4 = []
     input_5 = []
 
-    with open("constraints/higgs_dm_lsp/constrained_output.csv","r") as file:
+    with open("chunc/constraints/higgs_dm_lsp/constrained_output.csv","r") as file:
         reader = csv.reader(file, delimiter=",")
         for row in reader:
             chunc_1.append(float(row[0]))
@@ -77,7 +77,7 @@ if __name__ == "__main__":
             chunc_4.append(float(row[3]))
             chunc_5.append(float(row[4]))
     
-    with open("constraints/higgs_dm_lsp/constrained_output2.csv","r") as file:
+    with open("chuncc/constraints/higgs_dm_lsp/constrained_output.csv","r") as file:
         reader = csv.reader(file, delimiter=",")
         for row in reader:
             chuncc_1.append(float(row[0]))
@@ -86,7 +86,7 @@ if __name__ == "__main__":
             chuncc_4.append(float(row[3]))
             chuncc_5.append(float(row[4]))
     
-    with open("constraints/higgs_dm_lsp/constrained_data.csv","r") as file:
+    with open("chunc/constraints/higgs_dm_lsp/constrained_data.csv","r") as file:
         reader = csv.reader(file, delimiter=",")
         for row in reader:
             input_1.append(float(row[0]))
@@ -97,10 +97,11 @@ if __name__ == "__main__":
 
 
     fig, axs = plt.subplots(2,3,figsize=(10,6))
-    line_labels = ["Valid training data", "Valid generated data (CHUNC)"]
+    line_labels = ["Valid training data", "Valid generated data (CHUNC)", "Valid generated data (CHUNC2)"]
 
     axs[0][0].hist(input_1, bins=25, label="input data", histtype='step', density=True, stacked=True, color='b')
     axs[0][0].hist(chunc_1, bins=25, label="chunc output", histtype='step', density=True, stacked=True, color='r')
+    axs[0][0].hist(chuncc_1, bins=25, label="chunc2 output", histtype='step', density=True, stacked=True, color='orange')
     axs[0][0].set_yscale("log")
     #axs[0][0].set_yticks([])
     #axs[0][0].set_yticklabels([])
@@ -108,6 +109,7 @@ if __name__ == "__main__":
 
     axs[0][1].hist(input_2, bins=25, histtype='step', density=True, stacked=True, color='b')
     axs[0][1].hist(chunc_2, bins=25, histtype='step', density=True, stacked=True, color='r')
+    axs[0][1].hist(chuncc_2, bins=25, histtype='step', density=True, stacked=True, color='orange')
     axs[0][1].set_yscale("log")
     #axs[0][1].set_yticks([])
     #axs[0][1].set_yticklabels([])
@@ -115,6 +117,7 @@ if __name__ == "__main__":
 
     axs[0][2].hist(input_3, bins=25, histtype='step', density=True, stacked=True, color='b')
     axs[0][2].hist(chunc_3, bins=25, histtype='step', density=True, stacked=True, color='r')
+    axs[0][2].hist(chuncc_3, bins=25, histtype='step', density=True, stacked=True, color='orange')
     axs[0][2].set_yscale("log")
     #axs[0][2].set_yticks([])
     #axs[0][2].set_yticklabels([])
@@ -122,6 +125,7 @@ if __name__ == "__main__":
 
     axs[1][0].hist(input_4, bins=25, histtype='step', density=True, stacked=True, color='b')
     axs[1][0].hist(chunc_4, bins=25, histtype='step', density=True, stacked=True, color='r')
+    axs[1][0].hist(chuncc_4, bins=25, histtype='step', density=True, stacked=True, color='orange')
     axs[1][0].set_yscale("log")
     #axs[1][0].set_yticks([])
     #axs[1][0].set_yticklabels([])
@@ -129,6 +133,7 @@ if __name__ == "__main__":
 
     axs[1][1].hist(input_5, bins=25, label="input data", histtype='step', density=True, stacked=True, color='b')
     axs[1][1].hist(chunc_5, bins=25, label="chunc output", histtype='step', density=True, stacked=True, color='r')
+    axs[1][1].hist(chuncc_5, bins=25, label="chunc output", histtype='step', density=True, stacked=True, color='orange')
     axs[1][1].set_yscale("log")
     #axs[1][1].set_yticks([])
     #axs[1][1].set_yticklabels([])

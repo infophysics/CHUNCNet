@@ -200,7 +200,7 @@ extern double hEffLnDiff(double T);
 extern double vSigma(double T,double Beps ,int Fast);
 extern double darkOmega(double *Xf,int Fast, double Beps,int *err);
 extern char*ExcludedFor2DM;
-extern double darkOmega2(double fast, double Beps);
+extern double darkOmega2(double fast, double Beps, int *err);
 extern double darkOmegaExt(double *Xf, double (*f0)(double), double (*f1)(double));
 extern double darkOmegaTR(double TR, double YR, int Fast, double Beps,int *err);
 extern double darkOmega2TR(double TR, double Y1R, double Y2R,double fast, double Beps);

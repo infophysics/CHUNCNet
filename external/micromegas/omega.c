@@ -2801,7 +2801,7 @@ double darkOmega2TR( double TR, double Y1R,double Y2R, double fast, double Beps0
 
 
 
-double darkOmega2( double fast, double Beps0)
+double darkOmega2( double fast, double Beps0,int *err)
 {
   Fast_=fast;
   Beps=Beps0;

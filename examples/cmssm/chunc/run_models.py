@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # clean up folders
     save_model()
 
-    constraints = ["higgs_dm"]
+    constraints = ["higgs_dm_lsp"]
     epochs = [100]
 
     for ii, constraint in enumerate(constraints):

@@ -31,7 +31,7 @@ if __name__ == "__main__":
     and save the labeled training set to numpy files.
     """
     dataset = pMSSMDataset(
-        input_dir = 'old_outputs/2022-08-23 09:35:45.985175',
+        input_dir = 'old_outputs/2023-03-04 08:48:13.521660',
     )
     dataset.generate_constrained_dataset(
         output_file="constrained_output",

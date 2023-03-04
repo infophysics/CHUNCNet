@@ -81,7 +81,7 @@ if __name__ == "__main__":
             method="bin"
         )
         mssm = MSSMGenerator(
-            microemgas_dir='~/physics/micromegas/micromegas_5.2.13/MSSM/', 
+            microemgas_dir='~/physics/micromegas/micromegas_5.2.6/MSSM/', 
             softsusy_dir='~/physics/softsusy/softsusy-4.1.10/',
             param_space='pmssm',
         )
